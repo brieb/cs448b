@@ -110,6 +110,7 @@ def parse_data(college_id):
 
   except IOError:
     print 'ERROR: Does not exist ' + filename 
+    return None
 
 def store_data(data):
   conn = sqlite3.connect('data.db')
@@ -200,4 +201,5 @@ def store_data(data):
 #for i in range (1, 4000):
 i = 3387
 data = parse_data(i)
-store_data(data)
+if data != None:
+  store_data(data)
