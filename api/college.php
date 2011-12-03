@@ -1,11 +1,9 @@
 <?php
   require_once('util.php');
 
-  $json_pretty_print = isset($_GET['jspp']) && $_GET['jspp'];
-
   if (count($_GET) == 0) {
     $q = "select * from college";
-    echo print_json(db_query($q), $json_pretty_print);
+    echo json_encode(db_query($q));
     die();
   }
 
@@ -54,14 +52,14 @@
     $r = db_query($q, TRUE, $p);
     $college['settings'] = $r;
 
-    echo print_json($college, $json_pretty_print);
+    echo json_encode($college);
     die();
   }
 
   if ($_GET['name']) {
     $q = "select * from college where name like ?";
     $p = array("%{$_GET['name']}%");
-    echo print_json(db_query($q, TRUE, $p), $json_pretty_print);
+    echo json_encode(db_query($q, TRUE, $p));
     die();
   }
 

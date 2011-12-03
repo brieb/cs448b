@@ -1,15 +1,5 @@
 <?php
 
-  function print_json($x, $pretty = FALSE) {
-    $json = json_encode($x);
-    if ($pretty) {
-      require_once('json_pretty_print.php');
-      echo pretty_json($json);
-    } else {
-      echo $json;
-    }
-  }
-
   /* --- BEGIN DB FUNCTIONS --- */
 
   function get_db_conn() {
