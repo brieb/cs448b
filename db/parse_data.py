@@ -112,11 +112,27 @@ def parse_data(college_id):
     print 'ERROR: Does not exist ' + filename 
     return None
 
+def to_str(elem):
+  if elem == None:
+    return ""
+
+  if type(elem) == unicode:
+    return str(elem.encode("utf8","ignore"))
+  
+  return str(elem)
+
 def store_data(data):
   conn = sqlite3.connect('data.db')
   c = conn.cursor()
 
-  college_id = str(data['college']['id'])
+  college_id = to_str(data['college']['id'])
+
+  #for k in data['college'].keys():
+    #if data['college'][k] == None:
+      #data['college'][k] = ""
+    
+
+  print data['college']
 
   q = "insert or ignore into \
       college(\
@@ -131,16 +147,17 @@ def store_data(data):
         calendar\
       ) \
       values("+ \
-        str(data['college']['id']) +\
-        ",\"" + str(data['college']['name']) +\
-        "\",\"" + str(data['college']['url']) +\
-        "\",\"" + str(data['college']['address']) +\
-        "\",\"" + str(data['college']['faculty_to_student_ratio']) +\
-        "\"," + str(data['college']['num_grad'].replace(',','')) +\
-        "," + str(data['college']['num_undergrad'].replace(',','')) +\
-        "," + str(data['college']['percent_admitted']) +\
-        ",\"" + str(data['college']['calendar']) + "\"" +\
+                to_str(data['college']['id']) +\
+          ",\"" + to_str(data['college']['name']) +\
+        "\",\"" + to_str(data['college']['url']) +\
+        "\",\"" + to_str(data['college']['address']) +\
+        "\",\"" + to_str(data['college']['faculty_to_student_ratio']) +\
+        "\",\"" + to_str(data['college']['num_grad']).replace(',','') +\
+        "\",\"" + to_str(data['college']['num_undergrad']).replace(',','') +\
+        "\",\"" + to_str(data['college']['percent_admitted']) +\
+        "\",\"" + to_str(data['college']['calendar']) + "\"" +\
       ")"
+  print q
   c.execute(q)
 
   for d in data['degrees']:
@@ -148,7 +165,7 @@ def store_data(data):
     c.execute(q)
 
     q = "insert or ignore into college_degree(college_id, degree_id) \
-        select "+str(data['college']['id'])+", \
+        select "+college_id+", \
         (select id from degree where value=\""+d+"\")"
     c.execute(q)
 
@@ -198,8 +215,8 @@ def store_data(data):
   conn.close()
   
 
-#for i in range (1, 4000):
-i = 3387
-data = parse_data(i)
-if data != None:
-  store_data(data)
+for i in range (1, 4000):
+#i = 3387
+  data = parse_data(i)
+  if data != None:
+    store_data(data)
