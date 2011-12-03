@@ -23,7 +23,9 @@
     $q = "select value from degree
       where id in (select degree_id from college_degree where college_id = ?)";
     $r = db_query($q, TRUE, $p);
-    $college['degrees'] = $r;
+    foreach ($r as $e) {
+      $college['degrees'][] = $e['value'];
+    }
 
     $q = "select percentage, value from
       college_demographics_first_year join college
@@ -44,13 +46,17 @@
       from school_type where id in
       (select school_type_id from college_school_type where college_id = ?)";
     $r = db_query($q, TRUE, $p);
-    $college['school_types'] = $r;
+    foreach ($r as $e) {
+      $college['school_types'][] = $e['value'];
+    }
 
     $q = "select value
       from setting where id in
       (select setting_id from college_setting where college_id = ?)";
     $r = db_query($q, TRUE, $p);
-    $college['settings'] = $r;
+    foreach ($r as $e) {
+      $college['settings'][] = $e['value'];
+    }
 
     echo json_encode($college);
     die();
