@@ -114,23 +114,18 @@ def parse_data(college_id):
 
 def to_str(elem):
   if elem == None:
-    return ""
+    return "NULL"
 
   if type(elem) == unicode:
-    return str(elem.encode("utf8","ignore"))
-  
-  return str(elem)
+    return "\""+str(elem.encode("utf8","ignore"))+"\""
+
+  return "\""+str(elem)+"\""
 
 def store_data(data):
   conn = sqlite3.connect('data.db')
   c = conn.cursor()
 
   college_id = to_str(data['college']['id'])
-
-  #for k in data['college'].keys():
-    #if data['college'][k] == None:
-      #data['college'][k] = ""
-    
 
   print data['college']
 
@@ -147,15 +142,15 @@ def store_data(data):
         calendar\
       ) \
       values("+ \
-                to_str(data['college']['id']) +\
-          ",\"" + to_str(data['college']['name']) +\
-        "\",\"" + to_str(data['college']['url']) +\
-        "\",\"" + to_str(data['college']['address']) +\
-        "\",\"" + to_str(data['college']['faculty_to_student_ratio']) +\
-        "\",\"" + to_str(data['college']['num_grad']).replace(',','') +\
-        "\",\"" + to_str(data['college']['num_undergrad']).replace(',','') +\
-        "\",\"" + to_str(data['college']['percent_admitted']) +\
-        "\",\"" + to_str(data['college']['calendar']) + "\"" +\
+              to_str(data['college']['id']) +\
+        "," + to_str(data['college']['name']) +\
+        "," + to_str(data['college']['url']) +\
+        "," + to_str(data['college']['address']) +\
+        "," + to_str(data['college']['faculty_to_student_ratio']) +\
+        "," + to_str(data['college']['num_grad']).replace(',','') +\
+        "," + to_str(data['college']['num_undergrad']).replace(',','') +\
+        "," + to_str(data['college']['percent_admitted']) +\
+        "," + to_str(data['college']['calendar']) +\
       ")"
   print q
   c.execute(q)
