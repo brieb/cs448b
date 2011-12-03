@@ -5,7 +5,7 @@
 pragma foreign_keys = on;
 
 create table college (
-  id integer primary key autoincrement,
+  id integer primary key,
   name text,
   url text,
   address text,
@@ -18,29 +18,30 @@ create table college (
 
 create table degree (
   id integer primary key autoincrement,
-  value text
+  value text unique
 );
 
 create table demographics_first_year (
   id integer primary key autoincrement,
-  value text
+  value text unique 
 );
 
 create table school_type (
   id integer primary key autoincrement,
-  value text
+  value text unique
 );
 
 create table setting (
   id integer primary key autoincrement,
-  value text
+  value text unique
 );
 
 create table major (
   id integer primary key autoincrement,
   degree_type text,
   category text,
-  name text
+  name text,
+  unique(degree_type, category, name)
 );
 
 
@@ -159,7 +160,6 @@ insert into school_type(value) values("Western Association of Schools and Colleg
 insert into school_type(value) values("College Board member");
 
 insert into setting(value) values("Suburban setting");
-insert into setting(value) values("Small city (50000 - 249999)");
 insert into setting(value) values("Residential campus");
 
 /* ----- END PRESET DATA ----- */
