@@ -18,7 +18,7 @@ def get_data_for_address(lat, lng):
 
   data = json.loads(b.getvalue())
   if data['status'] != 'OK':
-    print "fail for address query: {0:.3f},{0:.3f}".format(lat, lng) 
+    print "fail for address query: {0:.3f},{1:.3f}".format(lat, lng) 
     return ""
 
   return data['results'][0]['formatted_address'][-3:]
@@ -26,7 +26,7 @@ def get_data_for_address(lat, lng):
 conn = sqlite3.connect('data.db')
 c = conn.cursor()
 c2 = conn.cursor()
-q = "select id, latitude, longitude from college where is_usa=0"
+q = "select id, latitude, longitude from college where is_usa isnull"
 r = c.execute(q)
 for e in r:
   print
