@@ -31,6 +31,15 @@ body {
 
 #share {
   float: right;
+  margin-top: 8px;
+  padding-left: 20px;
+  padding-top: 2px;
+  height: 20px;
+  background-image: url(img/mail.png);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  color: #3B5998;
+  text-decoration: none;
 }
 
 
@@ -55,8 +64,7 @@ body {
 }
 
 .help {
-  color: #8496BA;
-  color: #626262;
+  color: #3E3E3E;
   font-weight: 700;
   font-size: 11px;
 }

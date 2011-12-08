@@ -55,7 +55,7 @@ $(document).ready(function() {
           A CS448B Project by
           Brie Bunge, Caleb Jordan, Megan Kanne, and Julia Neidert
         </div>
-        <div id="share">Share</div>
+        <a id="share" href="">Share</a>
       </div>
     </div>
 
