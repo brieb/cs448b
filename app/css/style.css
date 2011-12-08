@@ -1,0 +1,84 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+#header {
+  height: 35px;
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #e3e3e3;
+  padding: 2px 0;
+}
+
+#logo, #subtitle, #share {
+  display: inline;
+  float: left;
+}
+
+#logo {
+  font-size: 32px;
+  font-weight: 800;
+  font-variant:small-caps;
+  margin-right: 10px;
+  color: #FB5D00;
+}
+
+#subtitle {
+  margin-top: 17px;
+  font-weight: 300;
+}
+
+#share {
+  float: right;
+}
+
+
+.page {
+  margin: auto;
+  width: 960px;
+}
+
+#content_l, #content_r {
+  float: left;
+}
+
+#content_l {
+  width: 629px;
+  border-right: 1px solid #e3e3e3;
+  padding: 10px 10px 10px 0;
+}
+
+#content_r {
+  width: 310px;
+  padding: 10px 0px 10px 10px;
+}
+
+.help {
+  color: #8496BA;
+  color: #626262;
+  font-weight: 700;
+  font-size: 11px;
+}
+ul.token-input-list-facebook,
+div.token-input-dropdown-facebook,
+ul.token-input-list,
+div.token-input-dropdown {
+  width: 630px;
+  margin-bottom: 10px;
+}
+
+
+.graph_small {
+  height: 120px;
+  width: 280px;
+  background-color: #e3e3e3;
+  margin-bottom: 10px;
+}
+
+#pc {
+  height: 680px;
+  width: 630px;
+  background-color: #e3e3e3;
+  margin-bottom: 10px;
+}
