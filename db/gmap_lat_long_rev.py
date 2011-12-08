@@ -18,7 +18,7 @@ def get_data_for_address(lat, lng):
 
   data = json.loads(b.getvalue())
   if data['status'] != 'OK':
-    print "fail for address query: {},{}".format(lat, lng) 
+    print "fail for address query: {0:.3f},{0:.3f}".format(lat, lng) 
     return ""
 
   return data['results'][0]['formatted_address'][-3:]
