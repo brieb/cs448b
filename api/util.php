@@ -40,17 +40,18 @@
         $result->execute($params);
       }
 
-      return $fetch_all ?
-        $result->fetchAll(PDO::FETCH_ASSOC) :
-        $result->fetch(PDO::FETCH_ASSOC);
+      $ret_val = $fetch_all ?
+      $result->fetchAll(PDO::FETCH_ASSOC) :
+      $result->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
       echo "query failed: \n".
       "query: ".$query."\n".
       "message: ".$e->getMessage();
-      return null;
+      $ret_vall = null;
     }
 
     $db = null;
+    return $ret_val;
   }
 
   /* --- END DB FUNCTIONS --- */

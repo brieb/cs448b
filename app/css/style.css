@@ -59,8 +59,7 @@ body {
 }
 
 #content_r {
-  width: 310px;
-  padding: 10px 0px 10px 10px;
+  width: 320px;
 }
 
 .help {
@@ -81,7 +80,7 @@ div.token-input-dropdown {
   height: 120px;
   width: 280px;
   background-color: #e3e3e3;
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
 #pc {
@@ -89,4 +88,34 @@ div.token-input-dropdown {
   width: 630px;
   background-color: #e3e3e3;
   margin-bottom: 10px;
+}
+
+#college_results, #college_details {
+  float: left;
+}
+
+#college_results {
+  width: 120px;
+  height: 100%;
+}
+#college_results li {
+  white-space: nowrap;
+  overflow: hidden;
+	text-overflow: ellipsis;
+  height: 18px;
+  line-height: 18px;
+  border: 1px solid #e3e3e3;
+  border-width: 1px 1px 0 1px;
+  padding: 1px 5px;
+  margin-left: -1px;
+}
+
+#college_details {
+  padding: 5px;
+  width: 180px;
+}
+
+#college {
+  height: 680px;
+  overflow: scroll-x;
 }

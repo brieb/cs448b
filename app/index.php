@@ -19,35 +19,6 @@
   </head>
   <body>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#tok_college").tokenInput(
-      [{"id":"856","name":"College"}],
-      {
-          minChars: 2,
-          preventDuplicates: true,
-          prePopulate: [],
-          animateDropdown: false,
-          hintText: "Type in a college name",
-          theme: "facebook"
-      }
-    );
-
-    $("#tok_major").tokenInput(
-      [],
-      {
-          minChars: 2,
-          preventDuplicates: true,
-          prePopulate: [],
-          animateDropdown: false,
-          hintText: "Type in a major",
-          theme: "facebook"
-      }
-    );
-});
-</script>
-
-
     <div id="header">
       <div class="page">
         <div id="logo">Parallel Colleges</div>
@@ -55,7 +26,8 @@ $(document).ready(function() {
           A CS448B Project by
           Brie Bunge, Caleb Jordan, Megan Kanne, and Julia Neidert
         </div>
-        <a id="share" href="">Share</a>
+        <!-- TODO -->
+        <a id="share" href="mailto:?&subject=Shipping%20Information%20Request&body=Please%20tell%20me%20if%20my%20order%20has%20shipped!">Share</a>
       </div>
     </div>
 
@@ -77,6 +49,12 @@ $(document).ready(function() {
         </div>
         <div id="graph2" class="graph_small">
         </div>
+
+        <div id="college">
+          <div id="college_results"></div>
+          <div id="college_details"></div>
+        </div>
+
       </div>
 
     </div>
