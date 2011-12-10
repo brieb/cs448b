@@ -1,3 +1,35 @@
+/* Usage: call drawMap() once data variable is set to college data from json.
+ 
+  collegeSelectedInMap(college) returns true if a college is selected in the map
+ 
+  Depends on file 'us-states.json' in same directory
+  
+  Depends on the following html/css:
+  <script type="text/javascript" src="d3/d3.js"></script>
+  <script type="text/javascript" src="d3/d3.geo.js"></script> 
+  <script type="text/javascript" src="d3/d3.geom.js"></script> 
+  <style type="text/css"> 
+    #states {
+      stroke: #fff;
+      fill: #ddd;
+      stroke-width: 1.5px;
+    }   
+    #colleges {
+      fill: #000;
+      stroke-width: 0px;
+    }
+    .selector {
+      fill-opacity: 0;
+      stroke-width: 3px;
+      stroke: #555;
+    }
+    .collegePoint {
+      fill: #111;
+      opacity: 0.3;
+    }
+  </style>
+*/
+
 var mapClickDown = {"x":0,"y":0};
 var mapClickUp = {"x":0,"y":0};
 var mouseIsDown = false;
