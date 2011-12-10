@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
   var API_URL = '../api/college.php';
-  var COLLEGE_RESULTS_LIMIT = 50;
+  var COLLEGE_RESULTS_LIMIT = 5000;
   var COLLEGE_RESULTS_OFFSET = 0;
 
   $("#tok_college").tokenInput(
@@ -63,8 +63,9 @@ $(document).ready(function() {
 
   var display_college_details = function(college, offset_top) {
     var details = $('#college_details');
-    var offset_left = details.offset().left;
-    details.offset({ left: offset_left, top: offset_top });
+    //var offset_left = details.offset().left;
+    //details.offset({ left: offset_left, top: offset_top });
+    details.scrollTop(0);
     details.empty();
 
     details.append(
@@ -80,31 +81,57 @@ $(document).ready(function() {
     var layout = [
       {
       title: 'Type of School',
-      keys: ['percent_admitted', 'school_types']
+      keys: [
+        { title:'Percent Admitted', key:'percent_admitted' },
+        { title:null, key:'school_types' }
+      ]
     },
     {
       title: 'Size',
-      keys: ['num_undergrad', 'num_grad', 'faculty_to_student_ratio']
+      keys: [
+        { title:'Number of Undergraduate Students', key:'num_undergrad' },
+        { title:'Number of Graduate Students', key:'num_grad' },
+        { title:'Student-Faculty Ratio', key:'faculty_to_student_ratio' }
+      ]
     },
     {
       title: 'Setting',
-      keys: ['settings']
+      keys: [{ title:null, key:'settings' }]
     },
     {
       title: 'Academics',
-      keys: ['calendar', 'degrees', 'majors']
+      keys: [
+        { title:'Calendar', key:'calendar' },
+        { title:'Degrees Offered', key:'degrees' },
+        { title:null, key:'majors' }
+      ]
     },
     ];
 
-    var sect;
+    var sect,subsect,content;
     for (var i = 0; i < layout.length; i++) {
+      var has_content = false;
+
       var elem = layout[i];
       sect = $('<div />').addClass('sect');
       sect.append($('<span />').addClass('title').text(elem.title));
+
       for (var j = 0; j < elem.keys.length; j++) {
-        var key = elem.keys[j];
+        var title = elem.keys[j].title;
+        var key = elem.keys[j].key;
         var value = college[key];
-        var content;
+
+        if (value === null) {
+          break;
+        }
+
+        has_content = true;
+
+        subsect = $('<div/>').addClass('subsect');
+        if (title !== null) {
+          subsect.append($('<span />').addClass('title').text(title+': '));
+        }
+
         if (key === 'majors') {
           content = render_majors(value).addClass(key);
         } else if (value instanceof Array) {
@@ -113,11 +140,16 @@ $(document).ready(function() {
             content.append($('<li/>').text(value[k]));
           }
         } else {
-          content = $('<p/>').addClass(key).text(value);
+          content = $('<span/>').addClass(key).text(value);
         }
-        sect.append(content);
+
+        subsect.append(content);
+        sect.append(subsect);
       }
-      details.append(sect);
+
+      if (has_content === true) {
+        details.append(sect);
+      }
     }
   };
 
@@ -151,7 +183,7 @@ $(document).ready(function() {
         });
       })()
     }
-    
+
     var li_more = $('<li/>')
     .addClass('more')
     .text('View More Results')
@@ -159,10 +191,10 @@ $(document).ready(function() {
       COLLEGE_RESULTS_OFFSET += 1;
       $.get(
         API_URL,
-            {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
-            function(response) {
-            display_college_results(response, true);
-            });
+        {only_id_name: 1},
+        function(response) {
+          display_college_results(response, true);
+        });
     });
     content.append(li_more);
 
@@ -180,11 +212,4 @@ $(document).ready(function() {
       display_college_results(response, false);
     });
 
-
-  //function is_page_bottom() {
-    //return window.pageYOffset >= window.scrollMaxY;
-  //}
-  //$(window).scroll(function(e) {
-    //console.log(e);
-  //});
 });

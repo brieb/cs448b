@@ -9,10 +9,8 @@
   }
 
   if ($_GET['only_id_name'] == 1) {
-    $limit = $_GET['limit'] ? $_GET['limit'] : 20;
-    $offset = $_GET['offset'] ? $_GET['offset'] : 20;
-    $q = "select id,name from college limit ? offset ?";
-    echo json_encode(db_query($q, TRUE, array($limit, $offset)));
+    $q = "select id,name from college";
+    echo json_encode(db_query($q));
     die();
   }
 
@@ -43,9 +41,9 @@
       where college_demographics_first_year.college_id = ?";
     $college['demographics_first_year'] = $r;
 
-    $q = "select degree_type, category, name
-      from major where id in
-      (select major_id from college_major where college_id = ?)";
+    $q = "select name, degree_type
+      from major join college_major on id = major_id
+      where college_id = ?";
     $r = db_query($q, TRUE, $p);
     $college['majors'] = $r;
 

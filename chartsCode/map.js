@@ -1,5 +1,4 @@
-/* Usage: call drawMap("#divname") once data variable is set to college data from json.
- 
+/* Usage: call drawMap("#divid") once data variable is set to college data from json.
   collegeSelectedInMap(college) returns true if a college is selected in the map
  
   Depends on file 'us-states.json' in same directory
@@ -238,5 +237,3 @@ var isEmpty = function(obj) {
   }
   return true;
 }
-
-// work on little charts for: demographics, graduating class, gpa
