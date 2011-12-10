@@ -1,9 +1,9 @@
-/* Usage: call drawMap() once data variable is set to college data from json.
+/* Usage: call drawMap("#divname") once data variable is set to college data from json.
  
   collegeSelectedInMap(college) returns true if a college is selected in the map
  
   Depends on file 'us-states.json' in same directory
-  
+
   Depends on the following html/css:
   <script type="text/javascript" src="d3/d3.js"></script>
   <script type="text/javascript" src="d3/d3.geo.js"></script> 
@@ -33,14 +33,14 @@
 var mapClickDown = {"x":0,"y":0};
 var mapClickUp = {"x":0,"y":0};
 var mouseIsDown = false;
-var curSelection = null;
+var curMapSelection = null;
 var mapSvg;
 var mapColleges;
-var selections = {};
-var drawMap = function() {
+var mapSelections = {};
+var drawMap = function(div) {
   var width = 700;
   var height = 400;
-  var svg = d3.select('#chart1')
+  var svg = d3.select(div)
     .append('svg:svg')
     .attr('onmousedown','mouseDown(event)')
     .attr('onmousemove','mouseMove(event)')
@@ -114,7 +114,7 @@ var drawMap = function() {
 
 var mouseDown = function(e) {
   if(mouseIsDown) {
-    curSelection = null;
+    curMapSelection = null;
   }
   mouseIsDown = true;
   mapClickDown = {"x":e.offsetX, "y":e.offsetY};
@@ -122,7 +122,7 @@ var mouseDown = function(e) {
 
 var mouseMove = function(e) {
   if (mouseIsDown) {
-    if(curSelection == null) {
+    if(curMapSelection == null) {
       mapClickUp = {"x":e.offsetX, "y":e.offsetY};
       drawMapSelection();
     } else if (Math.abs(e.offsetX-mapClickUp.x) > 5 ||
@@ -144,12 +144,12 @@ var changeMapSelection = function(e) {
   if (mapClickDown.x == mapClickUp.x &&
      mapClickDown.y == mapClickUp.y) clearSelector(e);
   else {
-    if(curSelection == null) drawMapSelection();
+    if(curMapSelection == null) drawMapSelection();
     else redrawMapSelection();
-    selections[curSelection.attr("cx")+"_"+
-               curSelection.attr("cy")+"_"+
-               curSelection.attr("r")] = curSelection;
-    curSelection = null;
+    mapSelections[curMapSelection.attr("cx")+"_"+
+               curMapSelection.attr("cy")+"_"+
+               curMapSelection.attr("r")] = curMapSelection;
+    curMapSelection = null;
   }
 }
 
@@ -158,7 +158,7 @@ var clearSelector = function(e){
   console.log(e);
   if (e.target.getAttribute("class") == "selector"){
     d3.select(e.target).remove();
-    delete selections[e.target.getAttribute("cx")+"_"+
+    delete mapSelections[e.target.getAttribute("cx")+"_"+
            e.target.getAttribute("cy")+"_"+
            e.target.getAttribute("r")];
   }
@@ -170,7 +170,7 @@ var drawMapSelection = function() {
   var x2 = mapClickUp.x;
   var y2 = mapClickUp.y;
   var r = Math.sqrt(Math.pow(x1-x2,2)+ Math.pow(y1-y2,2))/2;
-  curSelection = mapSvg.append("svg:circle")
+  curMapSelection = mapSvg.append("svg:circle")
     .attr("cx", (x1+mapClickUp.x)/2)
     .attr("cy", (y1+mapClickUp.y)/2)
     .attr("r", r)
@@ -182,7 +182,7 @@ var redrawMapSelection = function() {
   var x2 = mapClickUp.x;
   var y2 = mapClickUp.y;
   var r = Math.sqrt(Math.pow(x1-x2,2)+ Math.pow(y1-y2,2))/2;
-  curSelection.attr("cx", (x1+mapClickUp.x)/2)
+  curMapSelection.attr("cx", (x1+mapClickUp.x)/2)
     .attr("cy", (y1+mapClickUp.y)/2)
     .attr("r", r);
   
@@ -195,16 +195,16 @@ var colorColleges = function() {
 
 var mapSelection = function(){
   return mapSvg.selectAll(".collegePoint").filter(function(d){
-    if (isEmpty(selections)) return true;
+    if (isEmpty(mapSelections)) return true;
     var albersProj = d3.geo.albersUsa();
     var x = albersProj(d.geometry.coordinates)[0];
     var y = albersProj(d.geometry.coordinates)[1];
-    for (key in selections) {
-      if (selections[key]!=undefined){
+    for (key in mapSelections) {
+      if (mapSelections[key]!=undefined){
         var distanceToCenter = 
-          Math.sqrt(Math.pow((x-selections[key].attr("cx")),2)+
-                      Math.pow((y-selections[key].attr("cy")),2));
-        if (distanceToCenter < selections[key].attr("r")) {
+          Math.sqrt(Math.pow((x-mapSelections[key].attr("cx")),2)+
+                      Math.pow((y-mapSelections[key].attr("cy")),2));
+        if (distanceToCenter < mapSelections[key].attr("r")) {
           return true;
         }
       }
@@ -214,16 +214,16 @@ var mapSelection = function(){
 }
 
 var collegeSelectedInMap = function(college) {
-  if (isEmpty(selections)) return true;
+  if (isEmpty(mapSelections)) return true;
   var albersProj = d3.geo.albersUsa();
   var x = albersProj(college.longitude)[0];
   var y = albersProj(college.latitude)[1];
-  for (key in selections) {
-    if (selections[key]!=undefined){
+  for (key in mapSelections) {
+    if (mapSelections[key]!=undefined){
       var distanceToCenter = 
-        Math.sqrt(Math.pow((x-selections[key].attr("cx")),2)+
-                    Math.pow((y-selections[key].attr("cy")),2));
-      if (distanceToCenter < selections[key].attr("r")) {
+        Math.sqrt(Math.pow((x-mapSelections[key].attr("cx")),2)+
+                    Math.pow((y-mapSelections[key].attr("cy")),2));
+      if (distanceToCenter < mapSelections[key].attr("r")) {
         return true;
       }
     }
