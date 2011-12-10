@@ -4,14 +4,16 @@ var allData,
     passWithoutInfo = true;
 
 var filterVariables = {
-    "faculty_to_student_ratio":{"type":"quantitative","min":"0:1","max":"1000:1"},
-    "num_grad":{"type":"quantitative","min":0,"max":40000},
-    "num_undergrad":{"type":"quantitative","min":0,"max":40000},
-    "percent_admitted":{"type":"quantitative","min":0.0,"max":100.0},
-    "degrees":{"type":"ordinal","values":["associates","bachelors","masters","doctorate"]},
-    "majors":{"type":"nominative","values":["computer science", "mathematics", "physics",
+    "faculty_to_student_ratio":{"name":"Student to Faculty Ratio","type":"quantitative","min":"0:1","max":"1000:1"},
+    "num_grad":{"name":"Graduate Population","type":"quantitative","min":0,"max":40000},
+    "num_undergrad":{"name":"Undergraduate Population","type":"quantitative","min":0,"max":40000},
+    "percent_admitted":{"name":"Percent Admitted","type":"quantitative","min":0.0,"max":100.0},
+    "degrees":{"name":"Degrees Offered","type":"ordinal","values":["associates","bachelors","masters","doctorate"]},
+    "majors":{"name":"Majors Offered","type":"nominative","values":["computer science", "mathematics", "physics",
     "english", "drama"]}
-    };
+};
+
+var filterKeys = Object.keys(filterVariables);
 
 var currentFilter = {
     "num_undergrads":{"min":0,"max":40000,"weight":1.0},
@@ -36,6 +38,27 @@ function initializeTest()
 function loadData(json)
 {
     allData = json;
+    
+    transformData(allData);
+
+    /*for (var i = 0; i < 10; i++) {
+        console.log(allData[i]);
+	}*/
+}
+
+function transformData(data)
+{
+    for (var i = 0; i < data.length; i++) {
+	// Turn faculty to student ratio to numeric
+	var fts = data[i].faculty_to_student_ratio;
+	if (fts) {
+	    var idx = fts.indexOf(':');
+	    if (idx > 0) {
+		var num = fts.substring(0,idx) / fts.substring(idx+1);
+		data[i].faculty_to_student_ratio = num;
+	    }
+	}
+    }
 }
     
 // Callbacks to see if an individual data entry passes the current filter
