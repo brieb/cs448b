@@ -1,6 +1,9 @@
 <html>
 <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  <meta http-equiv="no-cache">
+  <meta http-equiv="Expires" content="-1">
+  <meta http-equiv="Cache-Control" content="no-cache">
   <title>College Map</title>
   <script type="text/javascript" src="d3/d3.js"></script>
   <script type="text/javascript" src="d3/d3.geo.js"></script> 
@@ -17,25 +20,29 @@
     }   
     #colleges {
       fill: #000;
-      stroke-width: 3px;
+      stroke-width: 0px;
     }
-    .circle {
-      fill: #4400ff;
+    .selector {
+      fill-opacity: 0;
+      stroke-width: 3px;
+      stroke: #555;
+    }
+    .collegePoint {
+      fill: #111;
       stroke: #fff;
+      opacity: 0.3;
     }
     .text {
       type: "hidden";
-    }
-    .collegePoint {
-      fill: #008;
     }
   </style>
 </head>
 <body>
   <div id="chart1"> </div>
   <div id="chart2"> </div>
-  <script type="text/javascript" src="numStudentsChart.js"></script>
-  <script type="text/javascript" src="studentFacultyChart.js"></script>
+  <script type="text/javascript" src="map.js"></script>
+  <!--  <script type="text/javascript" src="numStudentsChart.js"></script> -->
+  <!--  <script type="text/javascript" src="studentFacultyChart.js"></script> -->
   <script type="text/javascript">
     // var data = [{"id":"3387","name":"Stanford University","url":"www.stanford.edu","address":"Stanford, CA 94305","faculty_to_student_ratio":"6:1","num_grad":"12595","num_undergrad":"6940","percent_admitted":"7","calendar":"Quarter"}, 
     // {"id":"1251","name":"Harvard College","url":"www.college.harvard.edu","address":"86 Brattle Street Cambridge, MA 02138","faculty_to_student_ratio":"7:1","num_grad":"3942","num_undergrad":"6641","percent_admitted":"7","calendar":"Semester"}];
@@ -74,8 +81,9 @@
     // }
     var drawCharts = function(json) {
       data = json;
-      drawStudentChart();
-      drawStudentFacultyChart();
+      drawMap();
+      // drawStudentChart();
+      // drawStudentFacultyChart();
     }
 
     d3.json('../../../~bbunge/cgi-bin/cs448b/api/college.php?', drawCharts)
