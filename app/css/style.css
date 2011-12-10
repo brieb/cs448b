@@ -91,12 +91,13 @@ div.token-input-dropdown {
 }
 
 #college_results, #college_details {
-  float: left;
 }
 
+#college_details {
+  width: 190px;
+}
 #college_results {
-  width: 120px;
-  height: 100%;
+  width: 110px;
 }
 #college_results li {
   white-space: nowrap;
@@ -122,8 +123,7 @@ div.token-input-dropdown {
 }
 
 #college {
-  height: 680px;
-  overflow: scroll-x;
+  height: 500px;
 }
 
 #college_details .name {
@@ -160,4 +160,15 @@ div.token-input-dropdown {
 }
 #college_details .sect .majors .col_type {
   width: 32px;
+}
+
+#college .scroll_pane {
+  float: left;
+  /*height: 100%;*/
+  /*overflow: hidden;*/
+  /*overflow-y: scroll;*/
+width: 100%;
+	height: 200px;
+	overflow: auto;
+  
 }

@@ -63,8 +63,8 @@ $(document).ready(function() {
 
   var display_college_details = function(college, offset_top) {
     var details = $('#college_details');
-    var offset_left = details.offset().left;
-    details.offset({ left: offset_left, top: offset_top });
+    //var offset_left = details.offset().left;
+    //details.offset({ left: offset_left, top: offset_top });
     details.empty();
 
     details.append(
@@ -179,6 +179,8 @@ $(document).ready(function() {
     function(response) {
       display_college_results(response, false);
     });
+
+  $('.scroll_pane').jScrollPane();
 
 
   //function is_page_bottom() {
