@@ -1,9 +1,18 @@
 <?php
+  header('Content-type: application/json');
   require_once('util.php');
 
   if (count($_GET) == 0) {
     $q = "select * from college";
     echo json_encode(db_query($q));
+    die();
+  }
+
+  if ($_GET['only_id_name'] == 1) {
+    $limit = $_GET['limit'] ? $_GET['limit'] : 20;
+    $offset = $_GET['offset'] ? $_GET['offset'] : 20;
+    $q = "select id,name from college limit ? offset ?";
+    echo json_encode(db_query($q, TRUE, array($limit, $offset)));
     die();
   }
 
@@ -28,12 +37,10 @@
     }
 
     $q = "select percentage, value from
-      college_demographics_first_year join college
-      on college.id = college_demographics_first_year.college_id
-      join demographics_first_year
-      on demographics_first_year.id = college_demographics_first_year.demographics_first_year_id
-      where college.id = ?";
-    $r = db_query($q, TRUE, $p);
+      demographics_first_year join college_demographics_first_year
+      on demographics_first_year.id =
+      college_demographics_first_year.demographics_first_year_id
+      where college_demographics_first_year.college_id = ?";
     $college['demographics_first_year'] = $r;
 
     $q = "select degree_type, category, name
@@ -71,5 +78,3 @@
 
 ?>
 
-join college_school_type on college.id = college_school_type.college_id
-join college_setting on college.id = college_setting.college_id

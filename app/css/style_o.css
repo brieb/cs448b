@@ -1,0 +1,186 @@
+body {
+  font-family: tahoma, arial, sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+thead {
+  text-align: left;
+}
+th {
+  font-weight: bold;
+}
+td {
+  padding: 3px;
+}
+
+#header, #msg, #sidebar {
+  background-color: #efefef;
+}
+
+#page {
+  margin: auto;
+  width: 960px;
+}
+
+
+#time {
+  float: right;
+  margin: 5px 10px;
+}
+
+#sidebar, #content {
+  float: left;
+  padding: 10px;
+}
+#sidebar {
+  width: 199px;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #ccc;
+}
+#content {
+  width: 720px;
+  background-color: white;
+}
+
+#content .item .title {
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.clear {
+  clear: both;
+}
+
+#pages {
+  border-width: 1px 0 0 0;
+  border-style: dotted;
+  border-color: #ccc;
+  margin-top: 40px;
+  padding-top: 5px;
+}
+#pages li {
+  display: inline-block;
+  padding: 5px;
+}
+
+fieldset {
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin: 5px 0;
+}
+legend {
+  font-size: 90%;
+  font-weight: bold;
+  padding: 3px;
+}
+input[type="text"] {
+  display: block;
+  width: 100%;
+}
+
+ul.token-input-list-facebook,
+div.token-input-dropdown-facebook,
+ul.token-input-list,
+div.token-input-dropdown {
+  width: 180px;
+}
+li.token-input-token {
+  background-color: #a9cb42;
+}
+
+#header {
+  display: block;
+  height: 50px;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+#logo {
+  float: left;
+  margin: 5px 10px;
+}
+#logo a {
+  display: block;
+  width: 200px;
+  height: 40px;
+  background-image: url('../img/logo.png');
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  text-indent:-9999px;
+}
+#header_elems {
+  text-align: right;
+  float: right;
+}
+#input_item_id {
+  width: 150px;
+  display: inline-block;
+}
+#time_update {
+  font-size: 80%;
+}
+
+.item .info,
+.bid .history,
+.bid .info {
+  margin: 20px 0;
+}
+.item .categories li {
+  margin-left: 24px;
+  list-style-type: circle;
+}
+
+.bid .history ul ul {
+  margin: 5px 0;
+}
+.help {
+  font-size: 80%;
+  margin: 5px 0;
+}
+
+label {
+  margin-top: 10px;
+  display: block;
+  font-weight: bold;
+  font-size: 90%;
+}
+
+#sidebar input[type=submit] {
+  margin-top: 15px;
+  width: 100%;
+}
+
+#msg {
+  padding: 5px 10px;
+  min-height: 20px;
+  border-bottom: 1px solid #ccc;
+  font-size: 90%;
+  font-style: italic;
+  color: #c32126;
+}
+#msg .success {
+  color: #708c1b;
+}
+
+input[type=text] {
+  padding: 3px 3px 5px;
+  border: 2px solid #CCC;
+  font-size: small;
+}
+input[type=submit] {
+  background: #3684CE
+    url(../img/sprButtons.png)
+    repeat-x 0 -43px!important;
+  color: white;
+  border: 0;
+  cursor: pointer;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  font: bold 14px Trebuchet,"Trebuchet MS"!important;
+  padding: 2px 17px 4px;
+}
+input[type=submit]:hover {
+  background-position:0 -129px!important;
+}

@@ -1,0 +1,163 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+#header {
+  height: 35px;
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #e3e3e3;
+  padding: 2px 0;
+}
+
+#logo, #subtitle, #share {
+  display: inline;
+  float: left;
+}
+
+#logo {
+  font-size: 32px;
+  font-weight: 800;
+  font-variant:small-caps;
+  margin-right: 10px;
+  color: #FB5D00;
+}
+
+#subtitle {
+  margin-top: 17px;
+  font-weight: 300;
+}
+
+#share {
+  float: right;
+  margin-top: 8px;
+  padding-left: 20px;
+  padding-top: 2px;
+  height: 20px;
+  background-image: url(img/mail.png);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  color: #3B5998;
+  text-decoration: none;
+}
+
+
+.page {
+  margin: auto;
+  width: 960px;
+}
+
+#content_l, #content_r {
+  float: left;
+}
+
+#content_l {
+  width: 629px;
+  border-right: 1px solid #e3e3e3;
+  padding: 10px 10px 10px 0;
+}
+
+#content_r {
+  width: 320px;
+}
+
+.help {
+  color: #3E3E3E;
+  font-weight: 700;
+  font-size: 11px;
+}
+ul.token-input-list-facebook,
+div.token-input-dropdown-facebook,
+ul.token-input-list,
+div.token-input-dropdown {
+  width: 630px;
+  margin-bottom: 10px;
+}
+
+
+.graph_small {
+  height: 120px;
+  width: 280px;
+  background-color: #e3e3e3;
+  margin: 10px;
+}
+
+#pc {
+  height: 680px;
+  width: 630px;
+  background-color: #e3e3e3;
+  margin-bottom: 10px;
+}
+
+#college_results, #college_details {
+  float: left;
+}
+
+#college_results {
+  width: 120px;
+  height: 100%;
+}
+#college_results li {
+  white-space: nowrap;
+  overflow: hidden;
+	text-overflow: ellipsis;
+  height: 18px;
+  line-height: 18px;
+  border: 1px solid #e3e3e3;
+  border-width: 1px 1px 0 1px;
+  padding: 1px 5px;
+  margin-left: -1px;
+}
+#college_results li.active, #college_details {
+  background-color: #e3e3e3;
+}
+#college_results .more {
+  font-weight: bold;
+}
+
+#college_details {
+  padding: 5px;
+  width: 180px;
+}
+
+#college {
+  height: 680px;
+  overflow: scroll-x;
+}
+
+#college_details .name {
+  font-weight: 700;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 10px;
+}
+#college_details .sect {
+  margin: 10px 0;
+}
+#college_details .sect {
+  line-height: 13px;
+}
+#college_details .sect .title {
+  color: #FB5D00;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 3px;
+}
+
+#college_details .sect .majors {
+  margin-top: 5px;
+  width: 100%;
+  table-layout: fixed;
+}
+#college_details .sect .majors th {
+  text-align: left;
+}
+#college_details .sect .majors td {
+  border: 1px solid #eee;
+  border-width: 1px 0;
+  padding-right: 5px;
+}
+#college_details .sect .majors .col_type {
+  width: 32px;
+}
