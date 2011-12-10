@@ -1,9 +1,11 @@
 $(document).ready(function() {
 
   var API_URL = '../api/college.php';
+  var COLLEGE_RESULTS_LIMIT = 50;
+  var COLLEGE_RESULTS_OFFSET = 0;
 
   $("#tok_college").tokenInput(
-    [{"id":"856","name":"College"}],
+    '../api/college_name.php',
     {
       minChars: 2,
       preventDuplicates: true,
@@ -15,7 +17,7 @@ $(document).ready(function() {
   );
 
   $("#tok_major").tokenInput(
-    [],
+    '../api/major.php',
     {
       minChars: 2,
       preventDuplicates: true,
@@ -59,9 +61,10 @@ $(document).ready(function() {
   };
 
 
-  var display_college_details = function(college) {
-    console.log(college);
+  var display_college_details = function(college, offset_top) {
     var details = $('#college_details');
+    var offset_left = details.offset().left;
+    details.offset({ left: offset_left, top: offset_top });
     details.empty();
 
     details.append(
@@ -118,7 +121,7 @@ $(document).ready(function() {
     }
   };
 
-  var display_college_results = function(results) {
+  var display_college_results = function(results, is_append) {
     var content = $('<ul />');
     var active = null;
 
@@ -126,21 +129,62 @@ $(document).ready(function() {
       var li = $('<li />').text(results[i].name);
       content.append(li);
 
+      if (i === 0) {
+        // show the first by default
+        active = li;
+        active.addClass('active');
+        $.get(API_URL, {id: results[0].id}, function(response) {
+          display_college_details(response, active.offset().top);
+        });
+      }
+
+
       (function() {
         var cid = results[i].id;
         li.click(function() {
-          if (active !== null) {
-            active.removeClass('active');
-          }
+          active.removeClass('active');
           active = $(this);
           active.addClass('active');
-          $.get(API_URL, {id: cid}, display_college_details);
+          $.get(API_URL, {id: cid}, function(response) {
+            display_college_details(response, active.offset().top);
+          });
         });
       })()
     }
-    $('#college_results').html(content);
+    
+    var li_more = $('<li/>')
+    .addClass('more')
+    .text('View More Results')
+    .click(function(){
+      COLLEGE_RESULTS_OFFSET += 1;
+      $.get(
+        API_URL,
+            {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
+            function(response) {
+            display_college_results(response, true);
+            });
+    });
+    content.append(li_more);
+
+    if (is_append === true) {
+      $('#college_results').append(content);
+    } else {
+      $('#college_results').html(content);
+    }
   }
 
-  $.get(API_URL, {only_id_name: 1}, display_college_results);
+  $.get(
+    API_URL,
+    {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
+    function(response) {
+      display_college_results(response, false);
+    });
 
+
+  //function is_page_bottom() {
+    //return window.pageYOffset >= window.scrollMaxY;
+  //}
+  //$(window).scroll(function(e) {
+    //console.log(e);
+  //});
 });

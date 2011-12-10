@@ -112,6 +112,9 @@ div.token-input-dropdown {
 #college_results li.active, #college_details {
   background-color: #e3e3e3;
 }
+#college_results .more {
+  font-weight: bold;
+}
 
 #college_details {
   padding: 5px;
