@@ -191,7 +191,7 @@ $(document).ready(function() {
       COLLEGE_RESULTS_OFFSET += 1;
       $.get(
         API_URL,
-        {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
+        {only_id_name: 1},
         function(response) {
           display_college_results(response, true);
         });
