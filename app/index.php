@@ -48,21 +48,23 @@
       </div>
 
       <div id="content_r">
-        <div id="graph1" class="graph_small">
-        </div>
-        <div id="graph2" class="graph_small">
+        <div class="dis_scroll_pane">
+          <div id="college_results"></div>
         </div>
 
         <div id="college">
-          <div class="scroll_pane">
-            <div id="college_results"></div>
-          </div>
-          <div class="scroll_pane">
+          <div class="dis_scroll_pane">
             <div id="college_details"></div>
           </div>
+
+          <div id="graph1" class="graph_small">
+          </div>
+          <div id="graph2" class="graph_small">
+          </div>
+
         </div>
 
       </div>
 
-  </body>
-</html>
+    </body>
+  </html>
