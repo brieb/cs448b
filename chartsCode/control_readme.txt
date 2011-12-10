@@ -25,3 +25,8 @@ function passesFilter(school)
 
 // Returns a calculated weight for a given school [0.0, 1.0]
 function getWeightedRank(school)
+
+
+// FROM MAP.JS
+// returns true if the college is selected in the map, false otherwise
+var collegeSelectedInMap = function(college) {}
