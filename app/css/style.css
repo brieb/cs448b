@@ -109,6 +109,9 @@ div.token-input-dropdown {
   padding: 1px 5px;
   margin-left: -1px;
 }
+#college_results li.active, #college_details {
+  background-color: #e3e3e3;
+}
 
 #college_details {
   padding: 5px;
@@ -118,4 +121,40 @@ div.token-input-dropdown {
 #college {
   height: 680px;
   overflow: scroll-x;
+}
+
+#college_details .name {
+  font-weight: 700;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 10px;
+}
+#college_details .sect {
+  margin: 10px 0;
+}
+#college_details .sect {
+  line-height: 13px;
+}
+#college_details .sect .title {
+  color: #FB5D00;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 3px;
+}
+
+#college_details .sect .majors {
+  margin-top: 5px;
+  width: 100%;
+  table-layout: fixed;
+}
+#college_details .sect .majors th {
+  text-align: left;
+}
+#college_details .sect .majors td {
+  border: 1px solid #eee;
+  border-width: 1px 0;
+  padding-right: 5px;
+}
+#college_details .sect .majors .col_type {
+  width: 32px;
 }
