@@ -4,7 +4,7 @@
 
 <html>
   <head>
-    <title>Parallel Colleges</title>
+    <title>uniVSity</title>
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800,600' rel='stylesheet' type='text/css'>
 
@@ -24,24 +24,30 @@
 
     <div id="header">
       <div class="page">
-        <div id="logo">Parallel Colleges</div>
+        <div id="logo">uni<span id="vs">VS</span>ity</div>
         <div id="subtitle">
           A CS448B Project by
           Brie Bunge, Caleb Jordan, Megan Kanne, and Julia Neidert
         </div>
         <!-- TODO -->
-        <a id="share" href="mailto:?&subject=Shipping%20Information%20Request&body=Please%20tell%20me%20if%20my%20order%20has%20shipped!">Share</a>
+        <a id="share" href="">Share</a>
       </div>
     </div>
 
     <div class="page">
       <div id="content_l">
-        <div class="help">Filter by college name...</div>
-        <input class="tok" id="tok_college" type="text"
-        name="college" value="" />
-        <div class="help">Filter by major...</div>
-        <input class="tok" id="tok_major" type="text"
-        name="major" value="" />
+
+        <div id="c_tok_college">
+          <div class="help">Filter by college name...</div>
+          <input class="tok" id="tok_college" type="text"
+          name="college" value="" />
+        </div>
+
+        <div id="c_tok_major">
+          <div class="help">Filter by major...</div>
+          <input class="tok" id="tok_major" type="text"
+          name="major" value="" />
+        </div>
 
         <div id="pc">
         </div>

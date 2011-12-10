@@ -21,7 +21,10 @@ body {
   font-weight: 800;
   font-variant:small-caps;
   margin-right: 10px;
-  color: #FB5D00;
+  color: #006699;
+}
+#logo #vs {
+  color: #FF6633;
 }
 
 #subtitle {
@@ -73,6 +76,10 @@ ul.token-input-list,
 div.token-input-dropdown {
   width: 630px;
   margin-bottom: 10px;
+}
+ul.token-input-list-facebook {
+  max-height: 24px;
+  overflow: hidden;
 }
 
 

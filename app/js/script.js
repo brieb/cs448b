@@ -3,6 +3,10 @@ $(document).ready(function() {
   var API_URL = '../api/college.php';
   var COLLEGE_RESULTS_LIMIT = 5000;
   var COLLEGE_RESULTS_OFFSET = 0;
+  var MAIL_TO = "mailto:?"
+    + "&subject=" + escape("A uniVSity view has been shared with you!")
+    + "&body=" + escape(location.href);
+  console.log(MAIL_TO);
 
   $("#tok_college").tokenInput(
     '../api/college_name.php',
@@ -16,7 +20,7 @@ $(document).ready(function() {
     }
   );
 
-  $("#tok_major").tokenInput(
+  var t = $("#tok_major").tokenInput(
     '../api/major.php',
     {
       minChars: 2,
@@ -27,6 +31,7 @@ $(document).ready(function() {
       theme: "facebook"
     }
   );
+  console.log(t.attr('id'));
 
 
   var render_majors = function(majors) {
@@ -211,5 +216,25 @@ $(document).ready(function() {
     function(response) {
       display_college_results(response, false);
     });
+
+  $('#share').attr('href', MAIL_TO)
+
+  console.log(location.hash);
+  location.hash = 'foo';
+  console.log(location.hash);
+
+  $('.token-input-list-facebook input').focus(function(e) {
+    //var lists = $('.token-input-list-facebook');
+    //for (var i = 0; i < )
+    $(e.currentTarget).parents('ul').css('max-height', 'inherit');
+    var dds = $('.token-input-dropdown-facebook');
+    for (var i = 0; i < dds.length; i += 1) {
+      var t = dds.css('top');
+      dds.css('top', (parseInt(t.replace('px', ''))+20)+"px");
+    };
+  });
+  $('.token-input-list-facebook input').blur(function(e) {
+    $(e.currentTarget).parents('ul').css('max-height', '24px');
+  });
 
 });
