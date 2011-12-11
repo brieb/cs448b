@@ -41,20 +41,17 @@ function initializeTest()
     }
 }
 
+var drawCharts;
+
 function loadData(json)
 {
     allData = json;
     
     transformData(allData);
 
-    //console.log(allData.length);
-    //for (var i = 0; i < 2; i++) {
-    //    console.log(allData[i]);
-    //}
-
     currentFilter = {};
 
-    drawFilterChart();
+    drawCharts();
 }
 
 function transformData(data)

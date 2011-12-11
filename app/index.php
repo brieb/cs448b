@@ -85,6 +85,9 @@
   <script type="text/javascript" src="js/control.js"></script>
   <script type="text/javascript" src="js/filterChart.js"></script>
   <script type="text/javascript">
+    drawCharts = function() {
+        drawFilterChart("#filterChart", 600, 600);
+    };
     d3.json('../api/college.php?', loadData);
 
   </script>

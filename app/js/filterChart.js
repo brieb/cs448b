@@ -1,11 +1,9 @@
 var div = d3.select('#filterChart'),
-    width = 400,
-    height = 600,
+    width, height, rectWidth,
     xMarginLeft = 120.5,
     xMarginRight = 40.5,
     yMargin = 10.5,
     geoBuffer = 60,
-    rectWidth = width - xMarginLeft - xMarginRight,
     rectHeight = 5,
     nomSpace = 2.5,
     textOffset = rectHeight * 2 + 12;
@@ -24,20 +22,35 @@ var lastHovered = undefined,
 
 var paths;
 var filterVals = [];
-for (var i = 0; i < filterKeys.length; i++) {
-    filterVals[i] = filterVariables[filterKeys[i]];
-    filterVals[i].key = filterKeys[i];
-    filterVals[i].index = i;
+function initializeFilterVals()
+{
+    for (var i = 0; i < filterKeys.length; i++) {
+        filterVals[i] = filterVariables[filterKeys[i]];
+        filterVals[i].key = filterKeys[i];
+        filterVals[i].index = i;
 
-    if (filterVals[i].type == "quantitative") {
-	filterVals[i].toPixel = d3.scale.linear()
-	    .domain([filterVals[i].min, filterVals[i].max])
-	    .range([0, rectWidth]);
+        if (filterVals[i].type == "quantitative") {
+        filterVals[i].toPixel = d3.scale.linear()
+            .domain([filterVals[i].min, filterVals[i].max])
+            .range([0, rectWidth]);
+        }
     }
 }
 
-function drawFilterChart()
+function drawFilterChart(divTag, w, h)
 {
+    div = d3.select(divTag);
+    if (!div) {
+        console.log("Couldn't find div " + divTag);
+        return;
+    }   
+    width = w;
+    console.log("width is " + width);
+    height = h;
+    rectWidth = width - xMarginLeft - xMarginRight;
+    
+    initializeFilterVals();
+
     var y = d3.scale.linear()
 	.domain([0, filterKeys.length])
 	.range([yMargin + geoBuffer, height - yMargin]);
@@ -165,25 +178,23 @@ function calculatePaths()
     var rectWidthNorm = 1.0 / rectWidth;
 
     for (var s = 0; s < 1000; s++) {
-	var d = allData[s];
-	paths[s] = [];
+        var d = allData[s];
+        paths[s] = [];
 
-	var j = 0;
-	for (var i = 0; i < filterKeys.length; i++) {
-	    var key = filterKeys[i];
+        var j = 0;
+        for (var i = 0; i < filterKeys.length; i++) {
+            var key = filterKeys[i];
 
-	    if (filterVals[i].type == "quantitative") {
-		if (d[key] == "Not reported") continue;
-		if (key == "faculty_to_student_ratio" && d[key] == null) continue;
+            if (filterVals[i].type == "quantitative") {
+                if (d[key] == "Not reported") continue;
+                if (key == "faculty_to_student_ratio" && d[key] == null) continue;
 
-		paths[s][j] = {y:i, x:
-			       filterVals[i].toPixel(d[key])*rectWidthNorm};
-		j++;
-	    } else if (filterVariables[key].type == "nominal") {
-
-	    }
-	}
+                paths[s][j] = {y:i, x:filterVals[i].toPixel(d[key])*rectWidthNorm};
+                j++;
+            }
+        }
     }
+    console.log(paths[0]);
 }
 
 function mouseover(d)
