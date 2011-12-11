@@ -1,0 +1,63 @@
+[
+  {
+  id: 'name',
+  type: 'n'
+  name: 'Name',
+},
+{
+  id: 'population', 
+  type: 'q',
+},
+{
+  id: '% undergrad/grad'
+  type: 'q',
+},
+{
+  id: 'faculty_to_student_ratio'
+  type: 'q',
+},
+{
+  id: '% male/female'
+  type: 'q',
+},
+{
+  id: 'calendar'
+  type: 'n',
+},
+{
+  id: 'degrees'
+  type: 'n',
+},
+{
+  id: '% in-state/out-state'
+  type: 'q',
+},
+{
+  id: 'jors'
+  type: 'n',
+},
+{
+  id: 'pe'
+  type: 'n' - liberal arts, university, community college, vocational/tech/career,
+},
+{
+  id: 'private_public'
+  type: 'n',
+},
+{
+  id: 'setting'
+  type: 'n',
+},
+{
+  id: 'size_of_city'
+  type: 'n',
+},
+{
+  id: 'sidential/commuter'
+  type: 'n',
+},
+{
+  id: '% international students'
+  type: 'q',
+}
+]
