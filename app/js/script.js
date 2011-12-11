@@ -25,7 +25,7 @@ $(document).ready(function() {
     {
       minChars: 2,
       preventDuplicates: true,
-      prePopulate: [],
+      prePopulate: [{"id":"126","name":"Curriculum\/Instruction"},{"id":"358","name":"Business Teacher Education"},{"id":"369","name":"Foreign Language & Literature - General"},{"id":"496","name":"Natural Resource Economics"},{"id":"522","name":"International Agriculture"},{"id":"525","name":"Architectural History\/Criticism"},{"id":"533","name":"Gay\/Lesbian Studies"},{"id":"534","name":"German Studies"},{"id":"535","name":"Near\/Middle Eastern Studies"},{"id":"544","name":"Biometrics"},{"id":"578","name":"Science, Technology & Society"},{"id":"917","name":"Bilingual\/Bicultural Education"},{"id":"945","name":"European Studies"},{"id":"948","name":"Latin American Studies"},{"id":"950","name":"Russian\/Slavic Area Studies"},{"id":"951","name":"Slavic Studies"},{"id":"972","name":"Greek, Ancient"},{"id":"983","name":"Ancient Studies\/Civilization"},{"id":"984","name":"Medieval\/Renaissance Studies"},{"id":"991","name":"Astrophysics"},{"id":"1196","name":"Analytical Chemistry"},{"id":"1208","name":"East Asian Studies"},{"id":"1285","name":"Communication Disorders"},{"id":"1305","name":"GeophysicsSeismology"},{"id":"1360","name":"Planetary Sciences"},{"id":"1427","name":"Engineering Science"},{"id":"1522","name":"Bacteriology"},{"id":"1525","name":"Cellular Biology\/Histology"},{"id":"1529","name":"Parasitology"},{"id":"1534","name":"Adult\/Continuing Teacher Education"},{"id":"1556","name":"Marine Engineering\/Naval Architecture"},{"id":"1558","name":"Ocean Engineering"},{"id":"1595","name":"Demography\/Population Studies"},{"id":"1682","name":"Atmospheric Sciences"},{"id":"1757","name":"Education of Multiple Handicapped"},{"id":"1872","name":"Actuarial Science"},{"id":"1903","name":"Forensic Chemistry"},{"id":"1904","name":"Industrial\/Organizational Psychology"},{"id":"1906","name":"Social Psychology"},{"id":"1988","name":"Paralegal\/Legal Assistance"},{"id":"2157","name":"Facial Treatments"},{"id":"2250","name":"Pharmaceutical Sciences"},{"id":"2351","name":"Spanish\/Iberian Studies"},{"id":"2356","name":"Botany"}],
       animateDropdown: false,
       hintText: "Type in a major",
       theme: "facebook"
@@ -231,12 +231,19 @@ $(document).ready(function() {
   };
   var fn_focus = function(e) {
     var target = $(e.currentTarget);
-    target.parents('ul').css('max-height', 'inherit');
-    $('.token-input-list-facebook input').unbind('focus.tok');
-    $('.token-input-list-facebook input').unbind('blur.tok');
-    target.blur();
-    target.focus();
-    $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+    var list = target.parents('ul');
+    var height_old = list.css('height');
+    list.css('max-height', 'inherit');
+    var height_new = list.css('height');
+    list.css('max-height', height_old);
+    //list.animate()
+    list.animate({'maxHeight': height_new}, 100, function(){
+      $('.token-input-list-facebook input').unbind('focus.tok');
+      $('.token-input-list-facebook input').unbind('blur.tok');
+      target.blur();
+      target.focus();
+      $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+    });
   };
 
   $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
