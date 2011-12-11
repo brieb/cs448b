@@ -81,7 +81,14 @@ cast(round(cast(num_undergrad as real)/(num_undergrad+num_grad)*100) as integer)
   where
   college_demographics_first_year.demographics_first_year_id = 11
   and college_id = c.id
-) as percent_international
+) as percent_international,
+
+(
+  select value from school_type
+  join college_school_type on id = school_type_id
+  where school_type_id in (4, 12, 302)
+  and college_id = c.id
+) as type
 
 from college as c;
 
@@ -90,6 +97,12 @@ create index ci_id on college_info(id);
 update college_info set percent_admitted = null
 where percent_admitted = 'Not reported';
 update college_info set calendar = null where calendar = 'NULL';
+
+
+
+
+
+
 
 
 --drop table if exists stats;
