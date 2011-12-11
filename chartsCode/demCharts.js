@@ -1,3 +1,100 @@
+var drawEthnicityChart = function(div, college){
+	var ethData = getEthnicityData(college);
+  console.log(ethData);
+  if (ethData == null) return;
+
+  var width = 500;
+  var height = 500;
+  var innerRadius = 40;
+  var outerRadius = 60;
+  var cx = width/2;
+  var cy = height/2;
+
+  var colors = ['#FF6633','#006699','#FF9933','#004466','#772219','#aa6622','#aaaaaa'];
+
+  var svg = d3.select(div)
+    .append('svg:svg')
+    .attr('width',width)
+    .attr('height',height);
+
+  var rScale = d3.scale.linear()
+    .domain([0, 100])
+    .range([0, 2*Math.PI]);
+  
+  for (d in ethData) {
+    ethData[d].startAngle = rScale(ethData[d][2]);
+    ethData[d].endAngle = rScale(ethData[d][1]+ethData[d][2]);
+  }
+
+  arc = d3.svg.arc()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadius);
+    
+  svg.selectAll("path")
+    .data(ethData)
+    .enter().append("path")
+    .attr("d", arc)
+    .attr("transform", "translate(" + cx + "," + cy + ")")
+    .style("fill", function(d,i){
+      return colors[i];
+    });
+  
+  svg.selectAll("text")
+    .data(ethData)
+    .enter().append("svg:text")
+    .attr("dx", function(d) {
+      return 2*arc.centroid(d)[0]; 
+    })
+    .attr("dy", function(d) {
+      return 2*arc.centroid(d)[1]; 
+    })
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate(" + cx + "," + cy + ")")
+    .text(function(d) { return d[0]; });
+  
+  svg.selectAll("line")
+    .data(ethData)
+    .enter().append("svg:line")
+    .attr("x1", function(d) {
+      return arc.centroid(d)[0]; 
+    })
+    .attr("y1", function(d) {
+      return arc.centroid(d)[1]; 
+    })
+    .attr("x2", function(d) {
+      return 2*arc.centroid(d)[0]; 
+    })
+    .attr("y2", function(d) {
+      return 2*arc.centroid(d)[1]; 
+    })
+    .attr("transform", "translate(" + cx + "," + cy + ")")
+    .style("stroke-width", 1)
+    .style("stroke", '#111')
+};
+
+var getEthnicityData = function(college) {
+  var ethData = [['American Indian or Alaska Native',0,0],['Asian',0,0],
+    ['Black or African American',0,0],['Hispanic\/Latino',0,0],['White',0,0],
+    ['Two or more races',0,0],['Other',0,0]]; 
+  var sumSoFar = 0;
+  var dataExists = false;
+  for (cat in ethData) {
+    for (dem in college["demographics_first_year"]) {
+      if (college["demographics_first_year"][dem]["value"] == ethData[cat][0]) {
+        var val = parseInt(college["demographics_first_year"][dem]["percentage"]);
+        ethData[cat][1] = val;
+        ethData[cat][2] = sumSoFar;
+        sumSoFar += val;
+        dataExists = true;
+        continue;
+      }
+    }
+  }
+  if (!dataExists) return null;
+  ethData[ethData.length - 1][1] = 100 - sumSoFar;
+  ethData[ethData.length - 1][2] = sumSoFar;
+  return ethData;
+}
 
 var drawGPAChart = function(div, college){
   var gpaData = getGpaData(college);
@@ -21,7 +118,7 @@ var drawBarChart = function(div, barData) {
   var rectWidth = 100;
   var rectHeight = 100;
 
-  svg = d3.select(div)
+  var svg = d3.select(div)
     .append('svg:svg')
     .attr('width',width)
     .attr('height',height);
