@@ -88,7 +88,10 @@
     drawCharts = function() {
         drawFilterChart("#filterChart", 600, 600);
     };
-    d3.json('data.json', loadData);
+    loadFilter('FILTER_JSON_HERE', function() {
+           d3.json('data.json', loadData);
+           });
+//    d3.json('data.json', loadData);
 
   </script>
     </body>

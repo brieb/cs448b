@@ -45,7 +45,6 @@ function drawFilterChart(divTag, w, h)
         return;
     }   
     width = w;
-    console.log("width is " + width);
     height = h;
     rectWidth = width - xMarginLeft - xMarginRight;
     
@@ -194,7 +193,6 @@ function calculatePaths()
             }
         }
     }
-    console.log(paths[0]);
 }
 
 function mouseover(d)

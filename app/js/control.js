@@ -45,8 +45,8 @@ var drawCharts;
 
 function loadFilter(json, doneLoading)
 {
-    filterVariables = json;
-    filterKeys = Object.keys(filterVariables);
+    //filterVariables = json;
+    //filterKeys = Object.keys(filterVariables);
 
     doneLoading();
 }
