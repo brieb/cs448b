@@ -118,6 +118,10 @@ var drawBarChart = function(div, barData) {
   var rectWidth = 100;
   var rectHeight = 100;
 
+  var minr = 255;
+  var ming = 102;
+   var minb = 51;
+
   var svg = d3.select(div)
     .append('svg:svg')
     .attr('width',width)
@@ -137,9 +141,9 @@ var drawBarChart = function(div, barData) {
     .attr("height", function(d, i) { 
         return y(d[1])})
     .style("fill", function(d,i){
-      var valr = Math.round(255 - (255-255) * (i+1)/5);
-      var valg = Math.round(255 - (255-102) * (i+1)/5);
-      var valb = Math.round(255 - (255-51) * (i+1)/5);
+      var valr = Math.round(255 - (255-minr) * (i+1)/5);
+      var valg = Math.round(255 - (255-ming) * (i+1)/5);
+      var valb = Math.round(255 - (255-minb) * (i+1)/5);
       console.log(valg);
       return '#'+valr.toString(16)+valg.toString(16)+valb.toString(16);
     });
