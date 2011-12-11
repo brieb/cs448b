@@ -220,7 +220,6 @@ $(document).ready(function() {
     var target = $(e.currentTarget);
     $(target.parents('div')[0]).css('z-index', '11');
     var list = target.parents('ul');
-      //event.stopPropagation();
     list.css('max-height', 'inherit');
     $('.token-input-list-facebook input').unbind('focus.tok');
     $('.token-input-list-facebook input').unbind('blur.tok');
@@ -228,10 +227,11 @@ $(document).ready(function() {
     target.focus();
     $('.token-input-list-facebook input').bind('blur.tok', reset_height);
 
-    list.bind('click.tok', function(event){
-      event.stopPropagation();
-    });
     $('html').bind('click.html', {list:list}, function(e) {
+      var parents = $(e.target).parents();
+      for (var i = 0; i < parents.length; i += 1) {
+        var parent = parents[i];
+      }
       if (e.data.list[0] === e.target) {
         e.stopPropagation();
       } else {

@@ -22,6 +22,10 @@
   </head>
   <body>
 
+    <script type="text/javascript">
+      
+    </script>
+
     <div id="header">
       <div class="page">
         <div id="logo">uni<span id="vs">VS</span>ity</div>
