@@ -4,12 +4,12 @@ var allData,
     passWithoutInfo = true;
 
 var filterVariables = {
-    "faculty_to_student_ratio":{"name":"Student to Faculty Ratio","type":"quantitative","min":"0:1","max":"1000:1"},
-    "num_grad":{"name":"Graduate Population","type":"quantitative","min":0,"max":40000},
-    "num_undergrad":{"name":"Undergraduate Population","type":"quantitative","min":0,"max":40000},
+    "faculty_to_student_ratio":{"name":"Student to Faculty Ratio","type":"quantitative","min":0,"max":60},
+    "num_grad":{"name":"Graduate Population","type":"quantitative","min":0,"max":25000},
+    "num_undergrad":{"name":"Undergraduate Population","type":"quantitative","min":0,"max":80000},
     "percent_admitted":{"name":"Percent Admitted","type":"quantitative","min":0.0,"max":100.0},
-    "degrees":{"name":"Degrees Offered","type":"ordinal","values":["associates","bachelors","masters","doctorate"]},
-    "majors":{"name":"Majors Offered","type":"nominative","values":["computer science", "mathematics", "physics",
+    "degrees":{"name":"Degrees Offered","type":"nominal","values":["associates","bachelors","masters","doctorate"]},
+    "majors":{"name":"Majors Offered","type":"nominal","values":["computer science", "mathematics", "physics",
     "english", "drama"]}
 };
 
@@ -17,9 +17,15 @@ var filterKeys = Object.keys(filterVariables);
 
 var currentFilter = {
     "num_undergrads":{"min":0,"max":40000,"weight":1.0},
-    "degrees":{"min":"bachelors","max":"doctorate","weight":0.5},
+    "degrees":{"values":["bachelors","doctorate"],"weight":0.5},
     "majors":{"values":["computer science", "mathematics", "physics"],"weight":1.0}
     };
+
+/*
+ * Externals
+ *
+ * collegeSelectedInMap(d)
+ */
     
 // Callbacks to initialize all data and master filters and everything else
 
@@ -41,9 +47,14 @@ function loadData(json)
     
     transformData(allData);
 
-    /*for (var i = 0; i < 10; i++) {
-        console.log(allData[i]);
-	}*/
+    //console.log(allData.length);
+    //for (var i = 0; i < 2; i++) {
+    //    console.log(allData[i]);
+    //}
+
+    currentFilter = {};
+
+    drawFilterChart();
 }
 
 function transformData(data)
@@ -287,6 +298,15 @@ function setFilterMaxQuantitative(prop, val)
     
     if (val < currentFilter[prop].min)
         currentFilter[prop].min = val;
+}
+
+function getFilterQuantitative(prop)
+{
+    if (currentFilter[prop]) {
+	return [currentFilter[prop].min, currentFilter[prop].max];
+    } else {
+	return null;
+    }
 }
 
 // Default Constructors
