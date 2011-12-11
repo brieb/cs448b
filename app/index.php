@@ -85,7 +85,7 @@
   <script type="text/javascript" src="js/control.js"></script>
   <script type="text/javascript" src="js/filterChart.js"></script>
   <script type="text/javascript">
-    d3.json('../api/college.php?', loadData);
+    d3.json('data.json', loadData);
 
   </script>
     </body>

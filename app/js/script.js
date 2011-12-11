@@ -211,11 +211,11 @@ $(document).ready(function() {
 
 
   var reset_height = function(e) {
-    //$(e.currentTarget).parents('ul').css('max-height', '24px');
     var target = $(e.currentTarget);
     $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
     $(target.parents('div')[0]).css('z-index', '10');
   };
+
   var fn_focus = function(e) {
     var target = $(e.currentTarget);
     $(target.parents('div')[0]).css('z-index', '11');
