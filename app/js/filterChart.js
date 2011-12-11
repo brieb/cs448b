@@ -6,7 +6,7 @@ var div = d3.select('#filterChart'),
     geoBuffer = 60,
     rectHeight = 10,
     nomSpace = 2.5,
-    textOffset = rectHeight * 2 + 12;
+    textOffset = rectHeight * 2;
 
 var strokeDefault = "#888",
     strokeHover = "#444",
@@ -51,6 +51,7 @@ function drawFilterChart(divTag, w, h)
     width = w;
     height = h;
     rectWidth = width - xMarginLeft - xMarginRight;
+    textOffset = rectHeight * 2 + 4;
     
     addDataChangeCallback(dataChange);
     addDataSelectionCallback(dataSelect);
@@ -100,14 +101,19 @@ function drawFilterChart(divTag, w, h)
     // Set up general g's
 
     var sliders = svg.selectAll('g.filter')
-	.data(filterVals, function(d) { return d.name; })
-	.enter().append('svg:g')
-	.attr('class','filter')
-	.attr('name',function(d,i) { return d.name; })
-	.attr('transform',function(d,i) {
-		return 'translate('+xMarginLeft+','+y(i)+')'})
-	.style('opacity',opacityDefault);
-    
+        .data(filterVals, function(d) { return d.name; })
+        .enter().append('svg:g')
+        .attr('class','filter')
+        .attr('name',function(d,i) { return d.name; })
+        .attr('transform',function(d,i) {
+            return 'translate('+xMarginLeft+','+y(i)+')'})
+        .style('opacity',opacityDefault);
+    sliders.append('svg:text')
+        .attr('class','filter')
+        .text(function(d) { return "" + d.name; })
+        .attr('x', -rectHeight)
+        .attr('y', .5 *rectHeight);
+        
     // Set up q boxes
 
     var qsliders = svg.selectAll('g.filter')
@@ -122,18 +128,14 @@ function drawFilterChart(divTag, w, h)
         .on('mouseout',qMouseout)
         .on('mousedown',qMousedown)
         .on('mouseup',qMouseup);
-    qsliders.append('svg:text')
-        .attr('class','filter')
-        .text(function(d) { return "" + d.name; })
-        .attr('x', -rectHeight)
-        .attr('y', -rectHeight);
     qsliders.selectAll('text.label')
-        .data(function(d) { return [d.min, d.max]; })
+        .data(function(d) { 
+            return [d.min, d.max]; })
         .enter()
         .append('svg:text')
         .attr('class','label')
         .text(function(d) { return "" + d; })
-        .attr('x', function(d,i) { return i==0?0:rectWidth;})
+        .attr('x', function(d,i) { return i==0 ? 0 : rectWidth;})
         .attr('y', textOffset)
         .attr('text-anchor',function(d,i) { return i==0?'start':'end'; });
 

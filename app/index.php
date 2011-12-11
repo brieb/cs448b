@@ -93,7 +93,7 @@
     }
   
     // Load filters then load data--uncomment once we have a filter json
-    /*d3.json('FILTER_JSON_HERE', function(json) {
+    d3.json('filters.json', function(json) {
         loadFilter(json);
         
         d3.json('data.json', function(json) {
@@ -101,11 +101,6 @@
             
             drawCharts();
         });
-    });*/
-    
-    d3.json('data.json', function(json) {
-        loadData(json);
-        drawCharts();
     });
 
   </script>

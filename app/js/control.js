@@ -32,7 +32,11 @@ var currentFilter = {
 
 function loadFilter(json)
 {
-    //filterVariables = json;
+    filterVariables = json;
+    filterMap = {};
+    for (var i = 0; i < filterVariables.length; i++)
+        filterMap[filterVariables[i].id] = i;
+    
     //filterKeys = Object.keys(filterVariables);
 }
 
@@ -40,7 +44,7 @@ function loadData(json)
 {
     allData = json;
     
-    //allData.splice(1000);
+    allData.splice(1000);
     
     transformData(allData);
 
@@ -59,17 +63,17 @@ function transformData(data)
 {
     for (var i = 0; i < data.length; i++) {
         // Turn faculty to student ratio to numeric
-        var fts = data[i].faculty_to_student_ratio;
+        /*var fts = data[i].student_to_faculty_ratio;
         if (fts) {
             var idx = fts.indexOf(':');
             if (idx > 0) {
                 var num = fts.substring(0,idx) / fts.substring(idx+1);
-                data[i].faculty_to_student_ratio = num;
+                data[i].student_to_faculty_ratio = num;
             }
         } else {
-            data[i].faculty_to_student_ratio = -1;
-        }
-        
+            data[i].student_to_faculty_ratio = -1;
+        }*/
+        /*
         for (var j = 0; j < filterVariables.length; j++) {
             var key = filterVariables[j].id;
             if (filterVariables[j].type == 'q') {
@@ -79,7 +83,7 @@ function transformData(data)
                 if (data[i][key] === null)
                     data[i][key] = 0.0;
             }
-        }
+        }*/
     }
 }
     

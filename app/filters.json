@@ -13,6 +13,8 @@
   "id":"percent_admitted",
   "name": "Percent Admitted",
   "type":"q",
+  "min": 0,
+  "max": 100,
   "min_label": "Admitted",
   "max_label": "Not Admitted"
 },
@@ -27,6 +29,8 @@
   "id": "percent_undergrad",
   "name": "Percent Undergrad",
   "type": "q",
+  "min": 0,
+  "max": 100,
   "min_label": "Undergrad",
   "max_label": "Grad"
 },
@@ -34,15 +38,35 @@
   "id": "student_to_faculty_ratio",
   "name": "Student-Faculty Ratio",
   "type": "q",
-  "min": 3.0,
+  "min": 0.0,
   "max": 58.0
 },
 {
   "id": "percent_male",
   "name": "Percent Male",
   "type": "q",
+  "min": 0.0,
+  "max": 100.0,
   "min_label": "Male",
   "max_label": "Female"
+},
+{
+  "id": "percent_in_state",
+  "name": "Percent In-state",
+  "type": "q",
+  "min": 0,
+  "max": 100,
+  "min_label": "In-state",
+  "max_label": "Out-of-state"
+},
+{
+  "id": "percent_international",
+  "name": "Percent International",
+  "type": "q",
+  "min": 0,
+  "max": 100,
+  "min_label": "National",
+  "max_label": "International"
 },
 {
   "id": "calendar",
@@ -69,13 +93,6 @@
     "Master's",
     "Doctoral"
   ]
-},
-{
-  "id": "percent_in_state",
-  "name": "Percent In-state",
-  "type": "q",
-  "min_label": "In-state",
-  "max_label": "Out-of-state"
 },
 {
   "id": "prop_priv_pub",
@@ -128,12 +145,5 @@
     "Commuter campus",
     "Residential campus"
   ]
-},
-{
-  "id": "percent_international",
-  "name": "Percent International",
-  "type": "q",
-  "min_label": "National",
-  "max_label": "International"
 }
 ]
