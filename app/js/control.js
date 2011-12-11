@@ -43,6 +43,14 @@ function initializeTest()
 
 var drawCharts;
 
+function loadFilter(json, doneLoading)
+{
+    filterVariables = json;
+    filterKeys = Object.keys(filterVariables);
+
+    doneLoading();
+}
+
 function loadData(json)
 {
     allData = json;
