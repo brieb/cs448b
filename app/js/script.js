@@ -66,10 +66,8 @@ $(document).ready(function() {
   };
 
 
-  var display_college_details = function(college, offset_top) {
+  var display_college_details = function(college) {
     var details = $('#college_details');
-    //var offset_left = details.offset().left;
-    //details.offset({ left: offset_left, top: offset_top });
     details.scrollTop(0);
     details.empty();
 
@@ -158,7 +156,7 @@ $(document).ready(function() {
     }
   };
 
-  var display_college_results = function(results, is_append) {
+  var display_college_results = function(results) {
     var content = $('<ul />');
     var active = null;
 
@@ -167,11 +165,11 @@ $(document).ready(function() {
       content.append(li);
 
       if (i === 0) {
-        // show the first by default
+        // show the first college by default
         active = li;
         active.addClass('active');
         $.get(API_URL, {id: results[0].id}, function(response) {
-          display_college_details(response, active.offset().top);
+          display_college_details(response);
         });
       }
 
@@ -183,24 +181,20 @@ $(document).ready(function() {
           active = $(this);
           active.addClass('active');
           $.get(API_URL, {id: cid}, function(response) {
-            display_college_details(response, active.offset().top);
+            display_college_details(response);
           });
         });
       })()
     }
 
-    if (is_append === true) {
-      $('#college_results').append(content);
-    } else {
-      $('#college_results').html(content);
-    }
+    $('#college_results').html(content);
   }
 
   $.get(
     API_URL,
     {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
     function(response) {
-      display_college_results(response, false);
+      display_college_results(response);
     });
 
   $('#share').attr('href', MAIL_TO)
@@ -218,14 +212,15 @@ $(document).ready(function() {
 
   var fn_focus = function(e) {
     var target = $(e.currentTarget);
+    var input = $('.token-input-list-facebook input');
     $(target.parents('div')[0]).css('z-index', '11');
     var list = target.parents('ul');
     list.css('max-height', 'inherit');
-    $('.token-input-list-facebook input').unbind('focus.tok');
-    $('.token-input-list-facebook input').unbind('blur.tok');
+    input.unbind('focus.tok');
+    input.unbind('blur.tok');
     target.blur();
     target.focus();
-    $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+    input.bind('blur.tok', reset_height);
 
     $('html').bind('click.html', {list:list}, function(e) {
       var is_list = false;
@@ -248,8 +243,9 @@ $(document).ready(function() {
     });
   };
 
-  $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
-  $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+  var input = $('.token-input-list-facebook input');
+  input.bind('focus.tok', fn_focus);
+  input.bind('blur.tok', reset_height);
 
 
 
