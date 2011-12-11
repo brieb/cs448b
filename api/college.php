@@ -90,13 +90,13 @@
         $colleges[$i]['degrees'][] = $e['value'];
       }
 
-      $q = "select percentage, value from
-      demographics_first_year join college_demographics_first_year
-      on demographics_first_year.id =
-      college_demographics_first_year.demographics_first_year_id
-      where college_demographics_first_year.college_id = ?";
-      $r = db_query($q, TRUE, $p);
-      $colleges[$i]['demographics_first_year'] = $r;
+      //$q = "select percentage, value from
+      //demographics_first_year join college_demographics_first_year
+      //on demographics_first_year.id =
+      //college_demographics_first_year.demographics_first_year_id
+      //where college_demographics_first_year.college_id = ?";
+      //$r = db_query($q, TRUE, $p);
+      //$colleges[$i]['demographics_first_year'] = $r;
 
       //$q = "select name, degree_type
       //from major join college_major on id = major_id

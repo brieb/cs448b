@@ -1,24 +1,33 @@
 [
-  {
-  id: 'name',
-  type: 'n'
+{
+  id: 'name'
+  type: 'N'
   name: 'Name',
+},
+{
+  id: 'majors'
+  type: 'N'
+  name: 'Majors',
 },
 {
   id: 'population', 
   type: 'q',
+  min: 59,
+  max: 70440
 },
 {
-  id: '% undergrad/grad'
+  id: 'percent_undergrad'
   type: 'q',
 },
 {
-  id: 'faculty_to_student_ratio'
+  id: 'student_to_faculty_ratio',
   type: 'q',
 },
 {
-  id: '% male/female'
+  id: 'percent_male',
   type: 'q',
+  min_label: 'Male',
+  max_label: 'Female'
 },
 {
   id: 'calendar'
@@ -27,37 +36,74 @@
 {
   id: 'degrees'
   type: 'n',
+  values: [
+    "Certificate",
+    "Diploma",
+    "Associate",
+    "Bachelor's",
+    "Master's"
+    "Doctoral",
+  ]
 },
 {
-  id: '% in-state/out-state'
+  id: 'percent_in_state'
   type: 'q',
 },
 {
-  id: 'jors'
+  id: 'majors'
   type: 'n',
 },
 {
-  id: 'pe'
-  type: 'n' - liberal arts, university, community college, vocational/tech/career,
+  id: 'type'
+  type: 'n',
+  values: [
+    'Two-year',
+    'Two-year, upper division',
+    'Four-year'
+  ]
 },
 {
-  id: 'private_public'
+  id: 'prop_priv_pub'
   type: 'n',
-},
-{
-  id: 'setting'
-  type: 'n',
+  values: [
+    'Proprietary',
+    'Private',
+    'Public'
+  ]
 },
 {
   id: 'size_of_city'
   type: 'n',
+  values: [
+    'Rural community (under 2,500)',
+    'Small town (2,500 - 9,999)',
+    'Large town (10,000 - 49,999)',
+    'Small city (50,000 - 249,999)',
+    'Large city (250,000 - 499,999)',
+    'Very large city (over 500,000)'
+  ]
 },
 {
-  id: 'sidential/commuter'
+  id: 'setting'
   type: 'n',
+  values: [
+    'Suburban setting',
+    'Residential campus',
+    'Rural setting',
+    'Urban setting',
+    'Commuter campus'
+  ]
 },
 {
-  id: '% international students'
+  id: 'res_comm'
+  type: 'n',
+  values: [
+    'Commuter campus',
+    'Residential campus'
+  ]
+},
+{
+  id: 'percent_international'
   type: 'q',
 }
 ]
