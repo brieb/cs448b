@@ -211,8 +211,15 @@ function calculatePaths()
 
 function dataChange(i)
 {
-    d3.select(paths[0][i]).attr('class', allData[i].pass == true ?
-        'pass':'fail');
+    paths.attr('class', function(d,i) {
+            if (i == lastPath) return 'select';
+            else if (allData[i].pass) return 'pass';
+            else return 'fail';
+        })
+        .style('stroke-opacity', function(d,i) {
+            if (i == lastPath) return 1.0;
+            else return allData[i].weight * .8 + .2;
+        });
 }
 
 function dataSelect(i)
@@ -222,7 +229,8 @@ function dataSelect(i)
             allData[lastPath].pass == true ? 'pass':'fail');
     }
     lastPath = i;
-    d3.select(paths[0][i]).attr('class','select');
+    d3.select(paths[0][i]).attr('class','select')
+        .style('stroke-opacity',1.0);
 }
 
 function mouseover(d)
@@ -274,8 +282,6 @@ function qMousedown(d, i)
         setFilterMaxQuantitative(d.id, val);
         var min = currentFilter[d.id].min,
             max = currentFilter[d.id].max;
-        
-        console.log(min + " " + max);
 
         var g = d3.select(this.parentNode);
         g.append('svg:rect')
@@ -301,7 +307,6 @@ function qMousedown(d, i)
             })
             .attr('opacity',0.0)
             .call(handleDrag)
-        console.log(h[0][1]);
 
         g.transition()
             .duration(500)

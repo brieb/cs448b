@@ -1,5 +1,5 @@
 var allData,
-    filterData,
+    weightIndex,
     defaultWeight = 0.5,
     passWithoutInfo = false;
 
@@ -15,6 +15,7 @@ var filterMap = {};
 for (var i = 0; i < filterVariables.length; i++)
     filterMap[filterVariables[i].id] = i;
 
+var numFilter;
 var currentFilter = {
     "num_undergrads":{"min":0,"max":40000,"weight":1.0},
     "degrees":{"values":["bachelors","doctorate"],"weight":0.5},
@@ -39,15 +40,18 @@ function loadData(json)
 {
     allData = json;
     
-    //allData.splice(10);
+    //allData.splice(1000);
     
     transformData(allData);
 
     currentFilter = {};
+    numFilter = 0;
+    weightIndex = [];
     
     for (var i = 0; i < allData.length; i++) {
         allData[i].pass = true;
         allData[i].weight = 0.0;
+        weightIndex[i] = i;
     }
 }
 
@@ -81,6 +85,26 @@ function transformData(data)
     
 // Callbacks to see if an individual data entry passes the current filter
 // and if so, what its normed weight is
+
+function updateIndex()
+{   
+    for (var i = 0; i < allData.length; i++) {
+        if (!allData[i].pass) {
+            allData[i].weight = 0.0;
+            continue;
+        }
+            
+        allData[i].weight = getWeightedRank(allData[i]);
+    }
+    
+    // Sort indices
+    weightIndex.sort(function(a,b) {
+        return allData[b].weight - allData[a].weight;
+    });
+    
+    for (var j = 0; j < dataChangeListeners.length; j++)
+                dataChangeListeners[j]();
+}
     
 function passesFilter(d)
 {
@@ -106,13 +130,15 @@ function getWeightedRank(d)
 {
     var sum = 0.0;
     for (prop in currentFilter) {
-        if (filterVariables[prop].type == "q") {
+        var idx = filterMap[prop];
+        if (filterVariables[idx].type == "q") {
             sum += weightQuantitative(d, prop);
-        } else if (filterVariables[prop].type == 'n') {
+        } else if (filterVariables[idx].type == 'n') {
             sum += weightNominal(d, prop);
         }
     }
-    return sum / currentFilter.length;
+    if (numFilter == 0) return 1.0;
+    else return sum / numFilter;
 }
 
 // Filter change and callback info
@@ -127,10 +153,9 @@ function contractFilter(prop)
     for (var i = 0; i < allData.length; i++) {
         if (allData[i].pass == true && !passOneFilter(allData[i], prop)) {
             allData[i].pass = false;
-            for (var j = 0; j < dataChangeListeners.length; j++)
-                dataChangeListeners[j](i);
         }
     }
+    updateIndex();
 }
 
 function expandFilter(prop)
@@ -139,10 +164,9 @@ function expandFilter(prop)
         if (allData[i].pass == false && passOneFilter(allData[i], prop) &&
                 passesFilter(allData[i])) {
             allData[i].pass = true;
-            for (var j = 0; j < dataChangeListeners.length; j++)
-                dataChangeListeners[j](i);
         }
     }
+    updateIndex();
 }
 
 // Selection Callback Info
@@ -186,12 +210,14 @@ function passesQuantitative(data, prop)
 
 function weightNominal(data, prop)
 {
-    if (!data[prop] || currentFilter[prop].values.length == 0)
+    if (data[prop] < 0.0 || currentFilter[prop].values.length == 0)
         return 0.0;
+        
     var sum = 0.0;
     for (val in data[prop].values) {
         if (currentFilter[prop].values.indexOf(val) != -1) sum += 1.0;
     }
+    
     return currentFilter[prop].weight * sum / currentFilter[prop].values.length;
 }
 
@@ -199,10 +225,12 @@ function weightQuantitative(data, prop)
 {
     if (data[prop] < 1.0) return 0.0;
     
+    var w;
     var mid = (currentFilter[prop].max + currentFilter[prop].min) * .5;
     var range = (currentFilter[prop].max - currentFilter[prop].min) * .5;
-    if (range == 0) return 1.0;
-    return currentFilter[prop].weight * (1.0 - (Math.abs(data[prop] - mid) / range));
+    if (range == 0) return data[prop] == mid ? 1.0 : 0.0;
+    else w = currentFilter[prop].weight * (1.0 - (Math.abs(data[prop] - mid) / range));
+    return Math.max(0.0, w);
 }
 
 // Functions for modifying and adding filters
@@ -213,6 +241,7 @@ function setFilterWeight(prop, weight)
     if (!filterVariables[idx]) return;
     
     if (!currentFilter[prop]) {
+        return;
         if (filterVariables[idx].type == "q")
             currentFilter[prop] = FilterQuantitative(prop);
         else if (filterVariables[idx].type == "o")
@@ -235,6 +264,7 @@ function addFilterValueNominal(prop, val)
     var contract = false;
     if (!currentFilter[prop]) {
         currentFilter[prop] = FilterNominal(prop);
+        numFilter++;
         contract = true;
     }
     currentFilter[prop].values.push(val);
@@ -252,9 +282,12 @@ function removeFilterValueNominal(prop, val)
     if (idx > -1) vals.splice(idx, 1);
     
     if (vals.length == 0) {
+        numFilter--;
         expandFilter(prop);
         currentFilter[prop] = undefined;
-    } else contractFilter(prop);
+    } else {
+        contractFilter(prop);
+    }
 }
 
 function setFilterMinQuantitative(prop, val)
@@ -266,6 +299,7 @@ function setFilterMinQuantitative(prop, val)
     
     if (!currentFilter[prop]) {
         currentFilter[prop] = FilterQuantitative(prop);
+        numFilter++;
         min0 = -1.0;
     } else {
         min0 = currentFilter[prop].min;
@@ -293,6 +327,7 @@ function setFilterMaxQuantitative(prop, val)
     
     if (!currentFilter[prop]) {
         currentFilter[prop] = FilterQuantitative(prop);
+        numFilter++;
         max0 = currentFilter[prop].max + 1.0;
     } else {
         max0 = currentFilter[prop].max;
