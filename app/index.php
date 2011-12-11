@@ -88,7 +88,7 @@
     drawCharts = function() {
         drawFilterChart("#filterChart", 600, 600);
     };
-    d3.json('../api/college.php?', loadData);
+    d3.json('data.json', loadData);
 
   </script>
     </body>
