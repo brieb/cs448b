@@ -11,10 +11,13 @@
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/token-input.css" type="text/css" />
     <link rel="stylesheet" href="css/token-input-facebook.css" type="text/css" />
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" type="text/css" />
     <link rel="stylesheet" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="js/jquery.tokeninput.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
     <script src="js/script.js"></script>
   </head>
   <body>
@@ -45,19 +48,23 @@
       </div>
 
       <div id="content_r">
-        <div id="graph1" class="graph_small">
-        </div>
-        <div id="graph2" class="graph_small">
+        <div class="dis_scroll_pane">
+          <div id="college_results"></div>
         </div>
 
         <div id="college">
-          <div id="college_results"></div>
-          <div id="college_details"></div>
+          <div class="dis_scroll_pane">
+            <div id="college_details"></div>
+          </div>
+
+          <div id="graph1" class="graph_small">
+          </div>
+          <div id="graph2" class="graph_small">
+          </div>
+
         </div>
 
       </div>
 
-    </div>
-
-  </body>
-</html>
+    </body>
+  </html>
