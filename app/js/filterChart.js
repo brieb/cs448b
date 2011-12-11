@@ -20,7 +20,7 @@ var lastHovered = undefined,
     selected = undefined,
     selectedFilter = undefined;
 
-var paths;
+var paths, pathData;
 var filterVals = [];
 function initializeFilterVals()
 {
@@ -29,7 +29,7 @@ function initializeFilterVals()
         filterVals[i].key = filterKeys[i];
         filterVals[i].index = i;
 
-        if (filterVals[i].type == "quantitative") {
+        if (filterVals[i].type == "q") {
         filterVals[i].toPixel = d3.scale.linear()
             .domain([filterVals[i].min, filterVals[i].max])
             .range([0, rectWidth]);
@@ -47,6 +47,8 @@ function drawFilterChart(divTag, w, h)
     width = w;
     height = h;
     rectWidth = width - xMarginLeft - xMarginRight;
+    
+    addDataChangeCallback(dataChange);
     
     initializeFilterVals();
 
@@ -70,22 +72,25 @@ function drawFilterChart(divTag, w, h)
     // Set up paths
     
     calculatePaths();
-    svg.selectAll('path.pass')
-	.data(paths)
-	.enter()
-	.append('svg:path')
-	.attr('class','pass')
-	.attr('d', d3.svg.line()
-	      .x(function(d) { return x(d.x); })
-	      .y(function(d) { return y(d.y) + rectHeight * .5; }))
-	.on('mouseover', function(d) {
-		d3.select(this).attr('class','select');
-	    })
-	.on('mouseout',function(d) {
-		d3.select(this).attr('class','fail');
-	    })
-	.append('svg:title')
-	.text(function(d,i) { return allData[i].name; });
+    paths = svg.selectAll('path.pass')
+        .data(pathData)
+        .enter()
+        .append('svg:path')
+        .attr('class','pass')
+        .attr('d', d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y) + rectHeight * .5; }))
+        .on('mouseover', function(d) {
+            d3.select(this).attr('class','select');
+            })
+        .on('mouseout',function(d) {
+            var idx = paths[0].indexOf(this);
+            d3.select(this).attr('class', allData[idx].pass == true ?
+                    'pass' : 'fail');
+            });
+    paths.append('svg:title')
+        .text(function(d,i) { return allData[i].name; });
+    console.log(paths[0][1]);
 
     // Set up general g's
 
@@ -98,10 +103,10 @@ function drawFilterChart(divTag, w, h)
 		return 'translate('+xMarginLeft+','+y(i)+')'})
 	.style('opacity',opacityDefault);
     
-    // Set up quantitative boxes
+    // Set up q boxes
 
     var qsliders = svg.selectAll('g.filter')
-	.filter(function(d) { return d.type == "quantitative"; });
+	.filter(function(d) { return d.type == "q"; });
     qsliders.append('svg:rect')
 	.attr('class','filter')
 	.attr('width',rectWidth)
@@ -128,10 +133,10 @@ function drawFilterChart(divTag, w, h)
 	.attr('y', textOffset)
 	.attr('text-anchor',function(d,i) { return i==0?'start':'end'; });
 
-    // Set up nominal sliders
+    // Set up n sliders
 
     var nsliders = svg.selectAll('g.filter')
-	.filter(function(d) { return d.type == "nominal"; });
+	.filter(function(d) { return d.type == "n"; });
     nsliders.selectAll('rect.nominalBox')
 	.data(function(d) { return d.values; })
 	.enter()
@@ -173,33 +178,39 @@ function drawFilterChart(divTag, w, h)
 
 function calculatePaths()
 {
-    paths = [];
+    pathData = [];
     var rectWidthNorm = 1.0 / rectWidth;
 
-    for (var s = 0; s < 1000; s++) {
+    for (var s = 0; s < allData.length; s++) {
         var d = allData[s];
-        paths[s] = [];
+        pathData[s] = [];
 
         var j = 0;
         for (var i = 0; i < filterKeys.length; i++) {
             var key = filterKeys[i];
 
-            if (filterVals[i].type == "quantitative") {
-                if (d[key] == "Not reported") continue;
+            if (filterVals[i].type == "q") {
+                if (d[key] < 0.0) continue;
                 if (key == "faculty_to_student_ratio" && d[key] == null) continue;
 
-                paths[s][j] = {y:i, x:filterVals[i].toPixel(d[key])*rectWidthNorm};
+                pathData[s][j] = {y:i, x:filterVals[i].toPixel(d[key])*rectWidthNorm};
                 j++;
             }
         }
     }
 }
 
+function dataChange(i)
+{
+    d3.select(paths[0][i]).attr('class', allData[i].pass == true ?
+        'pass':'fail');
+}
+
 function mouseover(d)
 {
     if (!dragging && lastHovered && lastHovered != this) {
-	d3.select(lastHovered)
-	    .style('stroke',strokeDefault);
+        d3.select(lastHovered)
+            .style('stroke',strokeDefault);
     }
     lastHovered = this;
     d3.select(this).style('stroke',strokeHover);
@@ -208,9 +219,9 @@ function mouseover(d)
 function mouseout(d)
 {
     if (!dragging && lastHovered) {
-	d3.select(lastHovered)
-	    .style('stroke',strokeDefault);
-	lastHovered = undefined;
+        d3.select(lastHovered)
+            .style('stroke',strokeDefault);
+        lastHovered = undefined;
     }
 }
 
@@ -316,7 +327,7 @@ function qUpdateSlider(g, d)
 	    });
 }
 
-// Mouse handlers for nominal variables
+// Mouse handlers for n variables
 
 var nMouseover = mouseover,
     nMouseout = mouseout,
