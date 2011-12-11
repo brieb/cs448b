@@ -1,109 +1,139 @@
 [
 {
-  id: 'name'
-  type: 'N'
-  name: 'Name',
+  "id": "name",
+  "name": "Name",
+  "type": "N"
 },
 {
-  id: 'majors'
-  type: 'N'
-  name: 'Majors',
+  "id": "majors",
+  "name": "Majors",
+  "type": "N"
 },
 {
-  id: 'population', 
-  type: 'q',
-  min: 59,
-  max: 70440
+  "id":"percent_admitted",
+  "name": "Percent Admitted",
+  "type":"q",
+  "min_label": "Admitted",
+  "max_label": "Not Admitted"
 },
 {
-  id: 'percent_undergrad'
-  type: 'q',
+  "id": "population", 
+  "name": "Population",
+  "type": "q",
+  "min": 59,
+  "max": 70440
 },
 {
-  id: 'student_to_faculty_ratio',
-  type: 'q',
+  "id": "percent_undergrad",
+  "name": "Percent Undergrad",
+  "type": "q",
+  "min_label": "Undergrad",
+  "max_label": "Grad"
 },
 {
-  id: 'percent_male',
-  type: 'q',
-  min_label: 'Male',
-  max_label: 'Female'
+  "id": "student_to_faculty_ratio",
+  "name": "Student-Faculty Ratio",
+  "type": "q",
+  "min": 3.0,
+  "max": 58.0
 },
 {
-  id: 'calendar'
-  type: 'n',
+  "id": "percent_male",
+  "name": "Percent Male",
+  "type": "q",
+  "min_label": "Male",
+  "max_label": "Female"
 },
 {
-  id: 'degrees'
-  type: 'n',
-  values: [
+  "id": "calendar",
+  "name": "Calendar",
+  "type": "n",
+  "values": [
+    "4-1-4",
+    "Continuous",
+    "Differ by Program",
+    "Quarter",
+    "Semester",
+    "Trimester"
+  ]
+},
+{
+  "id": "degrees",
+  "name": "Degrees",
+  "type": "n",
+  "values": [
     "Certificate",
     "Diploma",
     "Associate",
     "Bachelor's",
-    "Master's"
-    "Doctoral",
+    "Master's",
+    "Doctoral"
   ]
 },
 {
-  id: 'percent_in_state'
-  type: 'q',
+  "id": "percent_in_state",
+  "name": "Percent In-state",
+  "type": "q",
+  "min_label": "In-state",
+  "max_label": "Out-of-state"
 },
 {
-  id: 'majors'
-  type: 'n',
-},
-{
-  id: 'type'
-  type: 'n',
-  values: [
-    'Two-year',
-    'Two-year, upper division',
-    'Four-year'
+  "id": "prop_priv_pub",
+  "name": "School Type",
+  "type": "n",
+  "values": [
+    "Proprietary",
+    "Private",
+    "Public"
   ]
 },
 {
-  id: 'prop_priv_pub'
-  type: 'n',
-  values: [
-    'Proprietary',
-    'Private',
-    'Public'
+  "id": "type",
+  "name": "School Type (Year)",
+  "type": "n",
+  "values": [
+    "Two-year",
+    "Two-year, upper division",
+    "Four-year"
   ]
 },
 {
-  id: 'size_of_city'
-  type: 'n',
-  values: [
-    'Rural community (under 2,500)',
-    'Small town (2,500 - 9,999)',
-    'Large town (10,000 - 49,999)',
-    'Small city (50,000 - 249,999)',
-    'Large city (250,000 - 499,999)',
-    'Very large city (over 500,000)'
+  "id": "setting",
+  "name": "Setting",
+  "type": "n",
+  "values": [
+    "Suburban setting",
+    "Rural setting",
+    "Urban setting"
   ]
 },
 {
-  id: 'setting'
-  type: 'n',
-  values: [
-    'Suburban setting',
-    'Residential campus',
-    'Rural setting',
-    'Urban setting',
-    'Commuter campus'
+  "id": "size_of_city",
+  "name": "Setting Size",
+  "type": "n",
+  "values": [
+    "Rural community (under 2,500)",
+    "Small town (2,500 - 9,999)",
+    "Large town (10,000 - 49,999)",
+    "Small city (50,000 - 249,999)",
+    "Large city (250,000 - 499,999)",
+    "Very large city (over 500,000)"
   ]
 },
 {
-  id: 'res_comm'
-  type: 'n',
-  values: [
-    'Commuter campus',
-    'Residential campus'
+  "id": "res_comm",
+  "name": "Campus Type",
+  "type": "n",
+  "values": [
+    "Commuter campus",
+    "Residential campus"
   ]
 },
 {
-  id: 'percent_international'
-  type: 'q',
+  "id": "percent_international",
+  "name": "Percent International",
+  "type": "q",
+  "min_label": "National",
+  "max_label": "International"
 }
 ]

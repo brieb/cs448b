@@ -87,6 +87,53 @@ from college as c;
 
 create index ci_id on college_info(id);
 
+update college_info set percent_admitted = null
+where percent_admitted = 'Not reported';
+update college_info set calendar = null where calendar = 'NULL';
+
+
+--drop table if exists stats;
+--create table stats as
+select
+min(student_to_faculty_ratio) as min_student_to_faculty_ratio,
+max(student_to_faculty_ratio) as max_student_to_faculty_ratio,
+min(num_undergrad) as min_num_undergrad,
+max(num_undergrad) as max_num_undergrad,
+min(num_grad) as min_num_grad,
+max(num_grad) as max_num_grad,
+min(percent_admitted) as min_percent_admitted,
+max(percent_admitted) as max_percent_admitted,
+min(population) as min_population,
+max(population) as max_population,
+min(percent_undergrad) as min_percent_undergrad,
+max(percent_undergrad) as max_percent_undergrad,
+min(percent_male) as min_percent_male,
+max(percent_male) as max_percent_male,
+min(percent_in_state) as min_percent_in_state,
+max(percent_in_state) as max_percent_in_state,
+min(percent_international) as min_percent_international,
+max(percent_international) as max_percent_international
+from college_info;
+
+
+select
+min(percent_admitted) as min_percent_admitted,
+max(percent_admitted) as max_percent_admitted
+from college_info;
+
+select
+min(percent_international) as min_percent_international,
+max(percent_international) as max_percent_international
+from college_info;
+
+
+select distinct calendar from college_info;
+select distinct prop_priv_pub from college_info;
+select distinct size_of_city from college_info;
+select distinct setting from college_info;
+select distinct res_comm from college_info;
+
+
 
 
 
