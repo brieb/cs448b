@@ -76,8 +76,7 @@
   }
 
   if ($_GET['full_profile'] == 1) {
-    //$q = "select * from college limit 500 offset 3000";
-    $q = "select * from college";
+    $q = "select * from college_info";
     $colleges = db_query($q);
 
     for ($i = 0; $i < count($colleges); $i++) {
@@ -90,13 +89,13 @@
         $colleges[$i]['degrees'][] = $e['value'];
       }
 
-      $q = "select percentage, value from
-      demographics_first_year join college_demographics_first_year
-      on demographics_first_year.id =
-      college_demographics_first_year.demographics_first_year_id
-      where college_demographics_first_year.college_id = ?";
-      $r = db_query($q, TRUE, $p);
-      $colleges[$i]['demographics_first_year'] = $r;
+      //$q = "select percentage, value from
+      //demographics_first_year join college_demographics_first_year
+      //on demographics_first_year.id =
+      //college_demographics_first_year.demographics_first_year_id
+      //where college_demographics_first_year.college_id = ?";
+      //$r = db_query($q, TRUE, $p);
+      //$colleges[$i]['demographics_first_year'] = $r;
 
       //$q = "select name, degree_type
       //from major join college_major on id = major_id
@@ -104,21 +103,21 @@
       //$r = db_query($q, TRUE, $p);
       //$colleges[$i]['majors'] = $r;
 
-      $q = "select value
-      from school_type where id in
-      (select school_type_id from college_school_type where college_id = ?)";
-      $r = db_query($q, TRUE, $p);
-      foreach ($r as $e) {
-        $colleges[$i]['school_types'][] = $e['value'];
-      }
+      //$q = "select value
+      //from school_type where id in
+      //(select school_type_id from college_school_type where college_id = ?)";
+      //$r = db_query($q, TRUE, $p);
+      //foreach ($r as $e) {
+        //$colleges[$i]['school_types'][] = $e['value'];
+      //}
 
-      $q = "select value
-      from setting where id in
-      (select setting_id from college_setting where college_id = ?)";
-      $r = db_query($q, TRUE, $p);
-      foreach ($r as $e) {
-        $colleges[$i]['settings'][] = $e['value'];
-      }
+      //$q = "select value
+      //from setting where id in
+      //(select setting_id from college_setting where college_id = ?)";
+      //$r = db_query($q, TRUE, $p);
+      //foreach ($r as $e) {
+        //$colleges[$i]['settings'][] = $e['value'];
+      //}
     }
 
     echo json_encode($colleges);
