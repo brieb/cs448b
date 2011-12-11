@@ -84,14 +84,29 @@
 
   <script type="text/javascript" src="js/control.js"></script>
   <script type="text/javascript" src="js/filterChart.js"></script>
+  <script type="text/javascript" src="js/map.js"></script>
   <script type="text/javascript">
-    drawCharts = function() {
+  
+    // Everything to draw once loading is done
+    var drawCharts = function() {
         drawFilterChart("#filterChart", 600, 600);
-    };
-    loadFilter('FILTER_JSON_HERE', function() {
-           d3.json('data.json', loadData);
-           });
-//    d3.json('data.json', loadData);
+    }
+  
+    // Load filters then load data--uncomment once we have a filter json
+    /*d3.json('FILTER_JSON_HERE', function(json) {
+        loadFilter(json);
+        
+        d3.json('data.json', function(json) {
+            loadData(json);
+            
+            drawCharts();
+        });
+    });*/
+    
+    d3.json('data.json', function(json) {
+        loadData(json);
+        drawCharts();
+    });
 
   </script>
     </body>

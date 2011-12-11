@@ -19,7 +19,7 @@ text.label {
 .pass {
   fill: none;
   stroke: #225599;
-  stroke-widh: 1.5px;
+  stroke-width: 2.0px;
   stroke-opacity: 0.3;
 }
 .fail {
@@ -28,9 +28,15 @@ text.label {
   stroke-width: 1.5px;
   stroke-opacity: 0.1;
 }
-.select {
+.hover {
   fill: none;
   stroke: #ff9933;
   stroke-width: 1.5px;
+  stroke-opacity: 0.5;
+}
+.select {
+  fill: none;
+  stroke: #ff9933;
+  stroke-width: 2.0px;
   stroke-opacity: 1.0;
 }

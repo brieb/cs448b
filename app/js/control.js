@@ -2,20 +2,18 @@ var allData,
     filterData,
     defaultWeight = 0.5,
     passWithoutInfo = false;
-    
-var dataPass,
-    dataFail;
 
-var filterVariables = {
-    "faculty_to_student_ratio":{"name":"Student to Faculty Ratio","type":"q","min":0,"max":60},
-    "num_grad":{"name":"Graduate Population","type":"q","min":0,"max":25000},
-    "num_undergrad":{"name":"Undergraduate Population","type":"q","min":0,"max":80000},
-    "percent_admitted":{"name":"Percent Admitted","type":"q","min":0.0,"max":100.0},
-    "degrees":{"name":"Degrees Offered","type":"n","values":["associates","bachelors","masters","doctorate"]},
-    "majors":{"name":"Majors Offered","type":"N"}
-};
-
-var filterKeys = Object.keys(filterVariables);
+var filterVariables = [
+    {id:"faculty_to_student_ratio",name:"Student to Faculty Ratio",type:"q",min:0,max:60},
+    {id:"num_grad",name:"Graduate Population",type:"q",min:0,max:32000,log:false},
+    {id:"num_undergrad",name:"Undergraduate Population",type:"q",min:0,max:80000,log:false},
+    {id:"percent_admitted",name:"Percent Admitted",type:"q",min:0.0,max:100.0},
+    {id:"degrees",name:"Degrees Offered",type:"n",values:["associates","bachelors","masters","doctorate"]},
+    {id:"majors",name:"Majors Offered",type:"N"}
+];
+var filterMap = {};
+for (var i = 0; i < filterVariables.length; i++)
+    filterMap[filterVariables[i].id] = i;
 
 var currentFilter = {
     "num_undergrads":{"min":0,"max":40000,"weight":1.0},
@@ -31,32 +29,17 @@ var currentFilter = {
     
 // Callbacks to initialize all data and master filters and everything else
 
-function initializeTest()
-{
-    var school = {"id":"3387","name":"Stanford University",
-        "url":"www.stanford.edu","address":"Stanford, CA 94305",
-        "faculty_to_student_ratio":"6:1","num_grad":"12595",
-        "num_undergrad":"6940","percent_admitted":"7","calendar":"Quarter"};
-
-    for (prop in filterVariables) {
-        console.log(FilterDefault(prop));
-    }
-}
-
-var drawCharts;
-
-function loadFilter(json, doneLoading)
+function loadFilter(json)
 {
     //filterVariables = json;
     //filterKeys = Object.keys(filterVariables);
-
-    doneLoading();
 }
 
 function loadData(json)
 {
     allData = json;
-    dataPass = json;
+    
+    //allData.splice(10);
     
     transformData(allData);
 
@@ -66,8 +49,6 @@ function loadData(json)
         allData[i].pass = true;
         allData[i].weight = 0.0;
     }
-
-    drawCharts();
 }
 
 function transformData(data)
@@ -81,14 +62,19 @@ function transformData(data)
                 var num = fts.substring(0,idx) / fts.substring(idx+1);
                 data[i].faculty_to_student_ratio = num;
             }
+        } else {
+            data[i].faculty_to_student_ratio = -1;
         }
         
-        for (var j = 0; j < filterKeys.length; j++) {
-            var key = filterKeys[j];
-            if ((filterVariables[key].type == 'q' &&
-                !data[i][key] === undefined) ||
-                data[i][key] == "Not reported")
-                data[i][key] = -1.0;
+        for (var j = 0; j < filterVariables.length; j++) {
+            var key = filterVariables[j].id;
+            if (filterVariables[j].type == 'q') {
+                if (data[i][key] === undefined ||
+                    data[i][key] == "Not reported")
+                    data[i][key] = -1.0;
+                if (data[i][key] === null)
+                    data[i][key] = 0.0;
+            }
         }
     }
 }
@@ -101,15 +87,17 @@ function passesFilter(d)
     for (prop in currentFilter) {
         if (!passOneFilter(d, prop)) return false;
     }
+    if (!collegeSelectedInMap(d)) return false;
     
     return true;
 }
 
 function passOneFilter(d, prop)
 {
-    if (filterVariables[prop].type == 'q') {
+    var idx = filterMap[prop];
+    if (filterVariables[idx].type == 'q') {
         return passesQuantitative(d, prop);
-    } else if (filterVariables[prop].type == 'n') {
+    } else if (filterVariables[idx].type == 'n') {
         return passesNominal(d, prop);
     }
 }
@@ -155,6 +143,22 @@ function expandFilter(prop)
                 dataChangeListeners[j](i);
         }
     }
+}
+
+// Selection Callback Info
+
+var selectedData,
+    selectionListeners = [];
+function selectData(idx)
+{
+    selectedData = allData[idx];
+    console.log(selectedData.name);
+    for (var i = 0; i < selectionListeners.length; i++)
+        selectionListeners[i](idx);
+}
+
+function addDataSelectionCallback(call) {
+    selectionListeners.push(call);
 }
 
 // All of the support functions for different types of variables
@@ -205,12 +209,13 @@ function weightQuantitative(data, prop)
 
 function setFilterWeight(prop, weight)
 {
-    if (!filterVariables[prop]) return;
+    var idx = filterMap[prop];
+    if (!filterVariables[idx]) return;
     
     if (!currentFilter[prop]) {
-        if (filterVariables[prop].type == "q")
+        if (filterVariables[idx].type == "q")
             currentFilter[prop] = FilterQuantitative(prop);
-        else if (filterVariables[prop].type == "o")
+        else if (filterVariables[idx].type == "o")
             currentFilter[prop] = FilterOrdinal(prop);
         else
             currentFilter[prop] = FilterNominal(prop);
@@ -246,13 +251,16 @@ function removeFilterValueNominal(prop, val)
     var idx = vals.indexOf(val);
     if (idx > -1) vals.splice(idx, 1);
     
-    if (vals.length == 0) expandFilter(prop);
-    else contractFilter(prop);
+    if (vals.length == 0) {
+        expandFilter(prop);
+        currentFilter[prop] = undefined;
+    } else contractFilter(prop);
 }
 
 function setFilterMinQuantitative(prop, val)
 {
-    if (!filterVariables[prop]) return;
+    var idx = filterMap[prop];
+    if (!filterVariables[idx]) return;
     
     var min0;
     
@@ -263,10 +271,10 @@ function setFilterMinQuantitative(prop, val)
         min0 = currentFilter[prop].min;
     }
     
-    if (val > filterVariables[prop].max)
-        val = filterVariables[prop].max;
-    else if (val < filterVariables[prop].min)
-        val = filterVariables[prop].min;
+    if (val > filterVariables[idx].max)
+        val = filterVariables[idx].max;
+    else if (val < filterVariables[idx].min)
+        val = filterVariables[idx].min;
     currentFilter[prop].min = val;
     
     if (val > currentFilter[prop].max)
@@ -278,7 +286,8 @@ function setFilterMinQuantitative(prop, val)
 
 function setFilterMaxQuantitative(prop, val)
 {
-    if (!filterVariables[prop]) return;
+    var idx = filterMap[prop];
+    if (!filterVariables[idx]) return;
     
     var max0;
     
@@ -289,10 +298,10 @@ function setFilterMaxQuantitative(prop, val)
         max0 = currentFilter[prop].max;
     }
     
-    if (val > filterVariables[prop].max)
-        val = filterVariables[prop].max;
-    else if (val < filterVariables[prop].min)
-        val = filterVariables[prop].min;
+    if (val > filterVariables[idx].max)
+        val = filterVariables[idx].max;
+    else if (val < filterVariables[idx].min)
+        val = filterVariables[idx].min;
     currentFilter[prop].max = val;
     
     if (val < currentFilter[prop].min)
@@ -305,9 +314,9 @@ function setFilterMaxQuantitative(prop, val)
 function getFilterQuantitative(prop)
 {
     if (currentFilter[prop]) {
-	return [currentFilter[prop].min, currentFilter[prop].max];
+        return [currentFilter[prop].min, currentFilter[prop].max];
     } else {
-	return null;
+        return null;
     }
 }
 
@@ -315,15 +324,12 @@ function getFilterQuantitative(prop)
 
 function FilterDefault(prop)
 {
-    if (filterVariables[prop]) {
-        if (filterVariables[prop].type == "q") {
-            return FilterQuantitative(prop);
-        } else if (filterVariables[prop].type == "o") {
-            return FilterOrdinal(prop);
-        } else {
-            return FilterNominal(prop);
-        }
-    } else return null;
+    var idx = filterMap[prop];
+    if (filterVariables[idx].type == "q") {
+        return FilterQuantitative(prop);
+    } else {
+        return FilterNominal(prop);
+    }
 }
 
 function FilterNominal(prop)
@@ -333,7 +339,7 @@ function FilterNominal(prop)
 
 function FilterQuantitative(prop)
 {
-    var min = filterVariables[prop].min;
-    var max = filterVariables[prop].max;
+    var min = filterVariables[filterMap[prop]].min;
+    var max = filterVariables[filterMap[prop]].max;
     return {"min":min,"max":max,"weight":defaultWeight};
 }
