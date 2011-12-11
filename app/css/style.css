@@ -53,6 +53,7 @@ body {
 
 #content_l, #content_r {
   float: left;
+  position: relative;
 }
 
 #content_l {
@@ -80,8 +81,6 @@ div.token-input-dropdown {
 ul.token-input-list-facebook {
   max-height: 24px;
   overflow: hidden;
-  position: absolute;
-  z-index: 10;
 }
 
 
@@ -202,10 +201,23 @@ ul.token-input-list-facebook {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #e3e3e3;
+  background-color: #ccc;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #999;
 }
 
+#c_tok_college, #c_tok_major {
+  position: absolute;
+  z-index: 10;
+}
+#c_tok_college {
+  top: 10px;
+}
+#c_tok_major {
+  top: 60px;
+}
+div.token-input-dropdown-facebook {
+  z-index: 100;
+}

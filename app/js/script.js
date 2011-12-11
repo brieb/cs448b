@@ -189,20 +189,6 @@ $(document).ready(function() {
       })()
     }
 
-    var li_more = $('<li/>')
-    .addClass('more')
-    .text('View More Results')
-    .click(function(){
-      COLLEGE_RESULTS_OFFSET += 1;
-      $.get(
-        API_URL,
-        {only_id_name: 1},
-        function(response) {
-          display_college_results(response, true);
-        });
-    });
-    content.append(li_more);
-
     if (is_append === true) {
       $('#college_results').append(content);
     } else {
@@ -225,31 +211,40 @@ $(document).ready(function() {
 
 
   var reset_height = function(e) {
-    $(e.currentTarget).parents('ul').css('max-height', '24px');
+    //$(e.currentTarget).parents('ul').css('max-height', '24px');
     var target = $(e.currentTarget);
-  $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
+    $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
+    $(target.parents('div')[0]).css('z-index', '10');
   };
   var fn_focus = function(e) {
-    $('.token-input-dropdown-facebook').hide();
     var target = $(e.currentTarget);
+    $(target.parents('div')[0]).css('z-index', '11');
     var list = target.parents('ul');
-    var height_old = list.css('height');
+      //event.stopPropagation();
     list.css('max-height', 'inherit');
-    var height_new = list.css('height');
-    list.css('max-height', height_old);
-    //list.animate()
-    list.animate({'maxHeight': height_new}, 50, function(){
-      $('.token-input-list-facebook input').unbind('focus.tok');
-      $('.token-input-list-facebook input').unbind('blur.tok');
-      target.blur();
-      target.focus();
-      $('.token-input-list-facebook input').bind('blur.tok', reset_height);
-      list.css('max-height', 'inherit');
-      $('.token-input-dropdown-facebook').show();
+    $('.token-input-list-facebook input').unbind('focus.tok');
+    $('.token-input-list-facebook input').unbind('blur.tok');
+    target.blur();
+    target.focus();
+    $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+
+    list.bind('click.tok', function(event){
+      event.stopPropagation();
+    });
+    $('html').bind('click.html', {list:list}, function(e) {
+      if (e.data.list[0] === e.target) {
+        e.stopPropagation();
+      } else {
+        e.data.list.css('max-height', '24px').unbind('click.tok');
+        $(this).unbind('click.html');
+      }
     });
   };
 
   $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
   $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+
+
+
 
 });
