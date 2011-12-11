@@ -80,6 +80,8 @@ div.token-input-dropdown {
 ul.token-input-list-facebook {
   max-height: 24px;
   overflow: hidden;
+  position: absolute;
+  z-index: 10;
 }
 
 

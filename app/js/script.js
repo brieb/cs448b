@@ -230,6 +230,7 @@ $(document).ready(function() {
   $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
   };
   var fn_focus = function(e) {
+    $('.token-input-dropdown-facebook').hide();
     var target = $(e.currentTarget);
     var list = target.parents('ul');
     var height_old = list.css('height');
@@ -237,12 +238,14 @@ $(document).ready(function() {
     var height_new = list.css('height');
     list.css('max-height', height_old);
     //list.animate()
-    list.animate({'maxHeight': height_new}, 100, function(){
+    list.animate({'maxHeight': height_new}, 50, function(){
       $('.token-input-list-facebook input').unbind('focus.tok');
       $('.token-input-list-facebook input').unbind('blur.tok');
       target.blur();
       target.focus();
       $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+      list.css('max-height', 'inherit');
+      $('.token-input-dropdown-facebook').show();
     });
   };
 
