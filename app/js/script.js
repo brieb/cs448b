@@ -228,11 +228,18 @@ $(document).ready(function() {
     $('.token-input-list-facebook input').bind('blur.tok', reset_height);
 
     $('html').bind('click.html', {list:list}, function(e) {
+      var is_list = false;
       var parents = $(e.target).parents();
       for (var i = 0; i < parents.length; i += 1) {
         var parent = parents[i];
+        if (parent === e.data.list[0]) {
+          is_list |= true;
+          break;
+        }
       }
-      if (e.data.list[0] === e.target) {
+      is_list |= e.data.list[0] === e.target;
+
+      if (is_list) {
         e.stopPropagation();
       } else {
         e.data.list.css('max-height', '24px').unbind('click.tok');

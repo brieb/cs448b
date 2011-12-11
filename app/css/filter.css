@@ -1,0 +1,36 @@
+#filterChart {
+  position: absolute;
+  top: 60px;
+}
+
+rect.slider {
+  fill: #fff;
+  stroke: #888;
+}
+text.filter {
+  font-size: 12;
+  dy: .31m;
+  text-anchor: end;
+}
+text.label {
+  font-size: 10;
+  dy: .31m;
+}
+.pass {
+  fill: none;
+  stroke: steelblue;
+  stroke-widh: 1px;
+  stroke-opacity: 0.25;
+}
+.fail {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1px;
+  stroke-opacity: 0.1;
+}
+.select {
+  fill: none;
+  stroke: orange;
+  stroke-width: 1px;
+  stroke-opacity: 1.0;
+}

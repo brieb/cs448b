@@ -12,18 +12,25 @@
     <link rel="stylesheet" href="css/token-input.css" type="text/css" />
     <link rel="stylesheet" href="css/token-input-facebook.css" type="text/css" />
     <link rel="stylesheet" href="css/jquery.jscrollpane.css" type="text/css" />
+    <link rel="stylesheet" href="css/filter.css" />
     <link rel="stylesheet" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="js/jquery.tokeninput.js"></script>
     <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
+
+  <script type="text/javascript" src="js/d3/d3.js"></script>
+  <script type="text/javascript" src="js/d3/d3.geo.js"></script>
+  <script type="text/javascript" src="js/d3/d3.geom.js"></script>
+
+
     <script src="js/script.js"></script>
   </head>
   <body>
 
     <script type="text/javascript">
-      
+
     </script>
 
     <div id="header">
@@ -53,8 +60,7 @@
           name="major" value="" />
         </div>
 
-        <div id="pc">
-        </div>
+        <div id="filterChart"></div>
       </div>
 
       <div id="content_r">
@@ -76,5 +82,11 @@
 
       </div>
 
+  <script type="text/javascript" src="js/control.js"></script>
+  <script type="text/javascript" src="js/filterChart.js"></script>
+  <script type="text/javascript">
+    d3.json('../api/college.php?', loadData);
+
+  </script>
     </body>
   </html>
