@@ -223,18 +223,23 @@ $(document).ready(function() {
   location.hash = 'foo';
   console.log(location.hash);
 
-  $('.token-input-list-facebook input').focus(function(e) {
-    //var lists = $('.token-input-list-facebook');
-    //for (var i = 0; i < )
-    $(e.currentTarget).parents('ul').css('max-height', 'inherit');
-    var dds = $('.token-input-dropdown-facebook');
-    for (var i = 0; i < dds.length; i += 1) {
-      var t = dds.css('top');
-      dds.css('top', (parseInt(t.replace('px', ''))+20)+"px");
-    };
-  });
-  $('.token-input-list-facebook input').blur(function(e) {
+
+  var reset_height = function(e) {
     $(e.currentTarget).parents('ul').css('max-height', '24px');
-  });
+    var target = $(e.currentTarget);
+  $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
+  };
+  var fn_focus = function(e) {
+    var target = $(e.currentTarget);
+    target.parents('ul').css('max-height', 'inherit');
+    $('.token-input-list-facebook input').unbind('focus.tok');
+    $('.token-input-list-facebook input').unbind('blur.tok');
+    target.blur();
+    target.focus();
+    $('.token-input-list-facebook input').bind('blur.tok', reset_height);
+  };
+
+  $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
+  $('.token-input-list-facebook input').bind('blur.tok', reset_height);
 
 });
