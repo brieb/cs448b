@@ -1,5 +1,7 @@
 var allData,
+    passIndex,
     weightIndex,
+    results,
     defaultWeight = 0.5,
     passWithoutInfo = false;
 
@@ -44,9 +46,7 @@ function loadData(json)
 {
     allData = json;
     
-    allData.splice(1000);
-    
-    transformData(allData);
+    //allData.splice(500);
 
     currentFilter = {};
     numFilter = 0;
@@ -56,34 +56,6 @@ function loadData(json)
         allData[i].pass = true;
         allData[i].weight = 0.0;
         weightIndex[i] = i;
-    }
-}
-
-function transformData(data)
-{
-    for (var i = 0; i < data.length; i++) {
-        // Turn faculty to student ratio to numeric
-        /*var fts = data[i].student_to_faculty_ratio;
-        if (fts) {
-            var idx = fts.indexOf(':');
-            if (idx > 0) {
-                var num = fts.substring(0,idx) / fts.substring(idx+1);
-                data[i].student_to_faculty_ratio = num;
-            }
-        } else {
-            data[i].student_to_faculty_ratio = -1;
-        }*/
-        /*
-        for (var j = 0; j < filterVariables.length; j++) {
-            var key = filterVariables[j].id;
-            if (filterVariables[j].type == 'q') {
-                if (data[i][key] === undefined ||
-                    data[i][key] == "Not reported")
-                    data[i][key] = -1.0;
-                if (data[i][key] === null)
-                    data[i][key] = 0.0;
-            }
-        }*/
     }
 }
     
@@ -103,11 +75,25 @@ function updateIndex()
     
     // Sort indices
     weightIndex.sort(function(a,b) {
+        if (!allData[a].pass) return 1;
         return allData[b].weight - allData[a].weight;
     });
     
-    for (var j = 0; j < dataChangeListeners.length; j++)
-                dataChangeListeners[j]();
+    passIndex = [];
+    results = [];
+    var r = 0;
+    for (var i = 0; i < weightIndex.length; i++) {
+        if (allData[weightIndex[i]].pass) {
+            passIndex[r] = i;
+            results[r++] = allData[weightIndex[i]];
+        }
+    }
+    console.log(results.length);
+    
+    display_college_results(results, false);
+    
+    for (var i = 0; i < dataChangeListeners.length; i++)
+        dataChangeListeners[i]();
 }
     
 function passesFilter(d)
@@ -158,6 +144,7 @@ function contractFilter(prop)
         if (allData[i].pass == true && !passOneFilter(allData[i], prop)) {
             allData[i].pass = false;
         }
+        allData[i].pass = passesFilter(allData[i]);
     }
     updateIndex();
 }
@@ -169,6 +156,7 @@ function expandFilter(prop)
                 passesFilter(allData[i])) {
             allData[i].pass = true;
         }
+        allData[i].pass = passesFilter(allData[i]);
     }
     updateIndex();
 }
@@ -197,11 +185,10 @@ function passesNominal(data, prop)
         return true;
         
     if (!data[prop]) return passWithoutInfo;
-        
-    for (val in data[prop].values) {
-        if (currentFilter[prop].values.indexOf(val) != -1) return true;
-    }
-    return false;
+    
+    var vals = currentFilter[prop].values;
+    if (vals.indexOf(data[prop]) != -1) return true;
+    else return false;
 }
 
 function passesQuantitative(data, prop)
@@ -262,9 +249,6 @@ function setFilterWeight(prop, weight)
 
 function addFilterValueNominal(prop, val)
 {
-    if (!filterVariables[prop])
-        return;
-
     var contract = false;
     if (!currentFilter[prop]) {
         currentFilter[prop] = FilterNominal(prop);
@@ -288,10 +272,11 @@ function removeFilterValueNominal(prop, val)
     if (vals.length == 0) {
         numFilter--;
         expandFilter(prop);
-        currentFilter[prop] = undefined;
+        delete currentFilter[prop];
     } else {
         contractFilter(prop);
     }
+    console.log(currentFilter);
 }
 
 function setFilterMinQuantitative(prop, val)

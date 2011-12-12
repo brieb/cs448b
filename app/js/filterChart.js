@@ -204,7 +204,12 @@ function calculatePaths()
                 pathData[s][j] = {y:i, x:filterVals[i].toPixel(val)*rectWidthNorm};
                 j++;
             } else if (type == "n") {
-                pathData[s][j] = {y:i, x:0.5};
+                var val = filterVals[i].values.indexOf(d[key]);
+                
+                if (val < 0) continue;
+                var num = filterVals[i].values.length;
+            
+                pathData[s][j] = {y:i, x:(val + .5)/num};
                 j++;
             }
         }
@@ -218,10 +223,10 @@ function dataChange(i)
             else if (allData[i].pass) return 'pass';
             else return 'fail';
         })
-        .style('stroke-opacity', function(d,i) {
+        /*.style('stroke-opacity', function(d,i) {
             if (i == lastPath) return 1.0;
             else return allData[i].weight * .8 + .2;
-        });
+        });*/
 }
 
 function dataSelect(i)
@@ -374,7 +379,6 @@ function nClick(d)
     } else {
         boolCheck[key+d] = false;
         removeFilterValueNominal(key, d);
-        console.log("removing");
         d3.select(this).style('fill',fillDefault);
     }
 
@@ -382,6 +386,10 @@ function nClick(d)
         d3.select(this.parentNode).transition()
             .duration(500)
             .style('opacity',opacitySelected);
+    } else if (!currentFilter[key]) {
+        d3.select(this.parentNode).transition()
+            .duration(500)
+            .style('opacity',opacityDefault);
     }
 }
 

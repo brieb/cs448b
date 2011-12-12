@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/token-input-facebook.css" type="text/css" />
     <link rel="stylesheet" href="css/jquery.jscrollpane.css" type="text/css" />
     <link rel="stylesheet" href="css/filter.css" />
+    <link rel="stylesheet" href="css/charts.css" />
     <link rel="stylesheet" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
@@ -61,6 +62,8 @@
         </div>
 
         <div id="filterChart"></div>
+      
+        <div id="mapChart"></div>
       </div>
 
       <div id="content_r">
@@ -90,6 +93,7 @@
     // Everything to draw once loading is done
     var drawCharts = function() {
         drawFilterChart("#filterChart", 600, 600);
+        drawMap("#mapChart");
     }
   
     // Load filters then load data--uncomment once we have a filter json

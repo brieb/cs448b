@@ -1,4 +1,4 @@
-/* Usage: call drawMap("#divid") once data variable is set to college data from json.
+/* Usage: call drawMap("#divid") once allData variable is set to college allData from json.
   collegeSelectedInMap(college) returns true if a college is selected in the map
  
   Depends on file 'us-states.json' in same directory
@@ -62,7 +62,7 @@ var drawMap = function(div) {
     .attr("transform", "scale(1.0)");
   mapColleges = colleges;
 
-  d3.json("us-states.json", function(json) {
+  d3.json("../us-states.json", function(json) {
       states.selectAll("path")
         .data(json.features)
         .enter().append("svg:path")
@@ -96,11 +96,11 @@ var drawMap = function(div) {
   // }
 
   var mapFeatures = [];
-  for (var i = 0; i < data.length; i++){
+  for (var i = 0; i < allData.length; i++){
     mapFeatures.push( 
       { "type": "Feature",
-        "geometry": {"type": "Point", "coordinates": [parseFloat(data[i].longitude), parseFloat(data[i].latitude)]},
-        "properties": {"name": data[i].name}
+        "geometry": {"type": "Point", "coordinates": [parseFloat(allData[i].longitude), parseFloat(allData[i].latitude)]},
+        "properties": {"name": allData[i].name}
       });
   }
   colleges.selectAll("path")
