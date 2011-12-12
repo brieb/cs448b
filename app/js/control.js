@@ -109,6 +109,7 @@ function passesFilter(d)
 
 function passOneFilter(d, prop)
 {
+    if (!currentFilter[prop]) return true;
     var idx = filterMap[prop];
     if (filterVariables[idx].type == 'q') {
         return passesQuantitative(d, prop);
@@ -145,7 +146,7 @@ function contractFilter(prop)
         if (allData[i].pass == true && !passOneFilter(allData[i], prop)) {
             allData[i].pass = false;
         }
-        allData[i].pass = passesFilter(allData[i]);
+        //allData[i].pass = passesFilter(allData[i]);
     }
     updateIndex();
 }
@@ -157,7 +158,7 @@ function expandFilter(prop)
                 passesFilter(allData[i])) {
             allData[i].pass = true;
         }
-        allData[i].pass = passesFilter(allData[i]);
+        //allData[i].pass = passesFilter(allData[i]);
     }
     updateIndex();
 }
@@ -296,6 +297,25 @@ function removeFilterValueNominal(prop, val)
         contractFilter(prop);
     }
     console.log(currentFilter);
+}
+
+function addFilterQuantitative(prop)
+{
+    if (currentFilter[prop]) return;
+    var idx = filterMap[prop];
+    
+    currentFilter[prop] = FilterQuantitative(prop);
+    numFilter++;
+    
+    contractFilter(prop);
+}
+
+function removeFilterQuantitative(prop)
+{
+    if (!currentFilter[prop]) return;
+    
+    delete currentFilter[prop];
+    expandFilter(prop);
 }
 
 function setFilterMinQuantitative(prop, val)
