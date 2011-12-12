@@ -1,0 +1,149 @@
+[
+{
+  "id": "name",
+  "name": "Name",
+  "type": "N"
+},
+{
+  "id": "majors",
+  "name": "Majors",
+  "type": "N"
+},
+{
+  "id":"percent_admitted",
+  "name": "Percent Admitted",
+  "type":"q",
+  "min": 0,
+  "max": 100,
+  "min_label": "Admitted",
+  "max_label": "Not Admitted"
+},
+{
+  "id": "population", 
+  "name": "Population",
+  "type": "q",
+  "min": 59,
+  "max": 70440
+},
+{
+  "id": "percent_undergrad",
+  "name": "Percent Undergrad",
+  "type": "q",
+  "min": 0,
+  "max": 100,
+  "min_label": "Undergrad",
+  "max_label": "Grad"
+},
+{
+  "id": "student_to_faculty_ratio",
+  "name": "Student-Faculty Ratio",
+  "type": "q",
+  "min": 0.0,
+  "max": 58.0
+},
+{
+  "id": "percent_male",
+  "name": "Percent Male",
+  "type": "q",
+  "min": 0.0,
+  "max": 100.0,
+  "min_label": "Male",
+  "max_label": "Female"
+},
+{
+  "id": "percent_in_state",
+  "name": "Percent In-state",
+  "type": "q",
+  "min": 0,
+  "max": 100,
+  "min_label": "In-state",
+  "max_label": "Out-of-state"
+},
+{
+  "id": "percent_international",
+  "name": "Percent International",
+  "type": "q",
+  "min": 0,
+  "max": 100,
+  "min_label": "National",
+  "max_label": "International"
+},
+{
+  "id": "calendar",
+  "name": "Calendar",
+  "type": "n",
+  "values": [
+    "4-1-4",
+    "Continuous",
+    "Differ by Program",
+    "Quarter",
+    "Semester",
+    "Trimester"
+  ]
+},
+{
+  "id": "degrees",
+  "name": "Degrees",
+  "type": "n",
+  "values": [
+    "Certificate",
+    "Diploma",
+    "Associate",
+    "Bachelor's",
+    "Master's",
+    "Doctoral"
+  ]
+},
+{
+  "id": "prop_priv_pub",
+  "name": "School Type",
+  "type": "n",
+  "values": [
+    "Proprietary",
+    "Private",
+    "Public"
+  ]
+},
+{
+  "id": "type",
+  "name": "School Type (Year)",
+  "type": "n",
+  "values": [
+    "Two-year",
+    "Two-year, upper division",
+    "Four-year"
+  ]
+},
+{
+  "id": "setting",
+  "name": "Setting",
+  "type": "n",
+  "values": [
+    "Suburban setting",
+    "Rural setting",
+    "Urban setting"
+  ]
+},
+{
+  "id": "size_of_city",
+  "name": "Setting Size",
+  "type": "n",
+  "values": [
+    "Rural community (under 2,500)",
+    "Small town (2,500 - 9,999)",
+    "Large town (10,000 - 49,999)",
+    "Small city (50,000 - 249,999)",
+    "Large city (250,000 - 499,999)",
+    "Very large city (over 500,000)"
+  ]
+},
+{
+  "id": "res_comm",
+  "name": "Campus Type",
+  "type": "n",
+  "values": [
+    "Commuter campus",
+    "Residential campus"
+  ]
+}
+]

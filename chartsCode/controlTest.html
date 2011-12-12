@@ -5,11 +5,46 @@
   <script type="text/javascript" src="D3/d3.js"></script>
   <script type="text/javascript" src="D3/d3.geo.js"></script> 
   <script type="text/javascript" src="D3/d3.geom.js"></script>
+  <style type="text/css">
+    rect.slider {
+      fill: #fff;
+      stroke: #888;
+    }
+    text.filter {
+      font-size: 12;
+      dy: .31m;
+      text-anchor: end;
+    }
+    text.label {
+      font-size: 10;
+      dy: .31m;
+    }
+    .pass {
+      fill: none;
+      stroke: steelblue;
+      stroke-widh: 1px;
+      stroke-opacity: 0.25;
+    }
+    .fail {
+      fill: none;
+      stroke: grey;
+      stroke-width: 1px;
+      stroke-opacity: 0.1;
+    }
+    .select {
+      fill: none;
+      stroke: orange;
+      stroke-width: 1px;
+      stroke-opacity: 1.0;
+    }
+  </style>
 </head>
 <body>
+  <div id="filterChart"> </div>
   <script type="text/javascript" src="control.js"></script>
+  <script type="text/javascript" src="filterChart.js"></script>
   <script type="text/javascript">
-    d3.json('../../../~bbunge/cgi-bin/cs448b/api/college.php?', loadData);
+    d3.json('../api/college.php?', loadData);
   </script>
 </body>
 </html>
