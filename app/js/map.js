@@ -36,9 +36,11 @@ var curMapSelection = null;
 var mapSvg;
 var mapColleges;
 var mapSelections = {};
-var drawMap = function(div) {
+var scaleX, scaleY;
+var drawMap = function(div, scale) {
   var width = 700;
   var height = 400;
+  
   var svg = d3.select(div)
     .append('svg:svg')
     .attr('onmousedown','mouseDown(event)')
@@ -55,11 +57,11 @@ var drawMap = function(div) {
 
   var states = svg.append("svg:g")
     .attr("id", "states")
-    .attr("transform", "scale(1.0)");
+    .attr("transform", "scale("+scale+")");
 
   var colleges = svg.append("svg:g")
     .attr("id", "colleges")
-    .attr("transform", "scale(1.0)");
+    .attr("transform", "scale("+scale+")");
   mapColleges = colleges;
 
   d3.json("../us-states.json", function(json) {
@@ -150,6 +152,7 @@ var changeMapSelection = function(e) {
                curMapSelection.attr("r")] = curMapSelection;
     curMapSelection = null;
   }
+  updateMapFilter();
 }
 
 var clearSelector = function(e){
@@ -215,8 +218,8 @@ var mapSelection = function(){
 var collegeSelectedInMap = function(college) {
   if (isEmpty(mapSelections)) return true;
   var albersProj = d3.geo.albersUsa();
-  var x = albersProj(college.longitude)[0];
-  var y = albersProj(college.latitude)[1];
+  var pos = albersProj([college.longitude,college.latitude]);
+  var x = pos[0], y = pos[1];
   for (key in mapSelections) {
     if (mapSelections[key]!=undefined){
       var distanceToCenter = 

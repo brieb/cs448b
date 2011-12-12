@@ -45,6 +45,7 @@ function loadFilter(json)
 function loadData(json)
 {
     allData = json;
+    console.log("Loaded data for " + allData.length + " schools");
     
     //allData.splice(500);
 
@@ -88,7 +89,7 @@ function updateIndex()
             results[r++] = allData[weightIndex[i]];
         }
     }
-    console.log(results.length);
+    //console.log(results.length);
     
     display_college_results(results, false);
     
@@ -158,6 +159,24 @@ function expandFilter(prop)
         }
         allData[i].pass = passesFilter(allData[i]);
     }
+    updateIndex();
+}
+
+function updateMapFilter()
+{
+    var numPass = 0;
+    for (var i = 0; i < allData.length; i++) {
+        if (collegeSelectedInMap(allData[i]))
+            numPass++;
+        if (allData[i].pass && !collegeSelectedInMap(allData[i])) {
+            allData[i].pass = false;
+            console.log("school ditched");
+        } else if (!allData[i].pass && passesFilter(allData[i])) {
+            allData[i].pass = true;
+            console.log("school added");
+        }
+    }
+    console.log("Map changed: " + numPass + " now pass.");
     updateIndex();
 }
 

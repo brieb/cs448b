@@ -93,7 +93,7 @@
     // Everything to draw once loading is done
     var drawCharts = function() {
         drawFilterChart("#filterChart", 600, 600);
-        drawMap("#mapChart");
+        drawMap("#mapChart", 1.0);
     }
   
     // Load filters then load data--uncomment once we have a filter json
