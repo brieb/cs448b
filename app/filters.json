@@ -92,7 +92,8 @@
     "Bachelor's",
     "Master's",
     "Doctoral"
-  ]
+  ],
+  "multiple": true
 },
 {
   "id": "prop_priv_pub",

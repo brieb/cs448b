@@ -47,7 +47,8 @@ function loadData(json)
     allData = json;
     console.log("Loaded data for " + allData.length + " schools");
     
-    //allData.splice(500);
+    //console.log(allData[0]);
+    //allData.splice(10);
 
     currentFilter = {};
     numFilter = 0;
@@ -209,12 +210,19 @@ function passesNominal(data, prop)
 {
     if (currentFilter[prop].values.length == 0)
         return true;
-        
+
     if (!data[prop]) return passWithoutInfo;
-    
     var vals = currentFilter[prop].values;
-    if (vals.indexOf(data[prop]) != -1) return true;
-    else return false;
+            
+    if (filterVariables[filterMap[prop]].multiple) {
+        for (var i = 0; i < data[prop].length; i++) {
+            if (vals.indexOf(data[prop][i]) != -1) return true;
+        }
+        return false;
+    } else {
+        if (vals.indexOf(data[prop]) != -1) return true;
+        else return false;
+    }
 }
 
 function passesQuantitative(data, prop)
@@ -227,15 +235,23 @@ function passesQuantitative(data, prop)
 
 function weightNominal(data, prop)
 {
-    if (data[prop] < 0.0 || currentFilter[prop].values.length == 0)
+    if (data[prop] === undefined || currentFilter[prop].values.length == 0)
         return 0.0;
-        
-    var sum = 0.0;
-    for (val in data[prop].values) {
-        if (currentFilter[prop].values.indexOf(val) != -1) sum += 1.0;
+    
+    var vals = currentFilter[prop].values,
+        sum = 0.0;
+    
+    
+    if (filterVariables[filterMap[prop]].multiple) {
+        for (var i = 0; i < data[prop].lengh; i++) {
+            if (vals.indexOf(data[prop][i]) != -1) sum += 1.0;
+        }
+        sum /= vals.length;
+    } else {
+        if (vals.indexOf(data[prop]) != -1) sum += 1.0;
     }
     
-    return currentFilter[prop].weight * sum / currentFilter[prop].values.length;
+    return currentFilter[prop].weight * sum;
 }
 
 function weightQuantitative(data, prop)
@@ -302,7 +318,7 @@ function removeFilterValueNominal(prop, val)
     } else {
         contractFilter(prop);
     }
-    console.log(currentFilter);
+    //console.log(currentFilter);
 }
 
 function addFilterQuantitative(prop)
