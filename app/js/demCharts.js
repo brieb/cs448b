@@ -140,14 +140,14 @@ var getEthnicityData = function(college) {
 var drawGPAChart = function(div, college){
   if (gpaSvg != undefined) gpaSvg.remove();
   var gpaData = getGpaData(college);
-  console.log(gpaData);
+  //console.log(gpaData);
   gpaSvg = drawBarChart(div, gpaData, 'GPA');
 }
 
 var drawRankChart = function(div, college){
   if (rankSvg != undefined) rankSvg.remove();
   var rankData = getRankData(college);
-  console.log(rankData);
+  //console.log(rankData);
   rankSvg = drawBarChart(div, rankData, 'Class Percentile');
 }
 
@@ -200,7 +200,7 @@ var drawBarChart = function(div, barData, label) {
       var valr = Math.round(255 - (255-minr) * (i+1)/5);
       var valg = Math.round(255 - (255-ming) * (i+1)/5);
       var valb = Math.round(255 - (255-minb) * (i+1)/5);
-      console.log(valg);
+      //console.log(valg);
       return '#'+valr.toString(16)+valg.toString(16)+valb.toString(16);
     });
 

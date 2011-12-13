@@ -306,7 +306,7 @@ $(document).ready(function() {
     }
   };
 
-  display_college_results = function(results) {
+  display_college_results = function(results, keepSelection) {
     var content = $('<ul />');
 
     for (var i = 0; i < results.length; i++) {
@@ -315,7 +315,7 @@ $(document).ready(function() {
       .text(results[i].name);
       content.append(li);
 
-      if (i === 0) {
+      if (i === 0 && !keepSelection) {
         // show the first college by default
         highlight_college_results_list_elem(li, false);
         $.get(API_URL, {id:results[0].id}, function(response) {

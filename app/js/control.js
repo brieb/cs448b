@@ -107,7 +107,7 @@ function updateIndex()
         }
     }
     
-    display_college_results(results);
+    display_college_results(results, true);
     
     for (var i = 0; i < dataChangeListeners.length; i++)
         dataChangeListeners[i]();

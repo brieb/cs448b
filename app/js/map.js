@@ -273,8 +273,11 @@ var selectSchoolOnMap = function(index) {
     .data([mapFeatures[index]], function(d) { return d.properties.index; });
   sel.enter().append("svg:path")
         .attr("d", path)
-        .attr("class", "collegePoint")
+        .attr("class", "selectedCollege")
         .style("fill","#FF9933")
-        .style("opacity",1);
+        .style("opacity",1)
+        .on('click',function(d) {
+            selectData(d.properties.index);
+        });
   sel.exit().remove();
 }

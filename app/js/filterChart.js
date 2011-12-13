@@ -21,7 +21,9 @@ var lastHovered = undefined,
     selected = undefined,
     selectedFilter = undefined;
 
-var paths, pathData, lastPath = -1;
+var paths, pathData, pathSelection, lastPath = -1,
+    xScale, yScale;
+
 var filterVals = [];
 function initializeFilterVals()
 {
@@ -64,11 +66,11 @@ function drawFilterChart(divTag, w, h)
     
     initializeFilterVals();
 
-    var y = d3.scale.linear()
+    yScale = d3.scale.linear()
         .domain([0, filterVariables.length])
         .range([yMargin + geoBuffer, height - yMargin]);
 
-    var x = d3.scale.linear()
+    xScale = d3.scale.linear()
         .domain([0, 1.0])
         .range([xMarginLeft, width - xMarginRight]);
 
@@ -84,14 +86,16 @@ function drawFilterChart(divTag, w, h)
     calculatePaths();
     svg.append('svg:g')
         .attr('class', 'pathGroup');
+    pathSelection = svg.append('svg:g')
+        .attr('class', 'pathSelection');
     paths = svg.select('g.pathGroup').selectAll('path.pass')
         .data(pathData)
         .enter()
         .append('svg:path')
         .attr('class','pass')
         .attr('d', d3.svg.line()
-              .x(function(d) { return x(d.x); })
-              .y(function(d) { return y(d.y) + rectHeight * .5; }))
+              .x(function(d) { return xScale(d.x); })
+              .y(function(d) { return yScale(d.y) + rectHeight * .5; }))
         .on('mouseover', function(d) {
             if (!dragging) d3.select(this).attr('class','hover');
         })
@@ -114,7 +118,7 @@ function drawFilterChart(divTag, w, h)
         .attr('class','filter')
         .attr('id',function(d,i) { return d.id; })
         .attr('transform',function(d,i) {
-            return 'translate('+xMarginLeft+','+y(i)+')'})
+            return 'translate('+xMarginLeft+','+yScale(i)+')'})
         .classed('on', false)
         .classed('off', true)
         .style('opacity',opacityDefault);
@@ -262,9 +266,7 @@ var alphaScale = d3.scale.linear()
 function dataChange()
 {
     paths.attr('class', function(d,i) {
-            if (d.idx == lastPath) return 'select';
-            else if (allData[d.idx].pass) return 'pass';
-            else return 'fail';
+            return (allData[d.idx].pass ? 'pass' : 'fail');
         });
     /*paths.attr('stroke', function(d,i) {
             if (d.idx == lastPath || !allData[d.idx].pass) {
@@ -289,15 +291,17 @@ function dataChange()
 
 function dataSelect(idx)
 {
-    if (lastPath >= 0) {
-        paths.filter(function(d) { return d.idx == lastPath; })
-            .attr('class',
-                allData[lastPath].pass == true ? 'pass':'fail')
-            .style('stroke-opacity',null);
-    }
-    lastPath = idx;
-    paths.filter(function(d) { return d.idx == idx; }).attr('class','select')
-        .style('stroke-opacity',1.0);
+    var sel = pathSelection.selectAll("path")
+        .data([pathData[idx]], function(d) { return d.idx; });
+    sel.enter().append('svg:path')
+        .attr('class','select')
+        .attr('d', d3.svg.line()
+              .x(function(d) { return xScale(d.x); })
+              .y(function(d) { return yScale(d.y) + rectHeight * .5; }))
+        .on('click', function(d) {
+            selectData(d.idx);
+        });
+    sel.exit().remove();
 }
 
 function mouseover(d)
