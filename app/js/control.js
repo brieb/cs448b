@@ -19,9 +19,8 @@ for (var i = 0; i < filterVariables.length; i++)
 
 var numFilter;
 var currentFilter = {
-    "num_undergrads":{"min":0,"max":40000,"weight":1.0},
-    "degrees":{"values":["bachelors","doctorate"],"weight":0.5},
-    "majors":{"values":["computer science", "mathematics", "physics"],"weight":1.0}
+    "population":{"min":3000,"max":10000,"weight":0.5},
+    "degrees":{"values":["Bachelor's","Doctoral"],"weight":0.5},
     };
 
 /*
@@ -59,6 +58,25 @@ function loadData(json)
         allData[i].weight = 0.0;
         weightIndex[i] = i;
     }
+}
+
+function reloadFilter(filter)
+{
+    currentFilter = filter;
+    numFilter = 0;
+    
+    for (prop in currentFilter) {
+        numFilter += 1;
+        var idx = filterMap[prop];
+        if (filterVariables[idx].type == 'q') {
+            enableQuantitativeFilter(prop);
+        } else if (filterVariables[idx].type == 'n') {
+            enableNominalFilter(prop);
+        }
+        setStarState(prop, weight > 0.5 ? true : false);
+    }
+    
+    updateFilters();
 }
     
 // Callbacks to see if an individual data entry passes the current filter
@@ -211,7 +229,12 @@ function updateMapFilter()
             //console.log("school added");
         }
     }
-    //console.log("Map changed: " + numPass + " now pass.");
+    updateIndex();
+}
+
+function setFilterStarred(prop, starred)
+{
+    setFilterWeight(prop, starred ? 1.0 : 0.5);
     updateIndex();
 }
 

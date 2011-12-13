@@ -35,8 +35,10 @@ var mouseIsDown = false;
 var curMapSelection = null;
 var mapSvg;
 var mapColleges;
+var brushSelection;
 var mapSelections = {};
 var albersProj;
+var mapFeatures;
 var drawMap = function(div, scale) {
   var width = 700;
   var height = 400;
@@ -67,6 +69,10 @@ var drawMap = function(div, scale) {
     .attr("id", "colleges")
     .attr("transform", "scale("+scale+")");
   mapColleges = colleges;
+  
+  brushSelection = svg.append("svg:g")
+    .attr("id", "collegeSelected")
+    .attr("transform", "scale("+scale+")");
 
   d3.json("../us-states.json", function(json) {
       states.selectAll("path")
@@ -101,12 +107,12 @@ var drawMap = function(div, scale) {
   //   ]
   // }
 
-  var mapFeatures = [];
+  mapFeatures = [];
   for (var i = 0; i < allData.length; i++){
     mapFeatures.push( 
       { "type": "Feature",
         "geometry": {"type": "Point", "coordinates": [parseFloat(allData[i].longitude), parseFloat(allData[i].latitude)]},
-        "properties": {"name": allData[i].name}
+        "properties": {"name": allData[i].name, "index": i}
       });
   }
   colleges.selectAll("path")
@@ -118,6 +124,7 @@ var drawMap = function(div, scale) {
   
 
   addDataSelectionCallback(selectSchoolOnMap); 
+  addDataChangeCallback(colorColleges);
 }
 
 var mouseDown = function(e) {
@@ -199,9 +206,14 @@ var redrawMapSelection = function() {
 
 var colorColleges = function() {
   mapSvg.selectAll(".collegePoint")
-    .style("fill","#111")
-    .style("opacity",0.3);
-  mapSelection().style("fill","#1960AA");
+    .style("fill", function(d) {
+        return allData[d.properties.index].pass ? 
+            "#1960AA" : "#111";
+    })
+    .style("opacity", function(d) {
+        return allData[d.properties.index].pass ?
+            0.3 : 0.1;
+    });
 }
 
 var mapSelection = function(){
@@ -255,17 +267,14 @@ var getMapOffset = function(college) {
 }
 
 var selectSchoolOnMap = function(index) {
-  //console.log('selecting on map');
-  var college = allData[index];
-  colorColleges();
-  mapSvg.selectAll(".collegePoint").filter(function(d,i){
-    if (i == index) {
-      //console.log('found on map');
-      return true;
-    }
-    return false;
-  })
-  .style("fill","#FF9933")
-  .style("z-index",100)
-  .style("opacity",1);
+  var path = d3.geo.path()
+    .pointRadius(6);
+  var sel = brushSelection.selectAll("path")
+    .data([mapFeatures[index]], function(d) { return d.properties.index; });
+  sel.enter().append("svg:path")
+        .attr("d", path)
+        .attr("class", "collegePoint")
+        .style("fill","#FF9933")
+        .style("opacity",1);
+  sel.exit().remove();
 }
