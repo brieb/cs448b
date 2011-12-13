@@ -2,14 +2,12 @@ var display_college_results;
 var select_college;
 var school_has_majors;
 var school_has_name;
+var update_url;
 
 $(document).ready(function() {
   var API_URL = '../api/college.php';
   var COLLEGE_RESULTS_LIMIT = 5000;
   var COLLEGE_RESULTS_OFFSET = 0;
-  var MAIL_TO = "mailto:?" +
-    "&subject=" + escape("A uniVSity view has been shared with you!") +
-    "&body=" + escape(location.href);
 
   var tok_match_college = [];
   var tok_match_major = [];
@@ -341,55 +339,85 @@ $(document).ready(function() {
     {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
     function(response) {
       display_college_results(response);
-    });
+    }
+  );
 
-    $('#share').attr('href', MAIL_TO)
+  $('#share').click(function() {
+    $.get(
+      "https://api-ssl.bitly.com/v3/shorten",
+      {
+        login:"cs448b",
+        apiKey:"R_5b0758cfb5f69a16726801cc351e30e8",
+        longUrl:location.href,
+        format:"json"
+      },
+      function(response) {
+        var mail_to = "mailto:?" +
+          "&subject=" + escape("A uniVSity view has been shared with you!") +
+          "&body=" + escape(response.data.url);
+        window.open(mail_to, '_blank');
+      }
+    );
+    return false;
+  });
 
-    //console.log(location.hash);
-    //location.hash = 'foo';
-    //console.log(location.hash);
+  var reset_height = function(e) {
+    var target = $(e.currentTarget);
+    $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
+    $(target.parents('div')[0]).css('z-index', '10');
+  };
 
-    var reset_height = function(e) {
-      var target = $(e.currentTarget);
-      $('.token-input-list-facebook input').bind('focus.tok', fn_focus);
-      $(target.parents('div')[0]).css('z-index', '10');
-    };
-
-    var fn_focus = function(e) {
-      var target = $(e.currentTarget);
-      var input = $('.token-input-list-facebook input');
-      $(target.parents('div')[0]).css('z-index', '11');
-      var list = target.parents('ul');
-      list.css('max-height', 'inherit');
-      input.unbind('focus.tok');
-      input.unbind('blur.tok');
-      target.blur();
-      target.focus();
-      input.bind('blur.tok', reset_height);
-
-      $('html').bind('click.html', {list:list}, function(e) {
-        var is_list = false;
-        var parents = $(e.target).parents();
-        for (var i = 0; i < parents.length; i += 1) {
-          var parent = parents[i];
-          if (parent === e.data.list[0]) {
-            is_list |= true;
-            break;
-          }
-        }
-        is_list |= e.data.list[0] === e.target;
-
-        if (is_list) {
-          e.stopPropagation();
-        } else {
-          e.data.list.css('max-height', '24px').unbind('click.tok');
-          $(this).unbind('click.html');
-        }
-      });
-    };
-
+  var fn_focus = function(e) {
+    var target = $(e.currentTarget);
     var input = $('.token-input-list-facebook input');
-    input.bind('focus.tok', fn_focus);
+    $(target.parents('div')[0]).css('z-index', '11');
+    var list = target.parents('ul');
+    list.css('max-height', 'inherit');
+    input.unbind('focus.tok');
+    input.unbind('blur.tok');
+    target.blur();
+    target.focus();
     input.bind('blur.tok', reset_height);
+
+    $('html').bind('click.html', {list:list}, function(e) {
+      var is_list = false;
+      var parents = $(e.target).parents();
+      for (var i = 0; i < parents.length; i += 1) {
+        var parent = parents[i];
+        if (parent === e.data.list[0]) {
+          is_list |= true;
+          break;
+        }
+      }
+      is_list |= e.data.list[0] === e.target;
+
+      if (is_list) {
+        e.stopPropagation();
+      } else {
+        e.data.list.css('max-height', '24px').unbind('click.tok');
+        $(this).unbind('click.html');
+      }
+    });
+  };
+
+  var input = $('.token-input-list-facebook input');
+  input.bind('focus.tok', fn_focus);
+  input.bind('blur.tok', reset_height);
+
+/*
+* 
+* URL HANDLING
+*
+*/
+  update_url = function() {
+    location.hash = $.param(currentFilter);
+  };
+  addDataChangeCallback(update_url);
+
+  //Read URL
+  (function() {
+    var filters = $.deparam(location.hash.substr(1));
+    console.log(filters);
+  })();
 
 });

@@ -20,6 +20,7 @@
     <script type="text/javascript" src="js/jquery.tokeninput.js"></script>
     <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
+    <script type="text/javascript" src="js/jquery.ba-bbq.min.js"></script>
 
     <script type="text/javascript" src="js/d3/d3.js"></script>
     <script type="text/javascript" src="js/d3/d3.geo.js"></script>
