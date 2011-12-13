@@ -1,6 +1,6 @@
 var div = d3.select('#filterChart'),
     width, height, rectWidth,
-    xMarginLeft = 160.5,
+    xMarginLeft = 170.5,
     xMarginRight = 0,
     yMargin = 10.5,
     geoBuffer = 0,
