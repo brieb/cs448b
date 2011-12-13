@@ -116,8 +116,10 @@ function passOneFilter(d, prop)
     case 'q': return passesQuantitative(d, prop);
     case 'n': return passesNominal(d, prop);
     case 'N':
-        if (prop == "major") {
+        if (prop == "majors") {
             var res = school_has_majors(d);
+            console.log("Checking majors for school " + d.name);
+            console.log(res);
             return (res === null || school_has_majors(d).num_majors > 0);
         } else if (prop == "name") {
             return school_has_name(d);
@@ -144,7 +146,7 @@ function getWeightedRank(d)
             sum += weightNominal(d, prop);
             break;
         case 'N':
-            if (prop == "major") {
+            if (prop == "majors") {
                 var res = school_has_majors(d);
                 sum += res.num_majors / res.num_majors_specified;
             }
