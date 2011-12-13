@@ -89,13 +89,13 @@ function drawFilterChart(divTag, w, h)
         .on('mouseover', function(d) {
             if (!dragging) d3.select(this).attr('class','hover');
         })
-        .on('mouseout',function(d,idx) {
-            if (lastPath != idx)
-                d3.select(this).attr('class', allData[idx].pass == true ?
+        .on('mouseout',function(d) {
+            if (lastPath != d.idx)
+                d3.select(this).attr('class', allData[d.idx].pass == true ?
                         'pass' : 'fail');
         })
         .on('click',function(d,i) {
-            selectData(i);
+            selectData(d.idx);
         });
     paths.append('svg:title')
         .text(function(d,i) { return allData[i].name; });
@@ -126,14 +126,11 @@ function drawFilterChart(divTag, w, h)
         .attr('height',rectHeight)
         .style('fill','#fff')
         .style('fill-opacity',0.5)
-        .style('stroke','#888')
-        .on('mouseover',qMouseover)
-        .on('mouseout',qMouseout)
-        .on('mouseup',qMouseup)
-        .on('click',qClickStart);
+        .style('stroke','#888');
     qsliders.selectAll('text.label')
         .data(function(d) { 
-            return [d.min, d.max]; })
+            return [(d.min_label ? d.min_label : d.min),
+                (d.max_label ? d.max_label : d.max)]; })
         .enter()
         .append('svg:text')
         .attr('class','label')
@@ -141,16 +138,24 @@ function drawFilterChart(divTag, w, h)
         .attr('x', function(d,i) { return i == 0 ? 2 : rectWidth - 2;})
         .attr('y', textOffset)
         .attr('text-anchor',function(d,i) { return i==0?'start':'end'; });
+    qsliders.append('svg:rect')
+        .attr('class','selector')
+        .attr('height',rectHeight)
+        .attr('width',rectWidth)
+        .on('mouseover',qMouseover)
+        .on('mouseout',qMouseout)
+        .on('mouseup',qMouseup)
+        .on('click',qClickStart);
 
     // Set up n sliders
 
     var nsliders = svg.selectAll('g.filter')
         .filter(function(d) { return d.type == "n"; });
-    nsliders.selectAll('rect.nominalBox')
+    nsliders.selectAll('rect.filter')
         .data(function(d) { return d.values; })
         .enter()
         .append('svg:rect')
-        .attr('class','nominalBox')
+        .attr('class','filter')
         .attr('height',rectHeight)
         .attr('width',function(d) {
             var w = rectWidth / (d3.select(this.parentNode)
@@ -161,17 +166,10 @@ function drawFilterChart(divTag, w, h)
             var w = rectWidth / (d3.select(this.parentNode)
                          .node().__data__.values.length);
             return w * i + nomSpace;
-            })
-        .style('fill','#fff')
-        .style('stroke','#888')
-        .on('mouseover',nMouseover)
-        .on('mouseout',nMouseout)
-        .on('mousedown',nMousedown)
-        .on('mouseup',nMouseup)
-        .on('click', nClick);
+            });
 
     nsliders.selectAll('text.label')
-        .data(function(d) { return d.values; })
+        .data(function(d) { return d.value_labels ? d.value_labels : d.values; })
         .enter()
         .append('svg:text')
         .attr('class','label')
@@ -183,6 +181,29 @@ function drawFilterChart(divTag, w, h)
             })
         .attr('y', textOffset)
         .attr('text-anchor','start');
+        
+    nsliders.selectAll('rect.selector')
+        .data(function(d) { return d.values; })
+        .enter()
+        .append('svg:rect')
+        .attr('class','selector')
+        .attr('height',rectHeight)
+        .attr('width',function(d) {
+            var w = rectWidth / (d3.select(this.parentNode)
+                         .node().__data__.values.length);
+            return w - 2 * nomSpace;
+            })
+        .attr('x',function(d, i) {
+            var w = rectWidth / (d3.select(this.parentNode)
+                         .node().__data__.values.length);
+            return w * i + nomSpace;
+            })
+        .on('mouseover',nMouseover)
+        .on('mouseout',nMouseout)
+        .on('mousedown',nMousedown)
+        .on('mouseup',nMouseup)
+        .on('click', nClick);
+        
 }
 
 function calculatePaths()
@@ -200,7 +221,7 @@ function calculatePaths()
             var type = filterVals[i].type,
                 key = filterVals[i].id;
             if (type == "q") {
-                if (d[key] < 0.0) continue;
+                if (d[key] <= 0.0) continue;
 
                 var val = filterVals[i].log && d[key] == 0 ? 1 : d[key];
                 
@@ -219,27 +240,32 @@ function calculatePaths()
     }
 }
 
+function drawPaths()
+{
+    paths.sort(function(a,b) {
+        return allData[a.idx].weight - allData[b.idx].weight;
+    });
+}
+
 function dataChange(i)
 {
     paths.attr('class', function(d,i) {
-            if (i == lastPath) return 'select';
-            else if (allData[i].pass) return 'pass';
+            if (d.idx == lastPath) return 'select';
+            else if (allData[d.idx].pass) return 'pass';
             else return 'fail';
-        })
-        /*.style('stroke-opacity', function(d,i) {
-            if (i == lastPath) return 1.0;
-            else return allData[i].weight * .8 + .2;
-        });*/
+        });
+    drawPaths();
 }
 
-function dataSelect(i)
+function dataSelect(idx)
 {
     if (lastPath >= 0) {
-        d3.select(paths[0][lastPath]).attr('class',
-            allData[lastPath].pass == true ? 'pass':'fail');
+        paths.filter(function(d) { return d.idx == lastPath; }).attr('class',
+            allData[lastPath].pass == true ? 'pass':'fail')
+            .style('stroke-opacity',null);
     }
-    lastPath = i;
-    d3.select(paths[0][i]).attr('class','select')
+    lastPath = idx;
+    paths.filter(function(d) { return d.idx == idx; }).attr('class','select')
         .style('stroke-opacity',1.0);
 }
 
@@ -264,19 +290,12 @@ function mouseout(d)
 
 function mousedown(d)
 {
-    //console.log("mousedown");
+
 }
 
 function mouseup(d)
 {
-    //console.log("mouseup");
     lastHandle = null;
-    div.on('mousemoved',null);
-}
-
-function mousemoved(d)
-{
-
 }
 
 var qMouseover = mouseover,
@@ -295,8 +314,6 @@ function qClickStart(d, i)
             .attr('width',rectWidth)
             .attr('x',0)
             .style('stroke',strokeDefault)
-            .style('fill',fillSelected)
-            .style('fill-opacity', 0.5)
             .call(sliderDrag)
             .on('mouseover',qMouseover)
             .on('mouseout',qMouseout)
@@ -390,10 +407,8 @@ var sliderDrag = d3.behavior.drag()
         var slider = d3.select(this.parentNode).select("rect.slider");
         var minx = slider.attr('x') * 1.0,
             maxx = slider.attr('width') * 1.0 + minx;
-        console.log([d.toPixel.invert(minx), d.toPixel.invert(maxx)]);
         setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
         setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
-        console.log(getFilterQuantitative(d.id));
     });
 
 function qUpdateSlider(g, d, minx, maxx)
@@ -414,18 +429,24 @@ var nMouseover = mouseover,
     nMouseup = mouseup;
 
 var boolCheck = {}
-function nClick(d)
+function nClick(d, i)
 {
     var key = d3.select(this.parentNode).node().__data__.id;
     var trans = !currentFilter[key];
     if (!boolCheck[key+d]) {
         boolCheck[key+d] = true;
         addFilterValueNominal(key, d);
-        d3.select(this).style('fill',fillSelected);
+        d3.select(this.parentNode).selectAll('rect.filter')
+            .filter(function(dother) {
+                return dother == d;
+            }).style('fill',fillSelected);
     } else {
         boolCheck[key+d] = false;
         removeFilterValueNominal(key, d);
-        d3.select(this).style('fill',fillDefault);
+        d3.select(this.parentNode).selectAll('rect.filter')
+            .filter(function(dother) {
+                return dother == d;
+            }).style('fill',fillDefault);
     }
 
     if (trans) {

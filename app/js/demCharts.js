@@ -31,7 +31,7 @@ var drawEthnicityChart = function(div, college){
     .attr('x',10)
     .attr('y',20);
   var ethData = getEthnicityData(college);
-  console.log(ethData);
+  //console.log(ethData);
   if (ethData == null) {
     svg.append('svg:text')
       .text('no data')
@@ -56,13 +56,13 @@ var drawEthnicityChart = function(div, college){
     ethData[d].endAngle = rScale(ethData[d][1]+ethData[d][2]);
   }
 
-  console.log(ethData);
+  //console.log(ethData);
 
   var arc = d3.svg.arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
     
-  console.log(arc);
+  //console.log(arc);
 
   var wedges = svg.selectAll("path")
     .data(ethData)
