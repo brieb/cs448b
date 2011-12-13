@@ -80,6 +80,8 @@
           </div>
           <div id="graph2" class="graph_small">
           </div>
+          <div id="graph3" class="graph_small">
+          </div>
 
         </div>
 
@@ -88,12 +90,13 @@
   <script type="text/javascript" src="js/control.js"></script>
   <script type="text/javascript" src="js/filterChart.js"></script>
   <script type="text/javascript" src="js/map.js"></script>
+  <script type="text/javascript" src="js/demCharts.js"></script>
   <script type="text/javascript">
   
     // Everything to draw once loading is done
     var drawCharts = function() {
         drawFilterChart("#filterChart", 600, 600);
-        drawMap("#mapChart", 1.0);
+        drawMap("#mapChart", 0.6);
     }
   
     // Load filters then load data--uncomment once we have a filter json

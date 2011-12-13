@@ -40,7 +40,6 @@ var scaleX, scaleY;
 var drawMap = function(div, scale) {
   var width = 700;
   var height = 400;
-  
   var svg = d3.select(div)
     .append('svg:svg')
     .attr('onmousedown','mouseDown(event)')
@@ -111,6 +110,9 @@ var drawMap = function(div, scale) {
     .attr("d", path)
     .attr("class", "collegePoint")
     .style("fill","#1960AA");  
+  
+
+  addDataSelectionCallback(selectSchoolOnMap); 
 }
 
 var mouseDown = function(e) {
@@ -191,7 +193,9 @@ var redrawMapSelection = function() {
 }
 
 var colorColleges = function() {
-  mapSvg.selectAll(".collegePoint").style("fill","#111");
+  mapSvg.selectAll(".collegePoint")
+    .style("fill","#111")
+    .style("opacity",0.3);
   mapSelection().style("fill","#1960AA");
 }
 
@@ -239,4 +243,27 @@ var isEmpty = function(obj) {
           return false;
   }
   return true;
+}
+
+var getMapOffset = function(college) {
+  var albersProj = d3.geo.albersUsa();
+  var x = albersProj(college.longitude)[0];
+  var y = albersProj(college.latitude)[1];
+  return {'x': x, 'y': y};
+}
+
+var selectSchoolOnMap = function(index) {
+  console.log('selecting on map');
+  var college = allData[index];
+  colorColleges();
+  mapSvg.selectAll(".collegePoint").filter(function(d,i){
+    if (i == index) {
+      console.log('found on map');
+      return true;
+    }
+    return false;
+  })
+  .style("fill","#FF9933")
+  .style("z-index",100)
+  .style("opacity",1);
 }
