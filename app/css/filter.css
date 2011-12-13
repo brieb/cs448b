@@ -11,6 +11,10 @@ rect.slider {
 rect.selector {
   opacity: 0.0;
 }
+circle.pref {
+  fill-opacity: 0.0;
+  stroke: #888;
+}
 text.filter {
   font-size: 12;
   dy: .31m;

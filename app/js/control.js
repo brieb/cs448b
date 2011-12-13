@@ -467,7 +467,7 @@ function FilterQuantitative(prop)
 {
     var min = filterVariables[filterMap[prop]].min;
     var max = filterVariables[filterMap[prop]].max;
-    return {"min":min,"max":max,"weight":defaultWeight};
+    return {"min":min,"max":max,"pref":(max+min)/2,"weight":defaultWeight};
 }
 
 function majorAdded()

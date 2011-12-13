@@ -310,35 +310,7 @@ function qClickStart(d, i)
 {
     if (!currentFilter[d.id]) {
         addFilterQuantitative(d.id);
-
-        var g = d3.select(this.parentNode);
-        g.append('svg:rect')
-            .attr('class','slider')
-            .attr('height',rectHeight)
-            .attr('width',rectWidth)
-            .attr('x',0)
-            .style('stroke',strokeDefault)
-            .call(sliderDrag)
-            .on('mouseover',qMouseover)
-            .on('mouseout',qMouseout)
-            .on('click',qClick);
-
-        var h = g.selectAll("rect.handle")
-            .data([d, d])
-            .enter().append('svg:rect')
-            .attr('class','handle')
-            .attr('height',rectHeight)
-            .attr('width',rectHeight)
-            .attr('x', function(d,i) {
-                return d.toPixel(getFilterQuantitative(d.id)[i])
-                    -rectHeight*.5;
-            })
-            .attr('opacity',0.0)
-            .call(handleDrag)
-
-        g.transition()
-            .duration(500)
-            .style('opacity',opacitySelected);
+        enableQuantitativeFilter(d.id);
     }
 }
 
@@ -414,6 +386,21 @@ var sliderDrag = d3.behavior.drag()
         setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
         setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
     });
+    
+var prefDrag = d3.behavior.drag()
+    .on("dragstart",function(d) { dragging = true; })
+    .on("drag",function(d) {
+        var dx = d3.event.dx;
+        var pref = d3.select(this.parentNode).select("rect.slider");
+        var minx = slider.attr('x') * 1.0 + dx,
+            maxx = slider.attr('width') * 1.0 + minx,
+            prefx = d.toPixel(currentFilter[d.id].pref);
+    })
+    .on("dragend",function(d) {
+        dragging = false;
+    });
+            
+        
 
 function qUpdateSlider(g, d, minx, maxx)
 {
@@ -498,7 +485,20 @@ function enableQuantitativeFilter(propId)
                 -rectHeight*.5;
         })
         .attr('opacity',0.0)
-        .call(handleDrag)
+        .call(handleDrag);
+        
+    var s = g.selectAll("circle.pref")
+        .data([d])
+        .enter().append('svg:circle')
+        .attr('class','pref')
+        .attr('r',rectHeight * .5)
+        .attr('cx', function(d) {
+            return d.toPixel(currentFilter[d.id].pref);
+        })
+        .attr('cy', rectHeight * .5)
+        .call(prefDrag)
+        .on('mouseover',qMouseover)
+        .on('mouseout',qMouseout);
 
     g.transition()
         .duration(500)
