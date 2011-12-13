@@ -4,9 +4,9 @@ var div = d3.select('#filterChart'),
     xMarginRight = 40.5,
     yMargin = 10.5,
     geoBuffer = 0,
-    rectHeight = 10,
+    rectHeight = 16,
     nomSpace = 2.5,
-    textOffset = rectHeight * 2;
+    textOffset;
 
 var strokeDefault = "#888",
     strokeHover = "#444",
@@ -51,7 +51,7 @@ function drawFilterChart(divTag, w, h)
     width = w;
     height = h;
     rectWidth = width - xMarginLeft - xMarginRight;
-    textOffset = rectHeight * 2 + 4;
+    textOffset = rectHeight * .5 + 3;
     
     addDataChangeCallback(dataChange);
     addDataSelectionCallback(dataSelect);
@@ -76,7 +76,9 @@ function drawFilterChart(divTag, w, h)
     // Set up paths
     
     calculatePaths();
-    paths = svg.selectAll('path.pass')
+    svg.append('svg:g')
+        .attr('class', 'pathGroup');
+    paths = svg.select('g.pathGroup').selectAll('path.pass')
         .data(pathData)
         .enter()
         .append('svg:path')
@@ -86,15 +88,15 @@ function drawFilterChart(divTag, w, h)
               .y(function(d) { return y(d.y) + rectHeight * .5; }))
         .on('mouseover', function(d) {
             if (!dragging) d3.select(this).attr('class','hover');
-            })
+        })
         .on('mouseout',function(d,idx) {
             if (lastPath != idx)
                 d3.select(this).attr('class', allData[idx].pass == true ?
                         'pass' : 'fail');
-            })
+        })
         .on('click',function(d,i) {
             selectData(i);
-            });
+        });
     paths.append('svg:title')
         .text(function(d,i) { return allData[i].name; });
 
@@ -123,6 +125,7 @@ function drawFilterChart(divTag, w, h)
         .attr('width',rectWidth)
         .attr('height',rectHeight)
         .style('fill','#fff')
+        .style('fill-opacity',0.5)
         .style('stroke','#888')
         .on('mouseover',qMouseover)
         .on('mouseout',qMouseout)
@@ -134,8 +137,8 @@ function drawFilterChart(divTag, w, h)
         .enter()
         .append('svg:text')
         .attr('class','label')
-        .text(function(d) { return "" + d; })
-        .attr('x', function(d,i) { return i==0 ? 0 : rectWidth;})
+        .text(function(d) { return d; })
+        .attr('x', function(d,i) { return i == 0 ? 2 : rectWidth - 2;})
         .attr('y', textOffset)
         .attr('text-anchor',function(d,i) { return i==0?'start':'end'; });
 
@@ -176,7 +179,7 @@ function drawFilterChart(divTag, w, h)
         .attr('x', function(d,i) {
             var w = rectWidth / (d3.select(this.parentNode)
                          .node().__data__.values.length);
-            return w * i + nomSpace;
+            return w * i + nomSpace + 2;
             })
         .attr('y', textOffset)
         .attr('text-anchor','start');
@@ -273,7 +276,7 @@ function mouseup(d)
 
 function mousemoved(d)
 {
-    //console.log("mousemoved");
+
 }
 
 var qMouseover = mouseover,
@@ -293,6 +296,7 @@ function qClickStart(d, i)
             .attr('x',0)
             .style('stroke',strokeDefault)
             .style('fill',fillSelected)
+            .style('fill-opacity', 0.5)
             .call(sliderDrag)
             .on('mouseover',qMouseover)
             .on('mouseout',qMouseout)
@@ -335,38 +339,69 @@ var dragging = false;
 var handleDrag = d3.behavior.drag()
     .on("dragstart",function(d) { dragging = true; })
     .on("drag",function(d,i) {
-	    var dx = d.toPixel.invert(d3.event.dx);
-	    var val = getFilterQuantitative(d.id);
-	    if (i == 0) {
-            setFilterMinQuantitative(d.id,val[0]+dx);
-	    } else {
-            setFilterMaxQuantitative(d.id,val[1]+dx);
-	    }
-	    qUpdateSlider(d3.select(this.parentNode), d);
+	    var dx = d3.event.dx;
+        var slider = d3.select(this.parentNode).select("rect.slider");
+        var minx = slider.attr('x') * 1.0,
+            maxx = slider.attr('width') * 1.0 + minx;
+        
+        if (i == 0) {
+            minx += dx * 1;
+            if (minx < 0) minx = 0;
+            else if (minx > maxx) minx = maxx;
+        } else {
+            maxx += dx * 1;
+            if (maxx > rectWidth) maxx = rectWidth;
+            else if (maxx < minx) maxx = minx;
+        }
+        
+        qUpdateSlider(d3.select(this.parentNode), d, minx, maxx);
 	})
-    .on("dragend",function(d) { dragging = false; mouseout(d); });
+    .on("dragend",function(d, i) {
+        dragging = false;
+        var slider = d3.select(this.parentNode).select("rect.slider");
+        var minx = slider.attr('x') * 1.0,
+            maxx = slider.attr('width') * 1.0 + minx;
+        if (i == 0) {
+            setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
+        } else
+            setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
+    });
 
 var sliderDrag = d3.behavior.drag()
     .on("dragstart",function(d) { dragging = true; })
     .on("drag",function(d) {
-	    var dx = d.toPixel.invert(d3.event.dx);
-	    var val = getFilterQuantitative(d.id);
-	    setFilterMinQuantitative(d.id,val[0]+dx);
-	    setFilterMaxQuantitative(d.id,val[1]+dx);
+	    var dx = d3.event.dx;
+        var slider = d3.select(this.parentNode).select("rect.slider");
+        var minx = slider.attr('x') * 1.0 + dx,
+            maxx = slider.attr('width') * 1.0 + minx;
+        
+        if (minx < 0) {
+            maxx -= minx;
+            minx = 0;
+        } else if (maxx > rectWidth) {
+            minx += (rectWidth - maxx);
+            maxx = rectWidth;
+        }
 	    
-	    qUpdateSlider(d3.select(this.parentNode), d);
+	    qUpdateSlider(d3.select(this.parentNode), d, minx, maxx);
 	})
-    .on("dragend",function(d) { dragging = false; mouseout(d); });
+    .on("dragend",function(d) { 
+        dragging = false;
+        var slider = d3.select(this.parentNode).select("rect.slider");
+        var minx = slider.attr('x'),
+            maxx = slider.attr('width') + minx;
+        setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
+        setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
+    });
 
-function qUpdateSlider(g, d)
+function qUpdateSlider(g, d, minx, maxx)
 {
-    var val = getFilterQuantitative(d.id);
-    g.select("rect.slider").attr('x', d.toPixel(val[0]))
-	.attr('width', d.toPixel(val[1]-val[0])+1);
+    g.select("rect.slider").attr('x', minx)
+        .attr('width', maxx - minx);
     g.selectAll("rect.handle")
-	.attr('x', function(d,i) {
-		return d.toPixel(val[i])-rectHeight*.5;
-	    });
+        .attr('x', function(d, i) {
+            return (i == 0 ? minx : maxx) - rectHeight*.5;
+        });
 }
 
 // Mouse handlers for n variables

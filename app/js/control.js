@@ -140,13 +140,20 @@ function addDataChangeCallback(call) {
     dataChangeListeners.push(call);
 }
 
+function updateFilters()
+{
+    for (var i = 0; i < allData.length; i++)
+        allData[i].pass = passesFilter(allData[i]);
+        
+    updateIndex();
+}
+
 function contractFilter(prop)
 {
     for (var i = 0; i < allData.length; i++) {
         if (allData[i].pass == true && !passOneFilter(allData[i], prop)) {
             allData[i].pass = false;
         }
-        //allData[i].pass = passesFilter(allData[i]);
     }
     updateIndex();
 }
@@ -158,7 +165,6 @@ function expandFilter(prop)
                 passesFilter(allData[i])) {
             allData[i].pass = true;
         }
-        //allData[i].pass = passesFilter(allData[i]);
     }
     updateIndex();
 }
