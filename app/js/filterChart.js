@@ -112,7 +112,7 @@ function drawFilterChart(divTag, w, h)
         .data(filterVals, function(d) { return d.name; })
         .enter().append('svg:g')
         .attr('class','filter')
-        .attr('name',function(d,i) { return d.name; })
+        .attr('id',function(d,i) { return d.id; })
         .attr('transform',function(d,i) {
             return 'translate('+xMarginLeft+','+y(i)+')'})
         .style('opacity',opacityDefault);
@@ -469,16 +469,66 @@ function nClick(d, i)
     }
 }
 
-// Redrawing callbacks
+// Master filter enabling stuff
 
-function redrawQuantitative(g, d)
+function enableQuantitativeFilter(propId)
 {
+    if (!currentFilter[propId]) return false;
+
+    var g = d3.select("g." + propId);
+    var d = g.node().__data__;
     
+    var vals = getFilterQuantitative(d.id);
+    
+    g.append('svg:rect')
+        .attr('class','slider')
+        .attr('height',rectHeight)
+        .attr('x',d.toPixel(vals[0]))
+        .attr('width',d.toPixel(vals[1] - vals[0]))
+        .style('stroke',strokeDefault)
+        .call(sliderDrag)
+        .on('mouseover',qMouseover)
+        .on('mouseout',qMouseout)
+        .on('click',qClick);
+
+    var h = g.selectAll("rect.handle")
+        .data([d, d])
+        .enter().append('svg:rect')
+        .attr('class','handle')
+        .attr('height',rectHeight)
+        .attr('width',rectHeight)
+        .attr('x', function(d,i) {
+            return d.toPixel(vals[i])
+                -rectHeight*.5;
+        })
+        .attr('opacity',0.0)
+        .call(handleDrag)
+
+    g.transition()
+        .duration(500)
+        .style('opacity',opacitySelected);
 }
 
-// Transition Styles
-
-function selectFilter()
+function enableNominalFilter(propId)
 {
+    if (!currentFilter[propId]) return false;
 
+    var g = d3.select("g." + propId);
+    var d = g.node().__data__;
+    
+    var vals = currentFilter[propId].values;
+    var key = d.id;
+    
+    for (var i = 0; i < vals.length; i++) {
+        boolCheck[key + vals[i]] = true;
+    }
+    g.selectAll('rect.filter')
+        .filter(function(oKey) {
+            return vals.indexOf(oKey) != -1;
+        })
+        .style('fill', fillSelected);
+    
+    g.transition()
+        .duration(500)
+        .style('opacity',opacitySelected);
 }

@@ -60,6 +60,24 @@ function loadData(json)
         weightIndex[i] = i;
     }
 }
+
+function reloadFilter(filter)
+{
+    currentFilter = filter;
+    numFilter = 0;
+    
+    for (prop in currentFilter) {
+        numFilter += 1;
+        var idx = filterMap[prop];
+        if (filterVariables[idx].type == 'q') {
+            enableQuantitativeFilter(prop);
+        } else if (filterVariables[idx].type == 'n') {
+            enableNominalFilter(prop);
+        }
+    }
+    
+    updateFilters();
+}
     
 // Callbacks to see if an individual data entry passes the current filter
 // and if so, what its normed weight is
