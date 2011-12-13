@@ -344,6 +344,7 @@ $(document).ready(function() {
   );
 
   $('#share').click(function() {
+    var share = $(this);
     $.get(
       "https://api-ssl.bitly.com/v3/shorten",
       {
@@ -356,7 +357,7 @@ $(document).ready(function() {
         var mail_to = "mailto:?" +
           "&subject=" + escape("A uniVSity view has been shared with you!") +
           "&body=" + escape(response.data.url);
-        window.open(mail_to, '_blank');
+        window.location.href = mail_to;
       }
     );
     return false;
