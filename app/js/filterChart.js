@@ -6,7 +6,8 @@ var div = d3.select('#filterChart'),
     geoBuffer = 0,
     rectHeight = 20,
     nomSpace = 2.5,
-    textOffset;
+    textOffset,
+    mapOffset = {x:0,y:0};
 
 var strokeDefault = "#888",
     strokeHover = "#444",
@@ -39,6 +40,11 @@ function initializeFilterVals()
             }
         }
     }
+}
+
+function setParallelToMapOffset(xoff, yoff)
+{
+    mapOffset = {x:xoff, y:yoff};
 }
 
 function drawFilterChart(divTag, w, h)
@@ -216,7 +222,8 @@ function calculatePaths()
         pathData[s] = [];
         pathData[s].idx = s;
 
-        //var j = 0;
+        
+
         for (var i = 0; i < filterVals.length; i++) {
             var type = filterVals[i].type,
                 key = filterVals[i].id;
