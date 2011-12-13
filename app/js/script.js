@@ -357,13 +357,7 @@ $(document).ready(function() {
         var mail_to = "mailto:?" +
           "&subject=" + escape("A uniVSity view has been shared with you!") +
           "&body=" + escape(response.data.url);
-        //window.open(mail_to);
         window.location.href = mail_to;
-        //var mailto_link = $('<a/>')
-          //.attr({href:"http://google.com", target:'_blank'})
-          //.text('test');
-        //$('#college_results').append(mailto_link);
-        //mailto_link.click();
       }
     );
     return false;
