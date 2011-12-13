@@ -108,6 +108,7 @@ function updateIndex()
             results[r++] = allData[weightIndex[i]];
         }
     }
+    console.log(results.length);
     
     display_college_results(results);
     
@@ -306,28 +307,49 @@ function weightNominal(data, prop)
 
 function weightQuantitative(data, prop)
 {
-    if (data[prop] < 1.0) return 0.0;
+    var val = data[prop];
+    if (val < 1.0 || val === null) return 0.0;
     
-    var w;
-    var mid = (currentFilter[prop].max + currentFilter[prop].min) * .5;
-    var range = (currentFilter[prop].max - currentFilter[prop].min) * .5;
-    if (range == 0) return data[prop] == mid ? 1.0 : 0.0;
-    else w = currentFilter[prop].weight * (1.0 - (Math.abs(data[prop] - mid) / range));
-    return Math.max(0.0, w);
+    var w, f = currentFilter[prop];
+    if (val > f.pref) {
+        w = (val - f.max) / (f.pref - f.max);
+    } else {
+        w = (val - f.min) / (f.pref - f.min);
+    }
+    
+    w *= f.weight;
+    return w;
 }
 
 // Functions for modifying and adding filters
 
 function setFilterWeight(prop, weight)
 {
-    if (!currentFilter[prop]) return;
-    
-    var idx = filterMap[prop];
+    if (!currentFilter[prop]) {
+        switch (filterVariables[filterMap[prop]].type) {
+        case 'q':
+            addFilterQuantitative(prop);
+            enableQuantitativeFilter(prop);
+            break;
+        case 'n':
+            addFilterNominal(prop);
+            enableNominalFilter(prop);
+            break;
+        default: return;
+        }
+    }
     
     if (weight < 0.0) weight = 0.0;
     else if (weight > 1.0) weight = 1.0;
     
     currentFilter[prop].weight = weight;
+}
+
+function addFilterNominal(prop)
+{
+    currentFilter[prop] = FilterNominal(prop);
+    numFilter++;
+    contractFilter(prop);
 }
 
 function addFilterValueNominal(prop, val)
@@ -384,7 +406,6 @@ function removeFilterQuantitative(prop)
 function setFilterMinQuantitative(prop, val)
 {
     var idx = filterMap[prop];
-    if (!filterVariables[idx]) return;
     
     var min0;
     
@@ -412,7 +433,6 @@ function setFilterMinQuantitative(prop, val)
 function setFilterMaxQuantitative(prop, val)
 {
     var idx = filterMap[prop];
-    if (!filterVariables[idx]) return;
     
     var max0;
     
@@ -435,6 +455,25 @@ function setFilterMaxQuantitative(prop, val)
         
     if (max0 > val) contractFilter(prop);
     else if (max0 < val) expandFilter(prop);
+}
+
+function setFilterPref(prop, val)
+{
+    var idx = filterMap[prop];
+    
+    if (!currentFilter[prop]) {
+        currentFilter[prop] = FilterQuantitative(prop);
+        numFilter++;
+    }
+    
+    if (val > currentFilter[prop].max)
+        val = currentFilter[prop].max;
+    else if (val < currentFilter[prop].min)
+        val = currentFilter[prop].min;
+        
+    currentFilter[prop].pref = val;
+    
+    updateIndex();
 }
 
 function getFilterQuantitative(prop)

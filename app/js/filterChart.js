@@ -1,6 +1,6 @@
 var div = d3.select('#filterChart'),
     width, height, rectWidth,
-    xMarginLeft = 170.5,
+    xMarginLeft = 160.5,
     xMarginRight = 0,
     yMargin = 10.5,
     geoBuffer = 0,
@@ -322,6 +322,8 @@ function qClick(d, i)
         .remove();
     g.selectAll('rect.slider')
         .remove();
+    g.selectAll('circle.pref')
+        .remove();
     g.transition()
         .duration(500)
         .style('opacity',opacityDefault);
@@ -335,7 +337,9 @@ var handleDrag = d3.behavior.drag()
 	    var dx = d3.event.dx;
         var slider = d3.select(this.parentNode).select("rect.slider");
         var minx = slider.attr('x') * 1.0,
-            maxx = slider.attr('width') * 1.0 + minx;
+            maxx = slider.attr('width') * 1.0 + minx,
+            prefx = d3.select(this.parentNode).select("circle.pref")
+                .attr('cx') * 1.0;
         
         if (i == 0) {
             minx += dx * 1;
@@ -347,17 +351,23 @@ var handleDrag = d3.behavior.drag()
             else if (maxx < minx) maxx = minx;
         }
         
-        qUpdateSlider(d3.select(this.parentNode), d, minx, maxx);
+        if (prefx < minx) prefx = minx;
+        if (prefx > maxx) prefx = maxx;
+        
+        qUpdateSlider(d3.select(this.parentNode), d, minx, maxx, prefx);
 	})
     .on("dragend",function(d, i) {
         dragging = false;
         var slider = d3.select(this.parentNode).select("rect.slider");
         var minx = slider.attr('x') * 1.0,
-            maxx = slider.attr('width') * 1.0 + minx;
+            maxx = slider.attr('width') * 1.0 + minx,
+            prefx = d3.select(this.parentNode).select("circle.pref")
+                .attr('cx') * 1.0;
         if (i == 0) {
             setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
         } else
             setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
+        setFilterPref(d.id, d.toPixel.invert(prefx));
     });
 
 var sliderDrag = d3.behavior.drag()
@@ -366,7 +376,9 @@ var sliderDrag = d3.behavior.drag()
 	    var dx = d3.event.dx;
         var slider = d3.select(this.parentNode).select("rect.slider");
         var minx = slider.attr('x') * 1.0 + dx,
-            maxx = slider.attr('width') * 1.0 + minx;
+            maxx = slider.attr('width') * 1.0 + minx,
+            prefx = d3.select(this.parentNode).select("circle.pref")
+                .attr('cx') * 1.0;
         
         if (minx < 0) {
             maxx -= minx;
@@ -375,34 +387,46 @@ var sliderDrag = d3.behavior.drag()
             minx += (rectWidth - maxx);
             maxx = rectWidth;
         }
+        
+        if (prefx < minx) prefx = minx;
+        if (prefx > maxx) prefx = maxx;
 	    
-	    qUpdateSlider(d3.select(this.parentNode), d, minx, maxx);
+	    qUpdateSlider(d3.select(this.parentNode), d, minx, maxx, prefx);
 	})
     .on("dragend",function(d) { 
         dragging = false;
         var slider = d3.select(this.parentNode).select("rect.slider");
         var minx = slider.attr('x') * 1.0,
-            maxx = slider.attr('width') * 1.0 + minx;
+            maxx = slider.attr('width') * 1.0 + minx,
+            prefx = d3.select(this.parentNode).select("circle.pref")
+                .attr('cx') * 1.0;
         setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
         setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
+        setFilterPref(d.id, d.toPixel.invert(prefx));
     });
     
 var prefDrag = d3.behavior.drag()
     .on("dragstart",function(d) { dragging = true; })
     .on("drag",function(d) {
         var dx = d3.event.dx;
-        var pref = d3.select(this.parentNode).select("rect.slider");
-        var minx = slider.attr('x') * 1.0 + dx,
+        var slider = d3.select(this.parentNode).select("rect.slider");
+        var minx = slider.attr('x') * 1.0,
             maxx = slider.attr('width') * 1.0 + minx,
-            prefx = d.toPixel(currentFilter[d.id].pref);
+            prefx = d3.select(this).attr('cx') * 1.0 + dx;
+        
+        if (prefx < minx) prefx = minx;
+        if (prefx > maxx) prefx = maxx;
+        
+        qUpdateSlider(d3.select(this.parentNode), d, minx, maxx, prefx);
     })
     .on("dragend",function(d) {
         dragging = false;
+        var prefx = d3.select(this).attr('cx') * 1.0;
+        setFilterPref(d.id, d.toPixel.invert(prefx));
     });
-            
         
 
-function qUpdateSlider(g, d, minx, maxx)
+function qUpdateSlider(g, d, minx, maxx, pref)
 {
     g.select("rect.slider").attr('x', minx)
         .attr('width', maxx - minx);
@@ -410,6 +434,7 @@ function qUpdateSlider(g, d, minx, maxx)
         .attr('x', function(d, i) {
             return (i == 0 ? minx : maxx) - rectHeight*.5;
         });
+    g.select("circle.pref").attr('cx', pref);
 }
 
 // Mouse handlers for n variables
