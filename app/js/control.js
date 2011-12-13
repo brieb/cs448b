@@ -177,13 +177,13 @@ function updateMapFilter()
             numPass++;
         if (allData[i].pass && !collegeSelectedInMap(allData[i])) {
             allData[i].pass = false;
-            console.log("school ditched");
+            //console.log("school ditched");
         } else if (!allData[i].pass && passesFilter(allData[i])) {
             allData[i].pass = true;
-            console.log("school added");
+            //console.log("school added");
         }
     }
-    console.log("Map changed: " + numPass + " now pass.");
+    //console.log("Map changed: " + numPass + " now pass.");
     updateIndex();
 }
 

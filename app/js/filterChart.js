@@ -1,10 +1,10 @@
 var div = d3.select('#filterChart'),
     width, height, rectWidth,
-    xMarginLeft = 120.5,
-    xMarginRight = 40.5,
+    xMarginLeft = 160.5,
+    xMarginRight = 0,
     yMargin = 10.5,
     geoBuffer = 0,
-    rectHeight = 16,
+    rectHeight = 20,
     nomSpace = 2.5,
     textOffset;
 
@@ -388,10 +388,12 @@ var sliderDrag = d3.behavior.drag()
     .on("dragend",function(d) { 
         dragging = false;
         var slider = d3.select(this.parentNode).select("rect.slider");
-        var minx = slider.attr('x'),
-            maxx = slider.attr('width') + minx;
+        var minx = slider.attr('x') * 1.0,
+            maxx = slider.attr('width') * 1.0 + minx;
+        console.log([d.toPixel.invert(minx), d.toPixel.invert(maxx)]);
         setFilterMinQuantitative(d.id, d.toPixel.invert(minx));
         setFilterMaxQuantitative(d.id, d.toPixel.invert(maxx));
+        console.log(getFilterQuantitative(d.id));
     });
 
 function qUpdateSlider(g, d, minx, maxx)

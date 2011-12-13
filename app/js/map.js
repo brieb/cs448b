@@ -36,7 +36,7 @@ var curMapSelection = null;
 var mapSvg;
 var mapColleges;
 var mapSelections = {};
-var scaleX, scaleY;
+var albersProj;
 var drawMap = function(div, scale) {
   var width = 700;
   var height = 400;
@@ -52,7 +52,12 @@ var drawMap = function(div, scale) {
 
   var path = d3.geo.path()
     .pointRadius(3);
-  var albersProj = d3.geo.albersUsa();
+    
+  albersProj = d3.geo.albersUsa();
+  var scale0 = albersProj.scale();
+  var trans0 = albersProj.translate();
+  albersProj.scale(scale0 * scale)
+    .translate([trans0[0]*scale,trans0[1]*scale]);
 
   var states = svg.append("svg:g")
     .attr("id", "states")
@@ -158,8 +163,8 @@ var changeMapSelection = function(e) {
 }
 
 var clearSelector = function(e){
-  console.log('clearing!');
-  console.log(e);
+  //console.log('clearing!');
+  //console.log(e);
   if (e.target.getAttribute("class") == "selector"){
     d3.select(e.target).remove();
     delete mapSelections[e.target.getAttribute("cx")+"_"+
@@ -202,7 +207,6 @@ var colorColleges = function() {
 var mapSelection = function(){
   return mapSvg.selectAll(".collegePoint").filter(function(d){
     if (isEmpty(mapSelections)) return true;
-    var albersProj = d3.geo.albersUsa();
     var x = albersProj(d.geometry.coordinates)[0];
     var y = albersProj(d.geometry.coordinates)[1];
     for (key in mapSelections) {
@@ -221,7 +225,6 @@ var mapSelection = function(){
 
 var collegeSelectedInMap = function(college) {
   if (isEmpty(mapSelections)) return true;
-  var albersProj = d3.geo.albersUsa();
   var pos = albersProj([college.longitude,college.latitude]);
   var x = pos[0], y = pos[1];
   for (key in mapSelections) {
@@ -246,7 +249,6 @@ var isEmpty = function(obj) {
 }
 
 var getMapOffset = function(college) {
-  var albersProj = d3.geo.albersUsa();
   var x = albersProj(college.longitude)[0];
   var y = albersProj(college.latitude)[1];
   return {'x': x, 'y': y};
