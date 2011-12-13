@@ -118,8 +118,8 @@ function passOneFilter(d, prop)
     case 'N':
         if (prop == "majors") {
             var res = school_has_majors(d);
-            console.log("Checking majors for school " + d.name);
-            console.log(res);
+            //console.log("Checking majors for school " + d.name);
+            //console.log(res);
             return (res === null || school_has_majors(d).num_majors > 0);
         } else if (prop == "name") {
             return school_has_name(d);
@@ -466,15 +466,12 @@ function majorAdded()
 function majorRemoved()
 {
     var res = school_has_majors(allData[0]);
-    if (res.num_majors_specified == 0) {
+    if (res === null) {
         expandFilter("majors");
         delete currentFilter["majors"];
     } else {
         contractFilter("majors");
     }
-    
-
-   console.log("Removed major");
 }
 
 function nameAdded()
