@@ -156,18 +156,20 @@ $(document).ready(function() {
   addDataSelectionCallback(function(idx) {
     $.get(API_URL, {id: allData[idx].id}, function(response) {
       display_college_details(response, 0);
-      highlight_college_results_list_elem($('#college_results_'+response.id));
+      highlight_college_results_list_elem($('#college_results_'+response.id), true);
     });
   });
 
-  var highlight_college_results_list_elem = function(elem) {
+  var highlight_college_results_list_elem = function(elem, do_scroll) {
     var results_list = $('#college_results');
     results_list.find('ul li').removeClass('active');
     elem.addClass('active');
 
-    var scroll_top_old = results_list.scrollTop();
-    var scroll_top_new = scroll_top_old + elem.position().top;
-    results_list.scrollTop(scroll_top_new);
+    if (do_scroll === true) {
+      var scroll_top_old = results_list.scrollTop();
+      var scroll_top_new = scroll_top_old + elem.position().top;
+      results_list.animate({scrollTop:scroll_top_new}, 'slow');
+    }
   };
 
   var display_college_details = function(college) {
@@ -271,7 +273,7 @@ $(document).ready(function() {
 
       if (i === 0) {
         // show the first college by default
-        highlight_college_results_list_elem(li);
+        highlight_college_results_list_elem(li, false);
         $.get(API_URL, {id:results[0].id}, function(response) {
           display_college_details(response);
         });
@@ -281,7 +283,7 @@ $(document).ready(function() {
       (function() {
         var cid = results[i].id;
         li.click(function() {
-          highlight_college_results_list_elem($(this));
+          highlight_college_results_list_elem($(this), false);
           $.get(API_URL, {id:cid}, function(response) {
             display_college_details(response);
           });
