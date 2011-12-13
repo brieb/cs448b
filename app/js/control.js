@@ -92,7 +92,7 @@ function updateIndex()
     }
     //console.log(results.length);
     
-    display_college_results(results, false);
+    display_college_results(results);
     
     for (var i = 0; i < dataChangeListeners.length; i++)
         dataChangeListeners[i]();
