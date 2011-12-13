@@ -427,7 +427,9 @@ $(document).ready(function() {
   * STARS
   */
   render_stars = function() {
+    var chart = $('#filterChart');
     var filter_elems = $('g.filter');
+
     for (var i = 2; i < filter_elems.length; i += 1) {
       var filter_elem = $(filter_elems[i]);
       var filter_top = filter_elem.position().top;
@@ -449,18 +451,16 @@ $(document).ready(function() {
         if (target.hasClass('star_unlit')) {
           target.removeClass('star_unlit');
           target.addClass('star_lit');
-          //setFilterStarred(prop, true);
+          setFilterStarred(filter_elem.attr('id'), true);
         } else {
           target.removeClass('star_lit');
           target.addClass('star_unlit');
-          //setFilterStarred(prop, false);
+          setFilterStarred(filter_elem.attr('id'), false);
         }
       });
 
-      $('#filterChart').append(star);
-    };
-    console.log(filter_elems);
+      chart.append(star);
+    }
   };
-  //add_stars();
 
 });
