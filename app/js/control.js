@@ -195,7 +195,7 @@ var selectedData,
 function selectData(idx)
 {
     selectedData = allData[idx];
-    console.log(selectedData.name);
+    //console.log(selectedData.name);
     for (var i = 0; i < selectionListeners.length; i++)
         selectionListeners[i](idx);
 }
@@ -227,7 +227,7 @@ function passesNominal(data, prop)
 
 function passesQuantitative(data, prop)
 {
-    if (data[prop] < -1.0) return passWithoutInfo;
+    if (data[prop] === undefined || data[prop] === null) return passWithoutInfo;
     
     return (data[prop] >= currentFilter[prop].min &&
             data[prop] <= currentFilter[prop].max);
