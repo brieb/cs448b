@@ -56,11 +56,16 @@ $(document).ready(function() {
     return null;
   };
   school_has_name = function(school) {
+    if (num_school_names_specified() === 0) {
+      return true;
+    }
+
     for (var i = 0; i < tok_match_college.length; i += 1) {
       if (tok_match_college[i].name === school.name) {
         return true;
       }
-    };
+    }
+
     return false;
   };
   num_school_names_specified = function() {
