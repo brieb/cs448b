@@ -17,8 +17,7 @@ $(document).ready(function() {
 
   var tok_college_on_change = function(callback) {
     tok_match_college = tok_college.tokenInput('get');
-    console.log(tok_match_college);
-    //callback();
+    callback();
   };
   var tok_college_on_add = function() {
     tok_college_on_change(nameAdded);
@@ -38,7 +37,7 @@ $(document).ready(function() {
       {major_ids: major_ids},
       function(response) {
         tok_match_major = response;
-        //callback();
+        callback();
       });
   };
   var tok_major_on_add = function() {

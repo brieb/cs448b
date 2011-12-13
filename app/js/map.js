@@ -255,12 +255,12 @@ var getMapOffset = function(college) {
 }
 
 var selectSchoolOnMap = function(index) {
-  console.log('selecting on map');
+  //console.log('selecting on map');
   var college = allData[index];
   colorColleges();
   mapSvg.selectAll(".collegePoint").filter(function(d,i){
     if (i == index) {
-      console.log('found on map');
+      //console.log('found on map');
       return true;
     }
     return false;
