@@ -115,6 +115,8 @@ function drawFilterChart(divTag, w, h)
         .attr('id',function(d,i) { return d.id; })
         .attr('transform',function(d,i) {
             return 'translate('+xMarginLeft+','+y(i)+')'})
+        .classed('on', false)
+        .classed('off', true)
         .style('opacity',opacityDefault);
     sliders.append('svg:text')
         .attr('class','filter')
@@ -354,6 +356,8 @@ function qClick(d, i)
     g.transition()
         .duration(500)
         .style('opacity',opacityDefault);
+    g.classed('on', false)
+        .classed('off', true);
 }
 
 var dragging = false;
@@ -493,11 +497,17 @@ function nClick(d, i)
     }
 
     if (trans) {
-        d3.select(this.parentNode).transition()
-            .duration(500)
-            .style('opacity',opacitySelected);
+        d3.select(this.parentNode)
+          .classed('off', false)
+          .classed('on', true)
+          .transition()
+              .duration(500)
+              .style('opacity',opacitySelected);
     } else if (!currentFilter[key]) {
-        d3.select(this.parentNode).transition()
+        d3.select(this.parentNode)
+          .classed('on', false)
+          .classed('off', true)
+          .transition()
             .duration(500)
             .style('opacity',opacityDefault);
     }
@@ -553,6 +563,9 @@ function enableQuantitativeFilter(propId)
     g.transition()
         .duration(500)
         .style('opacity',opacitySelected);
+
+    g.classed('off', false)
+      .classed('on', true);
 }
 
 function enableNominalFilter(propId)
@@ -578,4 +591,7 @@ function enableNominalFilter(propId)
     g.transition()
         .duration(500)
         .style('opacity',opacitySelected);
+
+    g.classed('off', false)
+      .classed('on', true);
 }
