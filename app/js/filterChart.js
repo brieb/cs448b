@@ -241,8 +241,9 @@ function calculatePaths()
             
                 pathData[s].push({y:i, x:(val + .5)/num});
             } else if (type == "N") {
-                
-                pathData[s].push({y:i, x:0.5});
+                if (key == "name") {
+                    pathData[s].push({y:i, x:0.5});
+                }
             }
         }
     }
