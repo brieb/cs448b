@@ -39,7 +39,6 @@ var brushSelection;
 var mapSelections = {};
 var albersProj;
 var mapFeatures;
-var path;
 var drawMap = function(div, scale) {
   var width = 700;
   var height = 400;
@@ -53,7 +52,7 @@ var drawMap = function(div, scale) {
 
   mapSvg = svg;
 
-  path = d3.geo.path()
+  var path = d3.geo.path()
     .pointRadius(3);
     
   albersProj = d3.geo.albersUsa();
@@ -268,10 +267,11 @@ var getMapOffset = function(college) {
 }
 
 var selectSchoolOnMap = function(index) {
+  var path = d3.geo.path()
+    .pointRadius(6);
   var sel = brushSelection.selectAll("path")
     .data([mapFeatures[index]], function(d) { return d.properties.index; });
-  console.log(mapFeatures[index]);
-  var newOne = sel.enter().append("svg:path")
+  sel.enter().append("svg:path")
         .attr("d", path)
         .attr("class", "collegePoint")
         .style("fill","#FF9933")
