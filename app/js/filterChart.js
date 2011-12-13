@@ -129,10 +129,7 @@ function drawFilterChart(divTag, w, h)
     qsliders.append('svg:rect')
         .attr('class','filter')
         .attr('width',rectWidth)
-        .attr('height',rectHeight)
-        .style('fill','#fff')
-        .style('fill-opacity',0.5)
-        .style('stroke','#888');
+        .attr('height',rectHeight);
     qsliders.selectAll('text.label')
         .data(function(d) { 
             return [(d.min_label ? d.min_label : d.min),
@@ -209,8 +206,12 @@ function drawFilterChart(divTag, w, h)
         .on('mousedown',nMousedown)
         .on('mouseup',nMouseup)
         .on('click', nClick);
-        
+
+    // Now do it
+    
+    dataChange();
 }
+
 
 function calculatePaths()
 {
@@ -249,13 +250,36 @@ function calculatePaths()
     }
 }
 
-function dataChange(i)
+var colorScale = d3.scale.linear()
+    .domain([0,0.5,1])
+    .range(['#333','#225599','#225599']);
+var alphaScale = d3.scale.linear()
+    .domain([0,0.5,1])
+    .range([0.1,0.5,0.6]);
+    
+function dataChange()
 {
     paths.attr('class', function(d,i) {
             if (d.idx == lastPath) return 'select';
             else if (allData[d.idx].pass) return 'pass';
             else return 'fail';
         });
+    /*paths.attr('stroke', function(d,i) {
+            if (d.idx == lastPath || !allData[d.idx].pass) {
+                return null;
+            } else {
+                var color = colorScale(allData[d.idx].weight);
+                return color;
+            }
+        });
+    paths.attr('opacity', function(d,i) {
+            //console.log(allData[d.idx].weight);
+            if (d.idx == lastPath || !allData[d.idx].pass) {
+                return null;
+            } else {
+                return alphaScale(allData[d.idx].weight);
+            }
+        });*/
     paths.sort(function(a,b) {
         return allData[a.idx].weight - allData[b.idx].weight;
     });
@@ -264,8 +288,9 @@ function dataChange(i)
 function dataSelect(idx)
 {
     if (lastPath >= 0) {
-        paths.filter(function(d) { return d.idx == lastPath; }).attr('class',
-            allData[lastPath].pass == true ? 'pass':'fail')
+        paths.filter(function(d) { return d.idx == lastPath; })
+            .attr('class',
+                allData[lastPath].pass == true ? 'pass':'fail')
             .style('stroke-opacity',null);
     }
     lastPath = idx;
@@ -275,19 +300,21 @@ function dataSelect(idx)
 
 function mouseover(d)
 {
-    if (!dragging && lastHovered && lastHovered != this) {
-        d3.select(lastHovered)
-            .style('stroke',strokeDefault);
+    if (!dragging) {
+        if (!dragging && lastHovered && lastHovered != this) {
+            d3.select(lastHovered)
+                .style('stroke',null);
+        }
+        lastHovered = this;
+        d3.select(this).style('stroke',strokeHover);
     }
-    lastHovered = this;
-    d3.select(this).style('stroke',strokeHover);
 }
 
 function mouseout(d)
 {
     if (!dragging && lastHovered) {
         d3.select(lastHovered)
-            .style('stroke',strokeDefault);
+            .style('stroke',null);
         lastHovered = undefined;
     }
 }
@@ -426,15 +453,15 @@ var prefDrag = d3.behavior.drag()
     });
         
 
-function qUpdateSlider(g, d, minx, maxx, pref)
+function qUpdateSlider(g, d, minx, maxx, prefx)
 {
     g.select("rect.slider").attr('x', minx)
         .attr('width', maxx - minx);
     g.selectAll("rect.handle")
         .attr('x', function(d, i) {
-            return (i == 0 ? minx : maxx) - rectHeight*.5;
+            return (i == 0 ? minx : maxx) - i * rectHeight + 1;
         });
-    g.select("circle.pref").attr('cx', pref);
+    g.select("circle.pref").attr('cx', prefx);
 }
 
 // Mouse handlers for n variables
@@ -486,14 +513,15 @@ function enableQuantitativeFilter(propId)
         return d.id == propId; });
     var d = g.node().__data__;
     
-    var vals = getFilterQuantitative(d.id);
+    var vals = getFilterQuantitative(d.id),
+        minx = d.toPixel(vals[0]),
+        maxx = d.toPixel(vals[1]),
+        prefx = d.toPixel(currentFilter[d.id].pref);
     
     g.append('svg:rect')
         .attr('class','slider')
         .attr('height',rectHeight)
-        .attr('x',d.toPixel(vals[0]))
-        .attr('width',d.toPixel(vals[1] - vals[0]))
-        .style('stroke',strokeDefault)
+        //.style('stroke',strokeDefault)
         .call(sliderDrag)
         .on('mouseover',qMouseover)
         .on('mouseout',qMouseout)
@@ -503,27 +531,24 @@ function enableQuantitativeFilter(propId)
         .data([d, d])
         .enter().append('svg:rect')
         .attr('class','handle')
-        .attr('height',rectHeight)
-        .attr('width',rectHeight)
-        .attr('x', function(d,i) {
-            return d.toPixel(vals[i])
-                -rectHeight*.5;
-        })
-        .attr('opacity',0.0)
+        .attr('height',rectHeight-2)
+        .attr('width',rectHeight-2)
+        .attr('y',1)
+        .on('mouseover',qMouseover)
+        .on('mousout',qMouseout)
         .call(handleDrag);
         
     var s = g.selectAll("circle.pref")
         .data([d])
         .enter().append('svg:circle')
         .attr('class','pref')
-        .attr('r',rectHeight * .5)
-        .attr('cx', function(d) {
-            return d.toPixel(currentFilter[d.id].pref);
-        })
+        .attr('r',rectHeight * .3)
         .attr('cy', rectHeight * .5)
         .call(prefDrag)
         .on('mouseover',qMouseover)
         .on('mouseout',qMouseout);
+        
+    qUpdateSlider(g, d, minx, maxx, prefx);
 
     g.transition()
         .duration(500)

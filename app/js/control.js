@@ -37,8 +37,6 @@ function loadFilter(json)
     filterMap = {};
     for (var i = 0; i < filterVariables.length; i++)
         filterMap[filterVariables[i].id] = i;
-    
-    //filterKeys = Object.keys(filterVariables);
 }
 
 function loadData(json)
@@ -55,7 +53,7 @@ function loadData(json)
     
     for (var i = 0; i < allData.length; i++) {
         allData[i].pass = true;
-        allData[i].weight = 0.0;
+        allData[i].weight = 1.0;
         weightIndex[i] = i;
     }
 }
@@ -108,7 +106,6 @@ function updateIndex()
             results[r++] = allData[weightIndex[i]];
         }
     }
-    console.log(results.length);
     
     display_college_results(results);
     
@@ -137,8 +134,6 @@ function passOneFilter(d, prop)
     case 'N':
         if (prop == "majors") {
             var res = school_has_majors(d);
-            //console.log("Checking majors for school " + d.name);
-            //console.log(res);
             return (res === null || school_has_majors(d).num_majors > 0);
         } else if (prop == "name") {
             return school_has_name(d);
@@ -189,8 +184,9 @@ function addDataChangeCallback(call) {
 
 function updateFilters()
 {
-    for (var i = 0; i < allData.length; i++)
+    for (var i = 0; i < allData.length; i++) {
         allData[i].pass = passesFilter(allData[i]);
+    }
         
     updateIndex();
 }
