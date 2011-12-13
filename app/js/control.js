@@ -19,9 +19,8 @@ for (var i = 0; i < filterVariables.length; i++)
 
 var numFilter;
 var currentFilter = {
-    "num_undergrads":{"min":0,"max":40000,"weight":1.0},
-    "degrees":{"values":["bachelors","doctorate"],"weight":0.5},
-    "majors":{"values":["computer science", "mathematics", "physics"],"weight":1.0}
+    "population":{"min":3000,"max":10000,"weight":0.5},
+    "degrees":{"values":["Bachelor's","Doctoral"],"weight":0.5},
     };
 
 /*

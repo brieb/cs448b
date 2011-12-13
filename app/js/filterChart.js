@@ -249,13 +249,6 @@ function calculatePaths()
     }
 }
 
-function drawPaths()
-{
-    paths.sort(function(a,b) {
-        return allData[a.idx].weight - allData[b.idx].weight;
-    });
-}
-
 function dataChange(i)
 {
     paths.attr('class', function(d,i) {
@@ -263,7 +256,9 @@ function dataChange(i)
             else if (allData[d.idx].pass) return 'pass';
             else return 'fail';
         });
-    drawPaths();
+    paths.sort(function(a,b) {
+        return allData[a.idx].weight - allData[b.idx].weight;
+    });
 }
 
 function dataSelect(idx)
@@ -475,7 +470,8 @@ function enableQuantitativeFilter(propId)
 {
     if (!currentFilter[propId]) return false;
 
-    var g = d3.select("g." + propId);
+    var g = d3.selectAll("g.filter").filter(function(d) {
+        return d.id == propId; });
     var d = g.node().__data__;
     
     var vals = getFilterQuantitative(d.id);
@@ -513,7 +509,8 @@ function enableNominalFilter(propId)
 {
     if (!currentFilter[propId]) return false;
 
-    var g = d3.select("g." + propId);
+    var g = d3.selectAll("g.filter").filter(function(d) {
+        return d.id == propId; });
     var d = g.node().__data__;
     
     var vals = currentFilter[propId].values;
