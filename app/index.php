@@ -99,7 +99,10 @@
         var drawCharts = function() {
             drawFilterChart("#filterChart", 630, 720);
             drawMap("#mapChart", .7);
-            
+            render_stars();
+
+            read_url();
+
             /*var currentFilter = {
                 "population":{"min":3000,"max":10000,"weight":0.5},
                 "calendar":{"values":["Quarter"],"weight":0.5},

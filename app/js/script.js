@@ -3,6 +3,7 @@ var select_college;
 var school_has_majors;
 var school_has_name;
 var update_url;
+var read_url;
 
 $(document).ready(function() {
   var API_URL = '../api/college.php';
@@ -410,14 +411,106 @@ $(document).ready(function() {
 *
 */
   update_url = function() {
-    location.hash = $.param(currentFilter);
+    var data = {};
+    data.currentFilter = currentFilter;
+    data.tok_specified_major = tok_specified_major;
+    data.tok_specified_college = tok_specified_college;
+    location.hash = $.param(data);
   };
   addDataChangeCallback(update_url);
 
   //Read URL
-  (function() {
-    var filters = $.deparam(location.hash.substr(1));
-    console.log(filters);
-  })();
+  read_url = function() {
+    var data = $.deparam(location.hash.substr(1));
+
+    var filter = data.currentFilter;
+    for (var attr in filter) {
+      if (filter.hasOwnProperty(attr)) {
+        if (filter[attr]['min'] !== undefined) {
+          filter[attr]['min'] = parseInt(filter[attr]['min']);
+        }
+        if (filter[attr]['max'] !== undefined) {
+          filter[attr]['max'] = parseInt(filter[attr]['max']);
+        }
+        if (filter[attr]['weight'] !== undefined) {
+          filter[attr]['weight'] = parseFloat(filter[attr]['weight']);
+        }
+      }
+    }
+    //TODO fill in tokenizers
+    console.log(data);
+    if (data.currentFilter !== undefined) {
+      reloadFilter(filter);
+    }
+
+    if (data.tok_specified_college !== undefined) {
+      for (var i = 0; i < data.tok_specified_college.length; i += 1) {
+        tok_college.tokenInput("add", data.tok_specified_college[i]);
+      }
+    }
+    if (data.tok_specified_major !== undefined) {
+      for (var i = 0; i < data.tok_specified_major.length; i += 1) {
+        tok_major.tokenInput("add", data.tok_specified_major[i]);
+      }
+    }
+  };
+
+  /*
+  * STARS
+  */
+  render_stars = function() {
+    var chart = $('#filterChart');
+    var filter_elems = $('g.filter');
+
+    for (var i = 2; i < filter_elems.length; i += 1) {
+      (function(){
+        var filter_elem = $(filter_elems[i]);
+        var filter_top = filter_elem.position().top;
+        var filter_id = filter_elem.attr('id');
+
+        var star = $('<div/>')
+        .attr('id', 'star_'+filter_id)
+        .addClass('star')
+        .addClass('star_unlit')
+        .css('top', filter_top+'px');
+
+        star.hover(function() {
+          $(this).addClass('star_hover');
+        }, function() {
+          $(this).removeClass('star_hover');
+        });
+
+        star.click(function() {
+          var target = $(this);
+          target.removeClass('star_hover');
+          if (target.hasClass('star_unlit')) {
+            target.removeClass('star_unlit');
+            target.addClass('star_lit');
+            setFilterStarred(filter_id, true);
+          } else {
+            target.removeClass('star_lit');
+            target.addClass('star_unlit');
+            setFilterStarred(filter_id, false);
+          }
+        });
+
+        chart.append(star);
+      })();
+    }
+  };
+
+  //var set_star_on = function(prop) {
+  //};
+
+  setStarState = function(prop, is_starred) {
+    var star = $('#star_'+prop);
+    if (is_starred) {
+      star.removeClass('star_unlit');
+      star.addClass('star_lit');
+    } else {
+      star.removeClass('star_lit');
+      star.addClass('star_unlit');
+    }
+  };
 
 });
