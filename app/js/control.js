@@ -73,6 +73,7 @@ function reloadFilter(filter)
         } else if (filterVariables[idx].type == 'n') {
             enableNominalFilter(prop);
         }
+        setStarState(prop, weight > 0.5 ? true : false);
     }
     
     updateFilters();
@@ -228,7 +229,12 @@ function updateMapFilter()
             //console.log("school added");
         }
     }
-    //console.log("Map changed: " + numPass + " now pass.");
+    updateIndex();
+}
+
+function setFilterStarred(prop, starred)
+{
+    setFilterWeight(prop, starred ? 1.0 : 0.5);
     updateIndex();
 }
 
