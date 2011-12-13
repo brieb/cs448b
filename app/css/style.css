@@ -260,3 +260,26 @@ div.token-input-dropdown-facebook {
 .star_hover {
   background-image: url('img/star_hover.png');
 }
+
+#filterChart .slider {
+  cursor:move;
+}
+#filterChart .handle {
+  cursor:col-resize;
+}
+#filterChart .pref {
+  cursor: -webkit-grab;
+}
+#filterChart .pref:active {
+  cursor: -webkit-grabbing;
+}
+#filterChart .filter.off .selector {
+  cursor: pointer;
+}
+.pathGroup .hover {
+  cursor: pointer;
+}
+.graph_small path {
+  cursor: help;
+}
+
