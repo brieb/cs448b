@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/token-input-facebook.css" type="text/css" />
     <link rel="stylesheet" href="css/jquery.jscrollpane.css" type="text/css" />
     <link rel="stylesheet" href="css/filter.css" />
+    <link rel="stylesheet" href="css/charts.css" />
     <link rel="stylesheet" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
@@ -61,6 +62,8 @@
         </div>
 
         <div id="filterChart"></div>
+      
+        <div id="mapChart"></div>
       </div>
 
       <div id="content_r">
@@ -77,6 +80,8 @@
           </div>
           <div id="graph2" class="graph_small">
           </div>
+          <div id="graph3" class="graph_small">
+          </div>
 
         </div>
 
@@ -85,15 +90,17 @@
   <script type="text/javascript" src="js/control.js"></script>
   <script type="text/javascript" src="js/filterChart.js"></script>
   <script type="text/javascript" src="js/map.js"></script>
+  <script type="text/javascript" src="js/demCharts.js"></script>
   <script type="text/javascript">
   
     // Everything to draw once loading is done
     var drawCharts = function() {
-        drawFilterChart("#filterChart", 600, 600);
+        drawFilterChart("#filterChart", 630, 720);
+        drawMap("#mapChart", .7);
     }
   
     // Load filters then load data--uncomment once we have a filter json
-    /*d3.json('FILTER_JSON_HERE', function(json) {
+    d3.json('filters.json', function(json) {
         loadFilter(json);
         
         d3.json('data.json', function(json) {
@@ -101,11 +108,6 @@
             
             drawCharts();
         });
-    });*/
-    
-    d3.json('data.json', function(json) {
-        loadData(json);
-        drawCharts();
     });
 
   </script>

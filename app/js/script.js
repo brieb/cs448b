@@ -1,3 +1,6 @@
+var display_college_results,
+    select_college;
+
 $(document).ready(function() {
 
   var API_URL = '../api/college.php';
@@ -65,6 +68,10 @@ $(document).ready(function() {
     return content;
   };
 
+    addDataSelectionCallback(function(idx) {
+        $.get(API_URL, {id: allData[idx].id}, function(response) {
+            display_college_details(response, 0);
+        }) });
 
   var display_college_details = function(college) {
     var details = $('#college_details');
@@ -156,7 +163,7 @@ $(document).ready(function() {
     }
   };
 
-  var display_college_results = function(results) {
+  display_college_results = function(results) {
     var content = $('<ul />');
     var active = null;
 

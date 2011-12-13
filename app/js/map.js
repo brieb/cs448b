@@ -1,4 +1,4 @@
-/* Usage: call drawMap("#divid") once data variable is set to college data from json.
+/* Usage: call drawMap("#divid") once allData variable is set to college allData from json.
   collegeSelectedInMap(college) returns true if a college is selected in the map
  
   Depends on file 'us-states.json' in same directory
@@ -36,7 +36,8 @@ var curMapSelection = null;
 var mapSvg;
 var mapColleges;
 var mapSelections = {};
-var drawMap = function(div) {
+var albersProj;
+var drawMap = function(div, scale) {
   var width = 700;
   var height = 400;
   var svg = d3.select(div)
@@ -51,18 +52,23 @@ var drawMap = function(div) {
 
   var path = d3.geo.path()
     .pointRadius(3);
-  var albersProj = d3.geo.albersUsa();
+    
+  albersProj = d3.geo.albersUsa();
+  var scale0 = albersProj.scale();
+  var trans0 = albersProj.translate();
+  albersProj.scale(scale0 * scale)
+    .translate([trans0[0]*scale,trans0[1]*scale]);
 
   var states = svg.append("svg:g")
     .attr("id", "states")
-    .attr("transform", "scale(1.0)");
+    .attr("transform", "scale("+scale+")");
 
   var colleges = svg.append("svg:g")
     .attr("id", "colleges")
-    .attr("transform", "scale(1.0)");
+    .attr("transform", "scale("+scale+")");
   mapColleges = colleges;
 
-  d3.json("us-states.json", function(json) {
+  d3.json("../us-states.json", function(json) {
       states.selectAll("path")
         .data(json.features)
         .enter().append("svg:path")
@@ -96,11 +102,11 @@ var drawMap = function(div) {
   // }
 
   var mapFeatures = [];
-  for (var i = 0; i < data.length; i++){
+  for (var i = 0; i < allData.length; i++){
     mapFeatures.push( 
       { "type": "Feature",
-        "geometry": {"type": "Point", "coordinates": [parseFloat(data[i].longitude), parseFloat(data[i].latitude)]},
-        "properties": {"name": data[i].name}
+        "geometry": {"type": "Point", "coordinates": [parseFloat(allData[i].longitude), parseFloat(allData[i].latitude)]},
+        "properties": {"name": allData[i].name}
       });
   }
   colleges.selectAll("path")
@@ -109,6 +115,9 @@ var drawMap = function(div) {
     .attr("d", path)
     .attr("class", "collegePoint")
     .style("fill","#1960AA");  
+  
+
+  addDataSelectionCallback(selectSchoolOnMap); 
 }
 
 var mouseDown = function(e) {
@@ -150,11 +159,12 @@ var changeMapSelection = function(e) {
                curMapSelection.attr("r")] = curMapSelection;
     curMapSelection = null;
   }
+  updateMapFilter();
 }
 
 var clearSelector = function(e){
-  console.log('clearing!');
-  console.log(e);
+  //console.log('clearing!');
+  //console.log(e);
   if (e.target.getAttribute("class") == "selector"){
     d3.select(e.target).remove();
     delete mapSelections[e.target.getAttribute("cx")+"_"+
@@ -188,14 +198,15 @@ var redrawMapSelection = function() {
 }
 
 var colorColleges = function() {
-  mapSvg.selectAll(".collegePoint").style("fill","#111");
+  mapSvg.selectAll(".collegePoint")
+    .style("fill","#111")
+    .style("opacity",0.3);
   mapSelection().style("fill","#1960AA");
 }
 
 var mapSelection = function(){
   return mapSvg.selectAll(".collegePoint").filter(function(d){
     if (isEmpty(mapSelections)) return true;
-    var albersProj = d3.geo.albersUsa();
     var x = albersProj(d.geometry.coordinates)[0];
     var y = albersProj(d.geometry.coordinates)[1];
     for (key in mapSelections) {
@@ -214,9 +225,8 @@ var mapSelection = function(){
 
 var collegeSelectedInMap = function(college) {
   if (isEmpty(mapSelections)) return true;
-  var albersProj = d3.geo.albersUsa();
-  var x = albersProj(college.longitude)[0];
-  var y = albersProj(college.latitude)[1];
+  var pos = albersProj([college.longitude,college.latitude]);
+  var x = pos[0], y = pos[1];
   for (key in mapSelections) {
     if (mapSelections[key]!=undefined){
       var distanceToCenter = 
@@ -236,4 +246,26 @@ var isEmpty = function(obj) {
           return false;
   }
   return true;
+}
+
+var getMapOffset = function(college) {
+  var x = albersProj(college.longitude)[0];
+  var y = albersProj(college.latitude)[1];
+  return {'x': x, 'y': y};
+}
+
+var selectSchoolOnMap = function(index) {
+  console.log('selecting on map');
+  var college = allData[index];
+  colorColleges();
+  mapSvg.selectAll(".collegePoint").filter(function(d,i){
+    if (i == index) {
+      console.log('found on map');
+      return true;
+    }
+    return false;
+  })
+  .style("fill","#FF9933")
+  .style("z-index",100)
+  .style("opacity",1);
 }

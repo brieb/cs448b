@@ -1,21 +1,51 @@
-var drawEthnicityChart = function(div, college){
-	var ethData = getEthnicityData(college);
-  console.log(ethData);
-  if (ethData == null) return;
+var ethSvg;
+var gpaSvg;
+var rankSvg;
 
-  var width = 500;
-  var height = 500;
-  var innerRadius = 40;
-  var outerRadius = 60;
+var drawDemCharts = function(index){
+  d3.json('../api/college.php?id=' + allData[index]['id'], function(college){
+    drawEthnicityChart('#graph1', college);
+    drawRankChart('#graph2', college);
+    drawGPAChart('#graph3', college);
+  });
+}
+
+addDataSelectionCallback(drawDemCharts); 
+
+var drawEthnicityChart = function(div, college){
+	var width = 170;
+  var height = 120;
+  var innerRadius = 22;
+  var outerRadius = 38;
   var cx = width/2;
   var cy = height/2;
 
-  var colors = ['#FF6633','#006699','#FF9933','#004466','#772219','#aa6622','#aaaaaa'];
-
-  var svg = d3.select(div)
+  if (ethSvg != undefined) ethSvg.remove();
+  svg = d3.select(div)
     .append('svg:svg')
     .attr('width',width)
     .attr('height',height);
+
+  svg.append('svg:text')
+    .text('Demographics')
+    .attr('x',10)
+    .attr('y',20);
+  var ethData = getEthnicityData(college);
+  console.log(ethData);
+  if (ethData == null) {
+    svg.append('svg:text')
+      .text('no data')
+      .attr('x',width/2)
+      .attr('y',height/2)
+      .attr("text-anchor", "middle")
+      .attr("alignment-baseline","middle");
+    ethSvg = svg;
+    return;
+  }
+
+  var colors = ['#FF6633','#FFCC33','#FF3333','#FFFF33','#FF9933','#FF0033','#aaaaaa'];
+
+
 
   var rScale = d3.scale.linear()
     .domain([0, 100])
@@ -26,50 +56,61 @@ var drawEthnicityChart = function(div, college){
     ethData[d].endAngle = rScale(ethData[d][1]+ethData[d][2]);
   }
 
-  arc = d3.svg.arc()
+  console.log(ethData);
+
+  var arc = d3.svg.arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
     
-  svg.selectAll("path")
+  console.log(arc);
+
+  var wedges = svg.selectAll("path")
     .data(ethData)
-    .enter().append("path")
+    .enter().append("svg:path")
     .attr("d", arc)
     .attr("transform", "translate(" + cx + "," + cy + ")")
     .style("fill", function(d,i){
       return colors[i];
     });
+
+  wedges.append('svg:title')
+        .text(function(d) { return d[0]; })
+
+  // svg.selectAll("text")
+  //   .data(ethData)
+  //   .enter().append("svg:text")
+  //   .attr("dx", function(d) {
+  //     return 2*arc.centroid(d)[0]; 
+  //   })
+  //   .attr("dy", function(d) {
+  //     return 2*arc.centroid(d)[1]; 
+  //   })
+  //   .attr("text-anchor", "middle")
+  //   .attr("transform", "translate(" + cx + "," + cy + ")")
+  //   .text(function(d) { return d[0]; });
   
-  svg.selectAll("text")
-    .data(ethData)
-    .enter().append("svg:text")
-    .attr("dx", function(d) {
-      return 2*arc.centroid(d)[0]; 
-    })
-    .attr("dy", function(d) {
-      return 2*arc.centroid(d)[1]; 
-    })
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate(" + cx + "," + cy + ")")
-    .text(function(d) { return d[0]; });
+  // svg.selectAll("line")
+  //   .data(ethData)
+  //   .enter().append("svg:line")
+  //   .attr("x1", function(d) {
+  //     return arc.centroid(d)[0]; 
+  //   })
+  //   .attr("y1", function(d) {
+  //     return arc.centroid(d)[1]; 
+  //   })
+  //   .attr("x2", function(d) {
+  //     return 2*arc.centroid(d)[0]; 
+  //   })
+  //   .attr("y2", function(d) {
+  //     return 2*arc.centroid(d)[1]; 
+  //   })
+  //   .attr("transform", "translate(" + cx + "," + cy + ")")
+  //   .style("stroke-width", 1)
+  //   .style("stroke", '#111')
   
-  svg.selectAll("line")
-    .data(ethData)
-    .enter().append("svg:line")
-    .attr("x1", function(d) {
-      return arc.centroid(d)[0]; 
-    })
-    .attr("y1", function(d) {
-      return arc.centroid(d)[1]; 
-    })
-    .attr("x2", function(d) {
-      return 2*arc.centroid(d)[0]; 
-    })
-    .attr("y2", function(d) {
-      return 2*arc.centroid(d)[1]; 
-    })
-    .attr("transform", "translate(" + cx + "," + cy + ")")
-    .style("stroke-width", 1)
-    .style("stroke", '#111')
+
+
+  ethSvg = svg;
 };
 
 var getEthnicityData = function(college) {
@@ -97,35 +138,50 @@ var getEthnicityData = function(college) {
 }
 
 var drawGPAChart = function(div, college){
+  if (gpaSvg != undefined) gpaSvg.remove();
   var gpaData = getGpaData(college);
   console.log(gpaData);
-  if (gpaData == null) return;
-  drawBarChart(div, gpaData);
+  gpaSvg = drawBarChart(div, gpaData, 'GPA');
 }
 
 var drawRankChart = function(div, college){
+  if (rankSvg != undefined) rankSvg.remove();
   var rankData = getRankData(college);
   console.log(rankData);
-  if (rankData == null) return;
-  drawBarChart(div, rankData);
+  rankSvg = drawBarChart(div, rankData, 'Class Percentile');
 }
 
 // Expects data in following format: array of arrays such that each 
 //  element in array is [name, val, sumSoFar], start with greatest element
-var drawBarChart = function(div, barData) {
-  var width = 300;
-  var height = 150;
-  var rectWidth = 100;
-  var rectHeight = 100;
+var drawBarChart = function(div, barData, label) {
+  var width = 170;
+  var height = 120;
+  var rectWidth = 50;
+  var rectHeight = 80;
 
   var minr = 255;
   var ming = 102;
-   var minb = 51;
+  var minb = 51;
 
   var svg = d3.select(div)
     .append('svg:svg')
     .attr('width',width)
     .attr('height',height);
+
+  svg.append('svg:text')
+    .text(label)
+    .attr('x',10)
+    .attr('y',20);
+  
+  if (barData == null) {
+    svg.append('svg:text')
+      .text('no data')
+      .attr('x',width/2)
+      .attr('y',height/2)
+      .attr("text-anchor", "middle")
+      .attr("alignment-baseline","middle");
+    return svg;
+  }
 
   var y = d3.scale.linear()
     .domain([0, 100])
@@ -179,6 +235,8 @@ var drawBarChart = function(div, barData) {
     .attr("y2", height - (height-rectHeight)/2 + strokeWidth/2)
     .attr("stroke", "#111")
     .attr("stroke-width", strokeWidth);
+
+  return svg;
 }
 
 var getGpaData = function(college) {

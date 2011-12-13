@@ -213,10 +213,17 @@ ul.token-input-list-facebook {
   z-index: 10;
 }
 #c_tok_college {
-  top: 10px;
+  top: 360px;
 }
 #c_tok_major {
-  top: 60px;
+  top: 410px;
+}
+#filterChart {
+  position: absolute;
+  top: 370px;
+}
+#mapChart {
+  top: 10px;
 }
 div.token-input-dropdown-facebook {
   z-index: 100;
