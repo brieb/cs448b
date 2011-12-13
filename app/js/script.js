@@ -4,6 +4,10 @@ var school_has_majors;
 var school_has_name;
 
 $(document).ready(function() {
+  
+  $.getJSON('data.json', function(response) {
+    console.log(response);
+  });
 
   var API_URL = '../api/college.php';
   var COLLEGE_RESULTS_LIMIT = 5000;
