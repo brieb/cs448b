@@ -126,8 +126,8 @@ function drawFilterChart(divTag, w, h)
         .style('stroke','#888')
         .on('mouseover',qMouseover)
         .on('mouseout',qMouseout)
-        .on('mousedown',qMousedown)
-        .on('mouseup',qMouseup);
+        .on('mouseup',qMouseup)
+        .on('click',qClickStart);
     qsliders.selectAll('text.label')
         .data(function(d) { 
             return [d.min, d.max]; })
@@ -280,27 +280,23 @@ var qMouseover = mouseover,
     qMouseout = mouseout,
     qMouseup = mouseup;
 
-function qMousedown(d, i)
+function qClickStart(d, i)
 {
-    var x = d3.svg.mouse(this.parentNode)[0];
     if (!currentFilter[d.id]) {
-        var val = d.toPixel.invert(x);
-        setFilterMinQuantitative(d.id, val);
-        setFilterMaxQuantitative(d.id, val);
-        var min = currentFilter[d.id].min,
-            max = currentFilter[d.id].max;
+        addFilterQuantitative(d.id);
 
         var g = d3.select(this.parentNode);
         g.append('svg:rect')
             .attr('class','slider')
             .attr('height',rectHeight)
-            .attr('width',1)
-            .attr('x',x)
+            .attr('width',rectWidth)
+            .attr('x',0)
             .style('stroke',strokeDefault)
             .style('fill',fillSelected)
             .call(sliderDrag)
             .on('mouseover',qMouseover)
-            .on('mouseout',qMouseout);
+            .on('mouseout',qMouseout)
+            .on('click',qClick);
 
         var h = g.selectAll("rect.handle")
             .data([d, d])
@@ -319,6 +315,19 @@ function qMousedown(d, i)
             .duration(500)
             .style('opacity',opacitySelected);
     }
+}
+
+function qClick(d, i)
+{
+    var g = d3.select(this.parentNode);
+    removeFilterQuantitative(d.id);
+    g.selectAll('rect.handle')
+        .remove();
+    g.selectAll('rect.slider')
+        .remove();
+    g.transition()
+        .duration(500)
+        .style('opacity',opacityDefault);
 }
 
 var dragging = false;
