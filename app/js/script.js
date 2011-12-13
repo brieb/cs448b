@@ -42,7 +42,6 @@ $(document).ready(function() {
       {major_ids:major_ids},
       function(response) {
         tok_match_major = response;
-        console.log(response);
         callback();
       });
   };
