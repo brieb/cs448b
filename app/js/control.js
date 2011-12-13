@@ -320,18 +320,9 @@ function weightQuantitative(data, prop)
 
 function setFilterWeight(prop, weight)
 {
-    var idx = filterMap[prop];
-    if (!filterVariables[idx]) return;
+    if (!currentFilter[prop]) return;
     
-    if (!currentFilter[prop]) {
-        return;
-        if (filterVariables[idx].type == "q")
-            currentFilter[prop] = FilterQuantitative(prop);
-        else if (filterVariables[idx].type == "o")
-            currentFilter[prop] = FilterOrdinal(prop);
-        else
-            currentFilter[prop] = FilterNominal(prop);
-    }
+    var idx = filterMap[prop];
     
     if (weight < 0.0) weight = 0.0;
     else if (weight > 1.0) weight = 1.0;
