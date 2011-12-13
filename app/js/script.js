@@ -410,6 +410,8 @@ $(document).ready(function() {
 *
 */
   update_url = function() {
+    currentFilter.tok_specified_major = tok_specified_major;
+    currentFilter.tok_specified_college = tok_specified_college;
     location.hash = $.param(currentFilter);
   };
   addDataChangeCallback(update_url);
@@ -417,7 +419,48 @@ $(document).ready(function() {
   //Read URL
   (function() {
     var filters = $.deparam(location.hash.substr(1));
+    //TODO fill in tokenizers
     console.log(filters);
   })();
+
+  /*
+  * STARS
+  */
+  render_stars = function() {
+    var filter_elems = $('g.filter');
+    for (var i = 2; i < filter_elems.length; i += 1) {
+      var filter_elem = $(filter_elems[i]);
+      var filter_top = filter_elem.position().top;
+
+      var star = $('<div/>')
+        .addClass('star')
+        .addClass('star_unlit')
+        .css('top', filter_top+'px');
+
+      star.hover(function() {
+        $(this).addClass('star_hover');
+      }, function() {
+        $(this).removeClass('star_hover');
+      });
+
+      star.click(function() {
+        var target = $(this);
+        target.removeClass('star_hover');
+        if (target.hasClass('star_unlit')) {
+          target.removeClass('star_unlit');
+          target.addClass('star_lit');
+          //setFilterStarred(prop, true);
+        } else {
+          target.removeClass('star_lit');
+          target.addClass('star_unlit');
+          //setFilterStarred(prop, false);
+        }
+      });
+
+      $('#filterChart').append(star);
+    };
+    console.log(filter_elems);
+  };
+  //add_stars();
 
 });

@@ -228,3 +228,22 @@ ul.token-input-list-facebook {
 div.token-input-dropdown-facebook {
   z-index: 100;
 }
+
+.star {
+  display: block;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  height: 19px;
+  width: 19px;
+  position: absolute;
+  left: 0;
+}
+.star_unlit {
+  background-image: url('img/star_unlit.png');
+}
+.star_lit {
+  background-image: url('img/star_lit.png');
+}
+.star_hover {
+  background-image: url('img/star_hover.png');
+}
