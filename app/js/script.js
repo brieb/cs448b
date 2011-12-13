@@ -53,7 +53,7 @@ $(document).ready(function() {
   };
 
   school_has_majors = function(school) {
-    if (tok_match_major.length === 0) {
+    if (tok_match_major === null || tok_match_major.length === 0) {
       return null;
     }
 
@@ -161,9 +161,13 @@ $(document).ready(function() {
   });
 
   var highlight_college_results_list_elem = function(elem) {
-    $('#college_results ul li').removeClass('active');
+    var results_list = $('#college_results');
+    results_list.find('ul li').removeClass('active');
     elem.addClass('active');
-    $("#college_results").scrollTop(elem.position().top);
+
+    var scroll_top_old = results_list.scrollTop();
+    var scroll_top_new = scroll_top_old + elem.position().top;
+    results_list.scrollTop(scroll_top_new);
   };
 
   var display_college_details = function(college) {

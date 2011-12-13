@@ -148,7 +148,11 @@ function getWeightedRank(d)
         case 'N':
             if (prop == "majors") {
                 var res = school_has_majors(d);
-                sum += res.num_majors / res.num_majors_specified;
+                if (res === null) {
+                  sum += 0;
+                } else {
+                  sum += res.num_majors / res.num_majors_specified;
+                }
             }
             break;
         }
