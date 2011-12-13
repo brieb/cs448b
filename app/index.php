@@ -65,14 +65,10 @@
       </div>
 
       <div id="content_r">
-        <div class="dis_scroll_pane">
-          <div id="college_results"></div>
-        </div>
+        <div id="college_results"></div>
 
         <div id="college">
-          <div class="dis_scroll_pane">
-            <div id="college_details"></div>
-          </div>
+          <div id="college_details"></div>
 
           <div id="graph1" class="graph_small">
           </div>
@@ -118,6 +114,12 @@
             });
         });
 
+      </script>
+
+      <script>
+        $(document).ready(function() {
+            //$('.page').height($(window).height()-$('#header').height());
+        });
       </script>
     </body>
   </html>

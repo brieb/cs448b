@@ -10,6 +10,7 @@ $(document).ready(function() {
   var COLLEGE_RESULTS_LIMIT = 5000;
   var COLLEGE_RESULTS_OFFSET = 0;
 
+
   var tok_match_college = [];
   var tok_match_major = [];
   var tok_specified_major = [];

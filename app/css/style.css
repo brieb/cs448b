@@ -69,6 +69,7 @@ body {
 
 #content_r {
   width: 320px;
+  height: 728px;
 }
 
 .help {
@@ -113,6 +114,7 @@ ul.token-input-list-facebook {
 
 #college {
   width: 190px;
+  height: 728px;
 }
 #college_results {
   width: 110px;
@@ -140,17 +142,13 @@ ul.token-input-list-facebook {
 #college_details {
   padding: 5px;
   width: 180px;
-  height: 448px;
+  height: 354px;
   overflow-y: scroll;
 
   -moz-user-select: -moz-text;
   -khtml-user-select: text;
   -webkit-user-select: text;
   user-select: text;
-}
-
-#college {
-  height: 728px;
 }
 
 #college_details .name {
@@ -281,5 +279,8 @@ div.token-input-dropdown-facebook {
 }
 .graph_small path {
   cursor: help;
+}
+.star {
+  cursor: pointer;
 }
 
