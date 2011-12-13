@@ -116,10 +116,5 @@
 
       </script>
 
-      <script>
-        $(document).ready(function() {
-            //$('.page').height($(window).height()-$('#header').height());
-        });
-      </script>
     </body>
   </html>
