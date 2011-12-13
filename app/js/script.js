@@ -14,8 +14,11 @@ $(document).ready(function() {
 
   var tok_match_college = [];
   var tok_match_major = [];
+  var tok_specified_major = [];
+  var tok_specified_college = [];
 
   var tok_college_on_change = function(callback) {
+    tok_specified_college = tok_college.tokenInput('get');
     tok_match_college = tok_college.tokenInput('get');
     callback();
   };
@@ -27,14 +30,16 @@ $(document).ready(function() {
   };
 
   var tok_major_on_change = function(callback) {
-    var majors = tok_major.tokenInput('get');
+    tok_specified_major = tok_major.tokenInput('get');
+
     var major_ids = [];
-    for (var i = 0; i < majors.length; i++) {
-      major_ids.push(majors[i].id);
+    for (var i = 0; i < tok_specified_major.length; i++) {
+      major_ids.push(tok_specified_major[i].id);
     }
+
     $.get(
       '../api/get_colleges_by_majors.php',
-      {major_ids: major_ids},
+      {major_ids:major_ids},
       function(response) {
         tok_match_major = response;
         callback();
@@ -48,12 +53,25 @@ $(document).ready(function() {
   };
 
   school_has_majors = function(school) {
+    if (tok_match_major.length === 0) {
+      return null;
+    }
     for (var i = 0; i < tok_match_major.length; i++) {
-      if (tok_match_major[i].college_id === school.id) {
+      if (parseInt(tok_match_major[i].college_id) === school.id) {
+        tok_match_major[i].college_id =
+          parseInt(tok_match_major[i].college_id);
+        tok_match_major[i].num_majors =
+          parseInt(tok_match_major[i].num_majors);
+        tok_match_major[i].num_majors_specified =
+          parseInt(tok_match_major[i].num_majors_specified);
         return tok_match_major[i];
       }
     }
-    return null;
+    return {
+      college_id:school.id,
+      num_majors:0,
+      num_majors_specified:tok_specified_major.length
+    };
   };
   school_has_name = function(school) {
     if (num_school_names_specified() === 0) {
@@ -69,7 +87,7 @@ $(document).ready(function() {
     return false;
   };
   num_school_names_specified = function() {
-    return tok_match_college.length;
+    return tok_specified_college.length;
   };
 
 
@@ -92,7 +110,7 @@ $(document).ready(function() {
     {
       minChars: 2,
       preventDuplicates: true,
-      prePopulate: [{"id":"126","name":"Curriculum\/Instruction"},{"id":"358","name":"Business Teacher Education"},{"id":"369","name":"Foreign Language & Literature - General"},{"id":"496","name":"Natural Resource Economics"},{"id":"522","name":"International Agriculture"},{"id":"525","name":"Architectural History\/Criticism"},{"id":"533","name":"Gay\/Lesbian Studies"},{"id":"534","name":"German Studies"},{"id":"535","name":"Near\/Middle Eastern Studies"},{"id":"544","name":"Biometrics"},{"id":"578","name":"Science, Technology & Society"},{"id":"917","name":"Bilingual\/Bicultural Education"},{"id":"945","name":"European Studies"},{"id":"948","name":"Latin American Studies"},{"id":"950","name":"Russian\/Slavic Area Studies"},{"id":"951","name":"Slavic Studies"},{"id":"972","name":"Greek, Ancient"},{"id":"983","name":"Ancient Studies\/Civilization"},{"id":"984","name":"Medieval\/Renaissance Studies"},{"id":"991","name":"Astrophysics"},{"id":"1196","name":"Analytical Chemistry"},{"id":"1208","name":"East Asian Studies"},{"id":"1285","name":"Communication Disorders"},{"id":"1305","name":"GeophysicsSeismology"},{"id":"1360","name":"Planetary Sciences"},{"id":"1427","name":"Engineering Science"},{"id":"1522","name":"Bacteriology"},{"id":"1525","name":"Cellular Biology\/Histology"},{"id":"1529","name":"Parasitology"},{"id":"1534","name":"Adult\/Continuing Teacher Education"},{"id":"1556","name":"Marine Engineering\/Naval Architecture"},{"id":"1558","name":"Ocean Engineering"},{"id":"1595","name":"Demography\/Population Studies"},{"id":"1682","name":"Atmospheric Sciences"},{"id":"1757","name":"Education of Multiple Handicapped"},{"id":"1872","name":"Actuarial Science"},{"id":"1903","name":"Forensic Chemistry"},{"id":"1904","name":"Industrial\/Organizational Psychology"},{"id":"1906","name":"Social Psychology"},{"id":"1988","name":"Paralegal\/Legal Assistance"},{"id":"2157","name":"Facial Treatments"},{"id":"2250","name":"Pharmaceutical Sciences"},{"id":"2351","name":"Spanish\/Iberian Studies"},{"id":"2356","name":"Botany"}],
+      prePopulated: [{"id":"126","name":"Curriculum\/Instruction"},{"id":"358","name":"Business Teacher Education"},{"id":"369","name":"Foreign Language & Literature - General"},{"id":"496","name":"Natural Resource Economics"},{"id":"522","name":"International Agriculture"},{"id":"525","name":"Architectural History\/Criticism"},{"id":"533","name":"Gay\/Lesbian Studies"},{"id":"534","name":"German Studies"},{"id":"535","name":"Near\/Middle Eastern Studies"},{"id":"544","name":"Biometrics"},{"id":"578","name":"Science, Technology & Society"},{"id":"917","name":"Bilingual\/Bicultural Education"},{"id":"945","name":"European Studies"},{"id":"948","name":"Latin American Studies"},{"id":"950","name":"Russian\/Slavic Area Studies"},{"id":"951","name":"Slavic Studies"},{"id":"972","name":"Greek, Ancient"},{"id":"983","name":"Ancient Studies\/Civilization"},{"id":"984","name":"Medieval\/Renaissance Studies"},{"id":"991","name":"Astrophysics"},{"id":"1196","name":"Analytical Chemistry"},{"id":"1208","name":"East Asian Studies"},{"id":"1285","name":"Communication Disorders"},{"id":"1305","name":"GeophysicsSeismology"},{"id":"1360","name":"Planetary Sciences"},{"id":"1427","name":"Engineering Science"},{"id":"1522","name":"Bacteriology"},{"id":"1525","name":"Cellular Biology\/Histology"},{"id":"1529","name":"Parasitology"},{"id":"1534","name":"Adult\/Continuing Teacher Education"},{"id":"1556","name":"Marine Engineering\/Naval Architecture"},{"id":"1558","name":"Ocean Engineering"},{"id":"1595","name":"Demography\/Population Studies"},{"id":"1682","name":"Atmospheric Sciences"},{"id":"1757","name":"Education of Multiple Handicapped"},{"id":"1872","name":"Actuarial Science"},{"id":"1903","name":"Forensic Chemistry"},{"id":"1904","name":"Industrial\/Organizational Psychology"},{"id":"1906","name":"Social Psychology"},{"id":"1988","name":"Paralegal\/Legal Assistance"},{"id":"2157","name":"Facial Treatments"},{"id":"2250","name":"Pharmaceutical Sciences"},{"id":"2351","name":"Spanish\/Iberian Studies"},{"id":"2356","name":"Botany"}],
       animateDropdown: false,
       hintText: "Type in a major",
       theme: "facebook",
