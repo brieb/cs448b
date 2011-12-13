@@ -6,7 +6,8 @@ var div = d3.select('#filterChart'),
     geoBuffer = 0,
     rectHeight = 20,
     nomSpace = 2.5,
-    textOffset;
+    textOffset,
+    mapOffset = {x:0,y:0};
 
 var strokeDefault = "#888",
     strokeHover = "#444",
@@ -39,6 +40,11 @@ function initializeFilterVals()
             }
         }
     }
+}
+
+function setParallelToMapOffset(xoff, yoff)
+{
+    mapOffset = {x:xoff, y:yoff};
 }
 
 function drawFilterChart(divTag, w, h)
@@ -216,7 +222,8 @@ function calculatePaths()
         pathData[s] = [];
         pathData[s].idx = s;
 
-        var j = 0;
+        
+
         for (var i = 0; i < filterVals.length; i++) {
             var type = filterVals[i].type,
                 key = filterVals[i].id;
@@ -225,16 +232,17 @@ function calculatePaths()
 
                 var val = filterVals[i].log && d[key] == 0 ? 1 : d[key];
                 
-                pathData[s][j] = {y:i, x:filterVals[i].toPixel(val)*rectWidthNorm};
-                j++;
+                pathData[s].push({y:i, x:filterVals[i].toPixel(val)*rectWidthNorm});
             } else if (type == "n") {
                 var val = filterVals[i].values.indexOf(d[key]);
                 
                 if (val < 0) continue;
                 var num = filterVals[i].values.length;
             
-                pathData[s][j] = {y:i, x:(val + .5)/num};
-                j++;
+                pathData[s].push({y:i, x:(val + .5)/num});
+            } else if (type == "N") {
+                
+                pathData[s].push({y:i, x:0.5});
             }
         }
     }

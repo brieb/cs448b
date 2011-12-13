@@ -90,7 +90,6 @@ function updateIndex()
             results[r++] = allData[weightIndex[i]];
         }
     }
-    //console.log(results.length);
     
     display_college_results(results);
     
@@ -112,11 +111,23 @@ function passOneFilter(d, prop)
 {
     if (!currentFilter[prop]) return true;
     var idx = filterMap[prop];
-    if (filterVariables[idx].type == 'q') {
-        return passesQuantitative(d, prop);
-    } else if (filterVariables[idx].type == 'n') {
-        return passesNominal(d, prop);
+    
+    switch (filterVariables[idx].type) {
+    case 'q': return passesQuantitative(d, prop);
+    case 'n': return passesNominal(d, prop);
+    case 'N':
+        if (prop == "major") {
+            var res = school_has_majors(d);
+            return (res === null || school_has_majors(d).num_majors > 0);
+        } else if (prop == "name") {
+            return school_has_name(d);
+        } else {
+            break;
+        }
+    default: return true;
     }
+    
+    return false;
 }
 
 function getWeightedRank(d)
@@ -124,10 +135,20 @@ function getWeightedRank(d)
     var sum = 0.0;
     for (prop in currentFilter) {
         var idx = filterMap[prop];
-        if (filterVariables[idx].type == "q") {
+        
+        switch (filterVariables[idx].type) {
+        case 'q':
             sum += weightQuantitative(d, prop);
-        } else if (filterVariables[idx].type == 'n') {
+            break;
+        case 'n':
             sum += weightNominal(d, prop);
+            break;
+        case 'N':
+            if (prop == "major") {
+                var res = school_has_majors(d);
+                sum += res.num_majors / res.num_majors_specified;
+            }
+            break;
         }
     }
     if (numFilter == 0) return 1.0;
@@ -431,21 +452,46 @@ function FilterQuantitative(prop)
 
 function majorAdded()
 {
-
+    var res = school_has_majors(allData[0]);
+    if (res.num_majors_specified == 1) {
+        currentFilter["majors"] = true;
+        contractFilter("majors");
+    } else {
+        expandFilter("majors");
+    }
 }
 
 function majorRemoved()
 {
+    var res = school_has_majors(allData[0]);
+    if (res.num_majors_specified == 0) {
+        expandFilter("majors");
+        delete currentFilter["majors"];
+    } else {
+        contractFilter("majors");
+    }
+    
 
+   console.log("Removed major");
 }
 
 function nameAdded()
 {
-
+    if (num_school_names_specified() == 1) {
+        currentFilter["name"] = true;
+        contractFilter("name");
+    } else {
+        expandFilter("name");
+    }
 }
 
 function nameRemoved()
 {
-
+    if (num_school_names_specified() == 0) {
+        expandFilter("name");
+        delete currentFilter["name"];
+    } else {
+        contractFilter("name");
+    }
 }
 
