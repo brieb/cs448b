@@ -21,11 +21,12 @@
     <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
 
-  <script type="text/javascript" src="js/d3/d3.js"></script>
-  <script type="text/javascript" src="js/d3/d3.geo.js"></script>
-  <script type="text/javascript" src="js/d3/d3.geom.js"></script>
+    <script type="text/javascript" src="js/d3/d3.js"></script>
+    <script type="text/javascript" src="js/d3/d3.geo.js"></script>
+    <script type="text/javascript" src="js/d3/d3.geom.js"></script>
 
 
+    <script src="js/map_college_to_data_index.js"></script>
     <script src="js/script.js"></script>
   </head>
   <body>
@@ -62,7 +63,7 @@
         </div>
 
         <div id="filterChart"></div>
-      
+
         <div id="mapChart"></div>
       </div>
 
@@ -87,29 +88,29 @@
 
       </div>
 
-  <script type="text/javascript" src="js/control.js"></script>
-  <script type="text/javascript" src="js/filterChart.js"></script>
-  <script type="text/javascript" src="js/map.js"></script>
-  <script type="text/javascript" src="js/demCharts.js"></script>
-  <script type="text/javascript">
-  
-    // Everything to draw once loading is done
-    var drawCharts = function() {
-        drawFilterChart("#filterChart", 630, 720);
-        drawMap("#mapChart", .7);
-    }
-  
-    // Load filters then load data--uncomment once we have a filter json
-    d3.json('filters.json', function(json) {
-        loadFilter(json);
-        
-        d3.json('data.json', function(json) {
-            loadData(json);
-            
-            drawCharts();
-        });
-    });
+      <script type="text/javascript" src="js/control.js"></script>
+      <script type="text/javascript" src="js/filterChart.js"></script>
+      <script type="text/javascript" src="js/map.js"></script>
+      <script type="text/javascript" src="js/demCharts.js"></script>
+      <script type="text/javascript">
 
-  </script>
+        // Everything to draw once loading is done
+        var drawCharts = function() {
+            drawFilterChart("#filterChart", 630, 720);
+            drawMap("#mapChart", .7);
+        }
+
+        // Load filters then load data--uncomment once we have a filter json
+        d3.json('filters.json', function(json) {
+            loadFilter(json);
+
+            d3.json('data.json', function(json) {
+                loadData(json);
+
+                drawCharts();
+            });
+        });
+
+      </script>
     </body>
   </html>

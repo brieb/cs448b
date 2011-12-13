@@ -219,12 +219,12 @@ function updateMapFilter()
 
 var selectedData,
     selectionListeners = [];
-function selectData(idx)
+function selectData(idx, is_from_result_list)
 {
     selectedData = allData[idx];
     //console.log(selectedData.name);
     for (var i = 0; i < selectionListeners.length; i++)
-        selectionListeners[i](idx);
+        selectionListeners[i](idx, is_from_result_list);
 }
 
 function addDataSelectionCallback(call) {
