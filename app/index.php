@@ -34,7 +34,7 @@
 
     <div id="header">
       <div class="page">
-        <div id="logo">uni<span id="vs">VS</span>ity</div>
+        <div id="logo"><a href="/cs448b/app/">uni<span id="vs">VS</span>ity</a></div>
         <div id="subtitle">
           A CS448B Project by
           Brie Bunge, Caleb Jordan, Megan Kanne, and Julia Neidert

@@ -16,6 +16,11 @@ body {
   padding: 2px 0;
 }
 
+#header a {
+  text-decoration: none;
+  color: #006699;
+}
+
 #logo, #subtitle, #share {
   display: inline;
   float: left;
