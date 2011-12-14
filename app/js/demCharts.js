@@ -3,6 +3,7 @@ var gpaSvg;
 var rankSvg;
 
 var drawDemCharts = function(index){
+    if (index < 0) return;
   d3.json('../api/college.php?id=' + allData[index]['id'], function(college){
     drawEthnicityChart('#graph1', college);
     drawRankChart('#graph2', college);
