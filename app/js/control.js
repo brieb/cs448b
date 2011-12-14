@@ -88,8 +88,10 @@ function reloadFilter(filter)
 
 function updateIndex()
 {   
-    if ((selectedDataIdx >= 0) && !allData[selectedDataIdx].pass)
+    if ((selectedDataIdx >= 0) && !allData[selectedDataIdx].pass) {
+        console.log(selectedDataIdx);
         selectData(-1);
+    }
 
     for (var i = 0; i < allData.length; i++) {
         if (!allData[i].pass) {
