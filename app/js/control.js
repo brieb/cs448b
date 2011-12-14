@@ -64,6 +64,8 @@ function reloadFilter(filter)
     numFilter = 0;
     
     for (prop in currentFilter) {
+        if (prop == "mapData") continue;
+        
         numFilter += 1;
         var idx = filterMap[prop];
         if (filterVariables[idx].type == 'q') {
@@ -72,6 +74,10 @@ function reloadFilter(filter)
             enableNominalFilter(prop);
         }
         setStarState(prop, currentFilter[prop].weight > 0.5 ? true : false);
+    }
+    
+    if (currentFilter["mapData"] && currentFilter["mapData"].length > 0) {
+        enableMapSelectors(currentFilter["mapData"]);
     }
     
     updateFilters();
@@ -119,6 +125,7 @@ function updateIndex()
 function passesFilter(d)
 {
     for (prop in currentFilter) {
+        if (prop == "mapData") continue;
         if (!passOneFilter(d, prop)) return false;
     }
     if (!collegeSelectedInMap(d)) return false;
@@ -153,6 +160,7 @@ function getWeightedRank(d)
 {
     var sum = 0.0;
     for (prop in currentFilter) {
+        if (prop == "mapData") continue;
         var idx = filterMap[prop];
         
         switch (filterVariables[idx].type) {
@@ -215,8 +223,9 @@ function expandFilter(prop)
     updateIndex();
 }
 
-function updateMapFilter()
+function updateMapFilter(sData)
 {
+    currentFilter["mapData"] = sData;
     var numPass = 0;
     for (var i = 0; i < allData.length; i++) {
         if (collegeSelectedInMap(allData[i]))
