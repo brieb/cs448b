@@ -82,6 +82,9 @@ function reloadFilter(filter)
 
 function updateIndex()
 {   
+    if ((selectedDataIdx >= 0) && !allData[selectedDataIdx].pass)
+        selectData(-1);
+
     for (var i = 0; i < allData.length; i++) {
         if (!allData[i].pass) {
             allData[i].weight = 0.0;
@@ -237,12 +240,12 @@ function setFilterStarred(prop, starred)
 
 // Selection Callback Info
 
-var selectedData,
+var selectedData, selectedDataIdx = -1;
     selectionListeners = [];
 function selectData(idx, is_from_result_list)
 {
-    selectedData = allData[idx];
-    //console.log(selectedData.name);
+    selectedDataIdx = idx;
+    selectedData = (idx < 0 ? null : allData[idx]);
     for (var i = 0; i < selectionListeners.length; i++)
         selectionListeners[i](idx, is_from_result_list);
 }
@@ -373,6 +376,7 @@ function removeFilterValueNominal(prop, val)
     if (vals.length == 0) {
         numFilter--;
         expandFilter(prop);
+        setStarState(prop, false);
         delete currentFilter[prop];
     } else {
         contractFilter(prop);
@@ -394,6 +398,8 @@ function addFilterQuantitative(prop)
 function removeFilterQuantitative(prop)
 {
     if (!currentFilter[prop]) return;
+    
+    setStarState(prop,false);
     
     delete currentFilter[prop];
     expandFilter(prop);

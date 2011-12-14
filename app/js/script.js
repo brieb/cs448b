@@ -198,6 +198,7 @@ $(document).ready(function() {
   };
 
   addDataSelectionCallback(function(idx, is_from_result_list) {
+    if (idx < 0) return;
     $.get(API_URL, {id: allData[idx].id}, function(response) {
       display_college_details(response);
       highlight_college_results_list_elem(

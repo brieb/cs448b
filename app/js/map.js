@@ -100,7 +100,8 @@ var drawMap = function(div, scale) {
         d3.select(this).style('opacity', null);
     })
     .on('click', function(d) {
-        selectData(d.properties.index);
+        if (allData[d.properties.index].pass)
+            selectData(d.properties.index);
     });
   
 
@@ -251,7 +252,7 @@ var selectSchoolOnMap = function(index) {
   var path = d3.geo.path()
     .pointRadius(6);
   var sel = brushSelection.selectAll("path")
-    .data([mapFeatures[index]], function(d) { return d.properties.index; });
+    .data(index < 0 ? [] : [mapFeatures[index]], function(d) { return d.properties.index; });
   sel.enter().append("svg:path")
         .attr("d", path)
         .attr("class", "selectedCollege")
