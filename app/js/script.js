@@ -345,7 +345,7 @@ $(document).ready(function() {
     }
   );
 
-  $('#share').click(function() {
+  var gen_bitly_link = function(callback) {
     var share = $(this);
     $.get(
       "https://api-ssl.bitly.com/v3/shorten",
@@ -356,12 +356,36 @@ $(document).ready(function() {
         format:"json"
       },
       function(response) {
-        var mail_to = "mailto:?" +
-          "&subject=" + escape("A uniVSity view has been shared with you!") +
-          "&body=" + escape(response.data.url);
-        window.location.href = mail_to;
+        callback(response.data.url);
       }
     );
+    return false;
+  };
+
+  var create_mail_to = function(bitly_url) {
+    var mail_to = "mailto:?" +
+      "&subject=" + escape("A uniVSity view has been shared with you!") +
+      "&body=" + escape(bitly_url);
+    window.location.href = mail_to;
+  };
+
+  var create_link = function(bitly_url) {
+    var link = $('#link_url');
+    bitly_url = "http://google.com";
+    link.attr('href', bitly_url)
+    link.text(bitly_url);
+    link.fadeIn();
+  };
+
+  $('#share').click(function() {
+    gen_bitly_link(create_mail_to);
+    return false;
+  });
+  $('#link').click(function() {
+    var link = $('#link_url');
+    link.fadeOut();
+
+    gen_bitly_link(create_link);
     return false;
   });
 

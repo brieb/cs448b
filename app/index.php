@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
     <script type="text/javascript" src="js/jquery.tokeninput.js"></script>
     <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
@@ -56,7 +57,11 @@
           Brie Bunge, Caleb Jordan, Megan Kanne, and Julia Neidert
         </div>
         <!-- TODO -->
-        <a id="share" href="">Share</a>
+        <div id="social">
+          <a id="link" href="">Link</a>
+          <a id="link_url" target="_blank" href="">http://google.com</a>
+          <a id="share" href="">Share</a>
+        </div>
       </div>
     </div>
 
