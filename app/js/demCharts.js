@@ -3,7 +3,6 @@ var gpaSvg;
 var rankSvg;
 
 var drawDemCharts = function(index){
-  if (index < 0) return;
   d3.json('../api/college.php?id=' + allData[index]['id'], function(college){
     drawEthnicityChart('#graph1', college);
     drawRankChart('#graph2', college);
@@ -20,6 +19,7 @@ var drawEthnicityChart = function(div, college){
   var outerRadius = 38;
   var cx = width/2;
   var cy = height/2;
+  var shiftDown = 8;
 
   if (ethSvg != undefined) ethSvg.remove();
   svg = d3.select(div)
@@ -44,7 +44,7 @@ var drawEthnicityChart = function(div, college){
     return;
   }
 
-  var colors = ['#FF6633','#FFCC33','#FF3333','#FFFF33','#FF9933','#FF0033','#aaaaaa'];
+  var colors = ['#FF6633','#FF9933','#FFFF33','#FF4433','#FFCC33','#FF2233','#aaaaaa'];
 
 
 
@@ -69,7 +69,7 @@ var drawEthnicityChart = function(div, college){
     .data(ethData)
     .enter().append("svg:path")
     .attr("d", arc)
-    .attr("transform", "translate(" + cx + "," + cy + ")")
+    .attr("transform", "translate(" + cx + "," + (cy+shiftDown) + ")")
     .style("fill", function(d,i){
       return colors[i];
     });
@@ -141,15 +141,15 @@ var getEthnicityData = function(college) {
 var drawGPAChart = function(div, college){
   if (gpaSvg != undefined) gpaSvg.remove();
   var gpaData = getGpaData(college);
-  //console.log(gpaData);
-  gpaSvg = drawBarChart(div, gpaData, 'GPA');
+  // console.log(gpaData);
+  gpaSvg = drawBarChart(div, gpaData, 'HS GPA');
 }
 
 var drawRankChart = function(div, college){
   if (rankSvg != undefined) rankSvg.remove();
   var rankData = getRankData(college);
-  //console.log(rankData);
-  rankSvg = drawBarChart(div, rankData, 'Class Percentile');
+  // console.log(rankData);
+  rankSvg = drawBarChart(div, rankData, 'HS Class Percentile');
 }
 
 // Expects data in following format: array of arrays such that each 
@@ -158,7 +158,8 @@ var drawBarChart = function(div, barData, label) {
   var width = 170;
   var height = 120;
   var rectWidth = 50;
-  var rectHeight = 80;
+  var rectHeight = 70;
+  var shiftDown = 8;
 
   var minr = 255;
   var ming = 102;
@@ -173,7 +174,13 @@ var drawBarChart = function(div, barData, label) {
     .text(label)
     .attr('x',10)
     .attr('y',20);
-  
+
+  svg.append('svg:text')
+    .text('Percent of Students')
+    .style("font-size", 10)
+    .attr('x',width *0.1)
+    .attr('y',height - 3);
+
   if (barData == null) {
     svg.append('svg:text')
       .text('no data')
@@ -188,12 +195,21 @@ var drawBarChart = function(div, barData, label) {
     .domain([0, 100])
     .range([0, rectHeight]);
 
-  svg.selectAll("rect")
+  svg.append("svg:rect")
+    .attr("x", (width - rectWidth)/2.0)
+    .attr("y", (height - rectHeight)/2.0 + shiftDown)
+    .attr("width", rectWidth)
+    .attr("height", rectHeight)
+    .style("stroke", "FFF")
+    .style("fill","none");
+
+  svg.selectAll("rect.dataBlock")
     .data(barData)
     .enter().append("svg:rect")
+    .attr("class","dataBlock")
     .attr("x", (width - rectWidth)/2.0)
     .attr("y", function(d, i) {
-      return (height - rectHeight)/2.0 + y(d[2]);})
+      return (height - rectHeight)/2.0 + y(d[2])+shiftDown;})
     .attr("width", rectWidth)
     .attr("height", function(d, i) { 
         return y(d[1])})
@@ -201,19 +217,21 @@ var drawBarChart = function(div, barData, label) {
       var valr = Math.round(255 - (255-minr) * (i+1)/5);
       var valg = Math.round(255 - (255-ming) * (i+1)/5);
       var valb = Math.round(255 - (255-minb) * (i+1)/5);
-      //console.log(valg);
+      // console.log(valg);
       return '#'+valr.toString(16)+valg.toString(16)+valb.toString(16);
     });
 
-  svg.selectAll("text")
+  svg.selectAll("text.labels")
     .data(barData)
     .enter().append("svg:text")
+    .attr("class","labels")
     .attr("x", width - (width - rectWidth)/2 + 5)
     .attr("y", function(d, i) {
-      return (height - rectHeight)/2.0 + y(d[2]) + y(d[1])/2;})
+      return (height - rectHeight)/2.0 + y(d[2]) + y(d[1])/2 + shiftDown;})
     .attr("alignment-baseline","middle")
+    .style("font-size","10")
     .text(function(d,i){
-      if (i == 5 || d[1] == 0) return "";
+      if (d[1] < 3) return "";
       return "> "+d[0];
     });
 
@@ -221,19 +239,21 @@ var drawBarChart = function(div, barData, label) {
     .data(y.ticks(3))
     .enter().append("svg:text")
     .attr("class","rule")
-    .attr("x", (width - rectWidth)/2.0 - 20)
+    .attr("x", (width - rectWidth)/2.0 - 5)
     .attr("y", function(d,i) {
-      return (height -rectHeight)/2 + y(d)})
-    .attr("text-anchor","middle")
+      return (height -rectHeight)/2 + y(d) + shiftDown})
+    .attr("text-anchor","end")
     .attr("alignment-baseline","middle")
+    .style("color","#555")
+    .style("font-size","10")
     .text(String);
 
   var strokeWidth = 2;
   svg.append("svg:line")
     .attr("x1", (width - rectWidth)/2)
     .attr("x2", rectWidth + (width - rectWidth)/2)
-    .attr("y1",height - (height-rectHeight)/2 + strokeWidth/2)
-    .attr("y2", height - (height-rectHeight)/2 + strokeWidth/2)
+    .attr("y1",height - (height-rectHeight)/2 + strokeWidth/2 + shiftDown)
+    .attr("y2", height - (height-rectHeight)/2 + strokeWidth/2 + shiftDown)
     .attr("stroke", "#111")
     .attr("stroke-width", strokeWidth);
 
