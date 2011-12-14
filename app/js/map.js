@@ -47,8 +47,6 @@ var drawMap = function(div, scale) {
     .attr('onmousedown','mouseDown(event)')
     .attr('onmousemove','mouseMove(event)')
     .attr('onmouseup','mouseUp(event)');
-  //  .attr('width', width)
-  //  .attr('height', height);
 
   mapSvg = svg;
 
@@ -81,32 +79,6 @@ var drawMap = function(div, scale) {
         .attr("d", path);
     });
 
-  // var collegeData = { 
-  //   "type": "FeatureCollection", 
-  //   "features": [
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-122,37]},
-  //       "properties": {"name": "Stanford University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-71.6,42.5]},
-  //       "properties": {"name": "Harvard University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-74.4,40.2]},
-  //       "properties": {"name": "Princeton University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-72.9,41.3]},
-  //       "properties": {"name": "Yale University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-87.7,42.0]},
-  //       "properties": {"name": "Northwestern University"}
-  //     }        
-  //   ]
-  // }
-
   mapFeatures = [];
   for (var i = 0; i < allData.length; i++){
     mapFeatures.push( 
@@ -120,7 +92,16 @@ var drawMap = function(div, scale) {
     .enter().append("svg:path")
     .attr("d", path)
     .attr("class", "collegePoint")
-    .style("fill","#1960AA");  
+    .style("fill","#1960AA")
+    .on('mouseover',function(d) {
+        d3.select(this).style('opacity', 1.0);
+    })
+    .on('mouseout',function(d) {
+        d3.select(this).style('opacity', null);
+    })
+    .on('click', function(d) {
+        selectData(d.properties.index);
+    });
   
 
   addDataSelectionCallback(selectSchoolOnMap); 
