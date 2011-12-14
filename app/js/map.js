@@ -100,7 +100,8 @@ var drawMap = function(div, scale) {
         d3.select(this).style('opacity', null);
     })
     .on('click', function(d) {
-        selectData(d.properties.index);
+        if (allData[d.properties.index].pass)
+            selectData(d.properties.index);
     });
   
 
@@ -147,7 +148,38 @@ var changeMapSelection = function(e) {
                curMapSelection.attr("r")] = curMapSelection;
     curMapSelection = null;
   }
-  updateMapFilter();
+
+  var sData = outputSelectionData();
+  
+  updateMapFilter(sData);
+}
+
+var outputSelectionData = function()
+{
+    var res = [];
+    for (key in mapSelections) {
+      if (mapSelections[key]!=undefined){
+        var c = mapSelections[key];
+        var d = [c.attr("cx")*1.0,c.attr("cy")*1.0,c.attr("r")*1.0];
+        res.push(d);
+        //console.log(d);
+      }
+    }
+    return res;
+}
+
+var enableMapSelectors = function(vals)
+{
+    for (var i = 0; i < vals.length; i++) {
+        var curr = mapSvg.append("svg:circle")
+            .attr("cx", vals[i][0])
+            .attr("cy", vals[i][1])
+            .attr("r", vals[i][2])
+            .attr("class", "selector");
+        mapSelections[curr.attr("cx")+"_"+
+               curr.attr("cy")+"_"+
+               curr.attr("r")] = curr;
+    }
 }
 
 var clearSelector = function(e){
@@ -251,7 +283,7 @@ var selectSchoolOnMap = function(index) {
   var path = d3.geo.path()
     .pointRadius(6);
   var sel = brushSelection.selectAll("path")
-    .data([mapFeatures[index]], function(d) { return d.properties.index; });
+    .data(index < 0 ? [] : [mapFeatures[index]], function(d) { return d.properties.index; });
   sel.enter().append("svg:path")
         .attr("d", path)
         .attr("class", "selectedCollege")

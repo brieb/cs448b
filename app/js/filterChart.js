@@ -292,7 +292,7 @@ function dataChange()
 function dataSelect(idx)
 {
     var sel = pathSelection.selectAll("path")
-        .data([pathData[idx]], function(d) { return d.idx; });
+        .data(idx < 0 ? [] : [pathData[idx]], function(d) { return d.idx; });
     sel.enter().append('svg:path')
         .attr('class','select')
         .attr('d', d3.svg.line()

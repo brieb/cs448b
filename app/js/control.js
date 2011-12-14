@@ -64,6 +64,8 @@ function reloadFilter(filter)
     numFilter = 0;
     
     for (prop in currentFilter) {
+        if (prop == "mapData") continue;
+        
         numFilter += 1;
         var idx = filterMap[prop];
         if (filterVariables[idx].type == 'q') {
@@ -74,6 +76,10 @@ function reloadFilter(filter)
         setStarState(prop, currentFilter[prop].weight > 0.5 ? true : false);
     }
     
+    if (currentFilter["mapData"] && currentFilter["mapData"].length > 0) {
+        enableMapSelectors(currentFilter["mapData"]);
+    }
+    
     updateFilters();
 }
     
@@ -82,6 +88,9 @@ function reloadFilter(filter)
 
 function updateIndex()
 {   
+    if ((selectedDataIdx >= 0) && !allData[selectedDataIdx].pass)
+        selectData(-1);
+
     for (var i = 0; i < allData.length; i++) {
         if (!allData[i].pass) {
             allData[i].weight = 0.0;
@@ -116,6 +125,7 @@ function updateIndex()
 function passesFilter(d)
 {
     for (prop in currentFilter) {
+        if (prop == "mapData") continue;
         if (!passOneFilter(d, prop)) return false;
     }
     if (!collegeSelectedInMap(d)) return false;
@@ -150,6 +160,7 @@ function getWeightedRank(d)
 {
     var sum = 0.0;
     for (prop in currentFilter) {
+        if (prop == "mapData") continue;
         var idx = filterMap[prop];
         
         switch (filterVariables[idx].type) {
@@ -212,8 +223,9 @@ function expandFilter(prop)
     updateIndex();
 }
 
-function updateMapFilter()
+function updateMapFilter(sData)
 {
+    currentFilter["mapData"] = sData;
     var numPass = 0;
     for (var i = 0; i < allData.length; i++) {
         if (collegeSelectedInMap(allData[i]))
@@ -237,12 +249,12 @@ function setFilterStarred(prop, starred)
 
 // Selection Callback Info
 
-var selectedData,
+var selectedData, selectedDataIdx = -1;
     selectionListeners = [];
 function selectData(idx, is_from_result_list)
 {
-    selectedData = allData[idx];
-    //console.log(selectedData.name);
+    selectedDataIdx = idx;
+    selectedData = (idx < 0 ? null : allData[idx]);
     for (var i = 0; i < selectionListeners.length; i++)
         selectionListeners[i](idx, is_from_result_list);
 }
@@ -373,6 +385,7 @@ function removeFilterValueNominal(prop, val)
     if (vals.length == 0) {
         numFilter--;
         expandFilter(prop);
+        setStarState(prop, false);
         delete currentFilter[prop];
     } else {
         contractFilter(prop);
@@ -394,6 +407,8 @@ function addFilterQuantitative(prop)
 function removeFilterQuantitative(prop)
 {
     if (!currentFilter[prop]) return;
+    
+    setStarState(prop,false);
     
     delete currentFilter[prop];
     expandFilter(prop);

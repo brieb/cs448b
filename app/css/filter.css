@@ -9,6 +9,7 @@ rect.slider {
   fill-opacity: 0.5;
 }
 rect.handle {
+  opacity: 0.0;
   fill-opacity: 0.0;
   stroke: #888;
 }
