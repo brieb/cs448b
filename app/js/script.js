@@ -371,7 +371,7 @@ $(document).ready(function() {
 
   var create_link = function(bitly_url) {
     var link = $('#link_url');
-    bitly_url = "http://google.com";
+    //bitly_url = "http://google.com";
     link.attr('href', bitly_url)
     link.text(bitly_url);
     link.fadeIn();
