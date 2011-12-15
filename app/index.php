@@ -90,7 +90,6 @@
       </div>
 
       <div id="content_r">
-        <div id="college_results_title">Your Top Colleges</div>
         <div id="college_results"></div>
 
         <div id="college">
