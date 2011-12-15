@@ -1,4 +1,4 @@
-/* Usage: call drawMap("#divid") once allData variable is set to college allData from json.
+/* Usage: call drawMap("#divid", width, height) once allData variable is set to college allData from json.
   collegeSelectedInMap(college) returns true if a college is selected in the map
  
   Depends on file 'us-states.json' in same directory
@@ -34,23 +34,23 @@ var mapClickUp = {"x":0,"y":0};
 var mouseIsDown = false;
 var curMapSelection = null;
 var mapSvg;
-var mapColleges;
 var brushSelection;
 var mapSelections = {};
 var albersProj;
 var mapFeatures;
-var drawMap = function(div, scale) {
-  var width = 700;
-  var height = 400;
+var drawMap = function(div, width, height) {
+  var scale = Math.min(width/900, height/596); //constants dependent on us-states.json
   var svg = d3.select(div)
     .append('svg:svg')
     .attr('onmousedown','mouseDown(event)')
     .attr('onmousemove','mouseMove(event)')
-    .attr('onmouseup','mouseUp(event)');
-  //  .attr('width', width)
-  //  .attr('height', height);
+    .attr('onmouseup','mouseUp(event)')
+    .attr('width', width)
+    .attr('height', height);
 
   mapSvg = svg;
+
+  setUpDocumentListeners();
 
   var path = d3.geo.path()
     .pointRadius(3);
@@ -68,7 +68,6 @@ var drawMap = function(div, scale) {
   var colleges = svg.append("svg:g")
     .attr("id", "colleges")
     .attr("transform", "scale("+scale+")");
-  mapColleges = colleges;
   
   brushSelection = svg.append("svg:g")
     .attr("id", "collegeSelected")
@@ -91,19 +90,7 @@ var drawMap = function(div, scale) {
   //     { "type": "Feature",
   //       "geometry": {"type": "Point", "coordinates": [-71.6,42.5]},
   //       "properties": {"name": "Harvard University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-74.4,40.2]},
-  //       "properties": {"name": "Princeton University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-72.9,41.3]},
-  //       "properties": {"name": "Yale University"}
-  //     },
-  //     { "type": "Feature",
-  //       "geometry": {"type": "Point", "coordinates": [-87.7,42.0]},
-  //       "properties": {"name": "Northwestern University"}
-  //     }        
+  //     }     
   //   ]
   // }
 
@@ -131,11 +118,16 @@ var mouseDown = function(e) {
   if(mouseIsDown) {
     curMapSelection = null;
   }
-  mouseIsDown = true;
   mapClickDown = {"x":e.offsetX, "y":e.offsetY};
+  mouseIsDown = true;
 }
 
 var mouseMove = function(e) {
+  if (!mouseIsDown && curMapSelection != null) {
+    curMapSelection.remove();
+    curMapSelection = null;
+    return;
+  }
   if (mouseIsDown) {
     if(curMapSelection == null) {
       mapClickUp = {"x":e.offsetX, "y":e.offsetY};
@@ -149,10 +141,11 @@ var mouseMove = function(e) {
 }
 
 var mouseUp = function(e) {
-  mouseIsDown = false;
-  mapClickUp = {"x":e.offsetX, "y":e.offsetY};
-  changeMapSelection(e);
-  colorColleges();
+  if(mouseIsDown) {
+    mapClickUp = {"x":e.offsetX, "y":e.offsetY};
+    changeMapSelection(e);
+    colorColleges();
+  }
 }
 
 var changeMapSelection = function(e) {
@@ -170,8 +163,6 @@ var changeMapSelection = function(e) {
 }
 
 var clearSelector = function(e){
-  //console.log('clearing!');
-  //console.log(e);
   if (e.target.getAttribute("class") == "selector"){
     d3.select(e.target).remove();
     delete mapSelections[e.target.getAttribute("cx")+"_"+
@@ -185,10 +176,10 @@ var drawMapSelection = function() {
   var y1 = mapClickDown.y;
   var x2 = mapClickUp.x;
   var y2 = mapClickUp.y;
-  var r = Math.sqrt(Math.pow(x1-x2,2)+ Math.pow(y1-y2,2))/2;
+  var r = Math.sqrt(Math.pow(x1-x2,2)+ Math.pow(y1-y2,2));
   curMapSelection = mapSvg.append("svg:circle")
-    .attr("cx", (x1+mapClickUp.x)/2)
-    .attr("cy", (y1+mapClickUp.y)/2)
+    .attr("cx", x1)
+    .attr("cy", y1)
     .attr("r", r)
     .attr("class", "selector");
 }
@@ -197,16 +188,16 @@ var redrawMapSelection = function() {
   var y1 = mapClickDown.y;
   var x2 = mapClickUp.x;
   var y2 = mapClickUp.y;
-  var r = Math.sqrt(Math.pow(x1-x2,2)+ Math.pow(y1-y2,2))/2;
-  curMapSelection.attr("cx", (x1+mapClickUp.x)/2)
-    .attr("cy", (y1+mapClickUp.y)/2)
+  var r = Math.sqrt(Math.pow(x1-x2,2)+ Math.pow(y1-y2,2));
+  curMapSelection.attr("cx", x1)
+    .attr("cy", y1)
     .attr("r", r);
   
 }
 
 var colorColleges = function() {
   mapSvg.selectAll(".collegePoint")
-    .style("fill", function(d) {
+    .style("fill", function(d, i) {
         return allData[d.properties.index].pass ? 
             "#1960AA" : "#111";
     })
@@ -273,8 +264,27 @@ var selectSchoolOnMap = function(index) {
     .data([mapFeatures[index]], function(d) { return d.properties.index; });
   sel.enter().append("svg:path")
         .attr("d", path)
-        .attr("class", "collegePoint")
+        .attr("class", "selPoint")
         .style("fill","#FF9933")
         .style("opacity",1);
   sel.exit().remove();
+}
+
+var setUpDocumentListeners = function(){
+
+  document.body.onmouseup = function() {
+    mouseIsDown = false;
+  }
+
+  document.body.onmouseout = function(e) {
+    e = e ? e : window.event;
+    var from = e.relatedTarget || e.toElement;
+    if (!from || from.nodeName == "HTML") {
+      if(curMapSelection != null) {
+        curMapSelection.remove();
+        curMapSelection = null;
+      }
+      mouseIsDown = false;
+    }
+  }
 }
