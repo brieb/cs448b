@@ -345,6 +345,16 @@ $(document).ready(function() {
     }
   );
 
+  $('#helpButton').click(function(){
+    d3.select('#helpOverlay')
+      .style('display','inline');
+  });
+
+  $('#helpOverlay').click(function(){
+    d3.select('#helpOverlay')
+      .style('display','none');
+  });
+
   var gen_bitly_link = function(callback) {
     var share = $(this);
     $.get(

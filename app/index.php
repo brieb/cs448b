@@ -58,15 +58,19 @@
         </div>
         <!-- TODO -->
         <div id="social">
+          <div id="helpButton">Show Me!</div>
           <a id="link" href="">Link</a>
           <a id="link_url" target="_blank" href="">http://google.com</a>
           <a id="share" href="">Share</a>
+          <a id="feedback" href="https://docs.google.com/spreadsheet/viewform?formkey=dFZqNHNraXB4blBhdnBpYk1HQmc4RlE6MQ">Feedback</a>
         </div>
       </div>
     </div>
 
     <div class="page">
+      <div id="helpOverlay"></div>
       <div id="content_l">
+        <a id="clearButton" href="">Clear all filters</a>
 
         <div id="c_tok_college">
           <div class="help">Filter by college name...</div>
@@ -86,6 +90,7 @@
       </div>
 
       <div id="content_r">
+        <div id="college_results_title">Your Top Colleges</div>
         <div id="college_results"></div>
 
         <div id="college">
