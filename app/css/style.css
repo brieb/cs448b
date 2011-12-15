@@ -183,8 +183,8 @@ ul.token-input-list-facebook {
 }
 #college_results {
   width: 110px;
-  /*height: 728px;*/
-  height: 1050px;
+  height: 728px;
+  /*height: 1050px;*/
   overflow-y: scroll;
 }
 #college_results li {

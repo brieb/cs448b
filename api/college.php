@@ -8,11 +8,11 @@
     die();
   }
 
-  // if ($_GET['only_id_name'] == 1) {
-  //   $q = "select id,name from college";
-  //   echo json_encode(db_query($q));
-  //   die();
-  // }
+   if ($_GET['only_id_name'] == 1) {
+     $q = "select id,name from college";
+     echo json_encode(db_query($q));
+     die();
+   }
 
   if ($_GET['id']) {
     $id = $_GET['id'];

@@ -7,9 +7,6 @@ var read_url;
 
 $(document).ready(function() {
   var API_URL = '../api/college.php';
-  var COLLEGE_RESULTS_LIMIT = 5000;
-  var COLLEGE_RESULTS_OFFSET = 0;
-
 
   var tok_match_college = [];
   var tok_match_major = [];
@@ -339,7 +336,7 @@ $(document).ready(function() {
 
   $.get(
     API_URL,
-    {limit: COLLEGE_RESULTS_LIMIT, offset: COLLEGE_RESULTS_OFFSET, only_id_name: 1},
+    {only_id_name: 1},
     function(response) {
       display_college_results(response);
     }
