@@ -19,6 +19,7 @@ body {
 #logo, #subtitle {
   display: inline;
   float: left;
+  font-size: 11;
 }
 
 #logo {
@@ -86,6 +87,7 @@ body {
   padding-left: 0px;
   color: black;
   text-decoration: underline;
+  text-size: 10px;
 
   display: none;
 
