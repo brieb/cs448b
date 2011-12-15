@@ -56,8 +56,8 @@
   "type": "q",
   "min": 0,
   "max": 100,
-  "min_label": "100% In-state",
-  "max_label": "100% Out-of-state"
+  "min_label": "100% Out-of-state",
+  "max_label": "100% In-state"
 },
 {
   "id": "percent_international",

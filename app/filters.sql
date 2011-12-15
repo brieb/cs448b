@@ -102,6 +102,114 @@ update college_info set calendar = null where calendar = 'NULL';
 
 
 
+---
+
+insert into college_info
+select
+id,
+name,
+url,
+address,
+cast(replace(faculty_to_student_ratio, ':1', '') as float) as student_to_faculty_ratio,
+num_undergrad,
+num_grad,
+percent_admitted,
+calendar,
+latitude,
+longitude,
+num_undergrad+num_grad as population,
+cast(round(cast(num_undergrad as real)/(num_undergrad+num_grad)*100) as integer) as percent_undergrad,
+
+(
+  select percentage from
+  college_demographics_first_year
+  where
+  college_demographics_first_year.demographics_first_year_id = 4
+  and college_id = c.id
+) as percent_male,
+
+(
+  select percentage from
+  college_demographics_first_year
+  where
+  college_demographics_first_year.demographics_first_year_id = 1
+  and college_id = c.id
+) as percent_in_state,
+
+(
+  select
+  value
+  from
+  school_type
+  join college_school_type
+  on id = school_type_id
+  where id in (1,9,66)
+  and college_id = c.id
+) as prop_priv_pub,
+
+(
+  select
+  value
+  from
+  setting
+  join college_setting
+  on id = setting_id
+  where id in (178,4,13,7,57,28)
+  and college_id = c.id
+) as size_of_city,
+
+(
+  select
+  value
+  from
+  setting
+  join college_setting
+  on id = setting_id
+  where id in (1,3,9)
+  and college_id = c.id
+) as setting,
+
+(
+  select
+  value
+  from
+  setting
+  join college_setting
+  on id = setting_id
+  where id in (2,11)
+  and college_id = c.id
+) as res_comm,
+
+(
+  select percentage from
+  college_demographics_first_year
+  where
+  college_demographics_first_year.demographics_first_year_id = 11
+  and college_id = c.id
+) as percent_international,
+
+(
+  select value from school_type
+  join college_school_type on id = school_type_id
+  where school_type_id in (4, 12, 302)
+  and college_id = c.id
+) as type
+
+from college_new as c;
+
+
+update college_info set percent_admitted = null
+where percent_admitted = 'Not reported';
+update college_info set calendar = null where calendar = 'NULL';
+
+
+---
+
+
+
+
+
+
 
 
 

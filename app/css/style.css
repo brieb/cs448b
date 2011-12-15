@@ -16,7 +16,7 @@ body {
   padding: 2px 0;
 }
 
-#logo, #subtitle, #share {
+#logo, #subtitle {
   display: inline;
   float: left;
 }
@@ -31,23 +31,52 @@ body {
 #logo #vs {
   color: #FF6633;
 }
+#logo a {
+  text-decoration: none;
+  color: #006699;
+}
 
 #subtitle {
   margin-top: 17px;
   font-weight: 300;
 }
 
-#share {
+#social {
   float: right;
+  display: block;
+  height: 36px;
+}
+
+#share, #link, #link_url {
+  display: inline-block;
   margin-top: 8px;
+  margin-left: 15px;
   padding-left: 20px;
   padding-top: 2px;
   height: 20px;
-  background-image: url(img/mail.png);
   background-repeat: no-repeat;
   background-position: 0 0;
   color: #3B5998;
   text-decoration: none;
+}
+#link {
+  background-image: url(img/link.png);
+}
+#share {
+  background-image: url(img/mail.png);
+}
+#link_url {
+  margin-left: 5px;
+  padding-left: 0px;
+  color: black;
+  text-decoration: underline;
+
+  display: none;
+
+  -moz-user-select: -moz-text;
+  -khtml-user-select: text;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 
@@ -69,6 +98,7 @@ body {
 
 #content_r {
   width: 320px;
+  height: 728px;
 }
 
 .help {
@@ -91,7 +121,7 @@ ul.token-input-list-facebook {
 
 .graph_small {
   height: 120px;
-  width: 190px;
+  width: 210px;
   background-color: #e3e3e3;
   border-top: 1px solid #999;
 }
@@ -112,7 +142,8 @@ ul.token-input-list-facebook {
 
 
 #college {
-  width: 190px;
+  width: 210px;
+  height: 728px;
 }
 #college_results {
   width: 110px;
@@ -139,18 +170,14 @@ ul.token-input-list-facebook {
 
 #college_details {
   padding: 5px;
-  width: 180px;
-  height: 448px;
+  width: 200px;
+  height: 354px;
   overflow-y: scroll;
 
   -moz-user-select: -moz-text;
   -khtml-user-select: text;
   -webkit-user-select: text;
   user-select: text;
-}
-
-#college {
-  height: 728px;
 }
 
 #college_details .name {
@@ -281,5 +308,8 @@ div.token-input-dropdown-facebook {
 }
 .graph_small path {
   cursor: help;
+}
+.star {
+  cursor: pointer;
 }
 

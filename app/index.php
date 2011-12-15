@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
     <script type="text/javascript" src="js/jquery.tokeninput.js"></script>
     <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
@@ -25,6 +26,22 @@
 
     <script src="js/map_college_to_data_index.js"></script>
     <script src="js/script.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27701363-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+
   </head>
   <body>
 
@@ -34,13 +51,17 @@
 
     <div id="header">
       <div class="page">
-        <div id="logo">uni<span id="vs">VS</span>ity</div>
+        <div id="logo"><a href="/">uni<span id="vs">VS</span>ity</a></div>
         <div id="subtitle">
           A CS448B Project by
           Brie Bunge, Caleb Jordan, Megan Kanne, and Julia Neidert
         </div>
         <!-- TODO -->
-        <a id="share" href="">Share</a>
+        <div id="social">
+          <a id="link" href="">Link</a>
+          <a id="link_url" target="_blank" href="">http://google.com</a>
+          <a id="share" href="">Share</a>
+        </div>
       </div>
     </div>
 
@@ -65,14 +86,10 @@
       </div>
 
       <div id="content_r">
-        <div class="dis_scroll_pane">
-          <div id="college_results"></div>
-        </div>
+        <div id="college_results"></div>
 
         <div id="college">
-          <div class="dis_scroll_pane">
-            <div id="college_details"></div>
-          </div>
+          <div id="college_details"></div>
 
           <div id="graph1" class="graph_small">
           </div>
@@ -119,5 +136,6 @@
         });
 
       </script>
+
     </body>
   </html>

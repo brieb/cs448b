@@ -36,6 +36,7 @@ var curMapSelection = null;
 var mapSvg;
 var mapColleges;
 var mapSelections = {};
+
 var drawMap = function(div) {
   var width = 700;
   var height = 400;
@@ -108,7 +109,9 @@ var drawMap = function(div) {
     .enter().append("svg:path")
     .attr("d", path)
     .attr("class", "collegePoint")
-    .style("fill","#1960AA");  
+    .style("fill","#1960AA"); 
+    
+  addDataSelectionCallback(selectSchoolOnMap); 
 }
 
 var mouseDown = function(e) {
@@ -236,4 +239,21 @@ var isEmpty = function(obj) {
           return false;
   }
   return true;
+}
+
+var getMapOffset = function(college) {
+  var albersProj = d3.geo.albersUsa();
+  var x = albersProj(college.longitude)[0];
+  var y = albersProj(college.latitude)[1];
+  return {'x': x, 'y': y};
+}
+
+var selectSchoolOnMap = funtion(index) {
+  var college = allData[index];
+  colorColleges();
+  mapSvg.selectAll(".collegePoint").filter(function(d,i){
+    if (i == index) return true;
+    return false;
+  })
+  .style("fill","#FF9933");
 }
