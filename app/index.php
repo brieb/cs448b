@@ -111,7 +111,7 @@
         // Everything to draw once loading is done
         var drawCharts = function() {
             drawFilterChart("#filterChart", 630, 720);
-            drawMap("#mapChart", .7);
+            drawMap("#mapChart", 629, 417);
             render_stars();
 
             read_url();
